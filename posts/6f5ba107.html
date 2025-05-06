@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="cat" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      redis编译安装 
+      
+      
+      |
+    
+     thisofcat
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <link rel="icon" href="/images/logo.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/logo.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">cat</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">redis编译安装</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2017-09-30 16:00:00
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                    <b>#</b> 后端
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/redis/" title="redis">
+                    <b>#</b> redis
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/redis/" title="redis">
+                    <b>#</b> redis
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>&lt;Excerpt in index | 首页摘要&gt;</p>
+<span id="more"></span>
+<p>&lt;The rest of contents | 余下全文&gt;</p>
+<h1 id="编译以及指定安装路径"><a href="#编译以及指定安装路径" class="headerlink" title="编译以及指定安装路径"></a>编译以及指定安装路径</h1><figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">make</span></span><br><span class="line"><span class="built_in">make</span> PREFIX=/usr/<span class="keyword">local</span>/webserver/redis install</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置文件移动"><a href="#配置文件移动" class="headerlink" title="配置文件移动"></a>配置文件移动</h1><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir <span class="regexp">/usr/</span>local<span class="regexp">/webserver/</span>redis<span class="regexp">/etc/</span></span><br><span class="line">cp redis.conf <span class="regexp">/usr/</span>local<span class="regexp">/webserver/</span>redis<span class="regexp">/etc/</span></span><br></pre></td></tr></table></figure>
+
+<p>#修改redis配置</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">vim <span class="keyword">/usr/</span>local<span class="keyword">/webserver/</span>redis<span class="keyword">/etc/</span>redis.conf</span><br><span class="line"></span><br><span class="line"><span class="meta"># 修改一下配置</span></span><br><span class="line"><span class="meta"># redis以守护进程的方式运行</span></span><br><span class="line"><span class="meta"># no表示不以守护进程的方式运行(会占用一个终端)  </span></span><br><span class="line">daemonize yes</span><br><span class="line"></span><br><span class="line"><span class="meta"># 客户端闲置多长时间后断开连接，默认为0关闭此功能                                      </span></span><br><span class="line">timeout <span class="number">300</span></span><br><span class="line"></span><br><span class="line"><span class="meta"># 设置redis日志级别，默认级别：notice                    </span></span><br><span class="line">loglevel verbose</span><br><span class="line"></span><br><span class="line"><span class="meta"># 设置日志文件的输出方式,如果以守护进程的方式运行redis 默认:<span class="string">&quot;&quot;</span> </span></span><br><span class="line"><span class="meta"># 并且日志输出设置为stdout,那么日志信息就输出到/dev/null里面去了 </span></span><br><span class="line">logfile stdout</span><br></pre></td></tr></table></figure>
+<h1 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim /etc<span class="built_in">/profile</span></span><br><span class="line"><span class="built_in"></span><span class="built_in">export</span> <span class="attribute">PATH</span>=<span class="string">&quot;<span class="variable">$PATH</span>:/usr/local/webserver/redis/bin&quot;</span></span><br></pre></td></tr></table></figure>
+<h1 id="保存退出"><a href="#保存退出" class="headerlink" title="保存退出"></a>保存退出</h1><h1 id="让环境变量立即生效"><a href="#让环境变量立即生效" class="headerlink" title="让环境变量立即生效"></a>让环境变量立即生效</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>#开机启动</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim <span class="regexp">/etc/</span>rc.local</span><br><span class="line"><span class="regexp">/usr/</span>local<span class="regexp">/webserver/</span>redis<span class="regexp">/bin/</span>redis-server <span class="regexp">/usr/</span>local<span class="regexp">/webserver/</span>redis<span class="regexp">/etc/</span>redis.conf</span><br></pre></td></tr></table></figure>
+
+<p>#重启</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">kill</span> -HUP `<span class="built_in">cat</span> /var/run/redis.pid`</span><br></pre></td></tr></table></figure>
+
+<p>#关闭</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">kill</span> 进程<span class="built_in">id</span>或者./redis-cli shutdown</span><br></pre></td></tr></table></figure>
+
+<h1 id="防火墙配置"><a href="#防火墙配置" class="headerlink" title="防火墙配置"></a>防火墙配置</h1><p> 打开防火墙规则</p>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/sysconfig/iptables</span><br><span class="line"></span><br><span class="line"><span class="comment"># 增加内容</span></span><br><span class="line">-A INPUT -m <span class="keyword">state</span> --state NEW -m tcp -p tcp --dport <span class="number">6379</span> -j ACCEPT</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启火墙规则立即生效</span></span><br><span class="line">service iptables restart </span><br></pre></td></tr></table></figure>
+
+<h1 id="安装php-redis扩展包"><a href="#安装php-redis扩展包" class="headerlink" title="安装php redis扩展包"></a>安装php redis扩展包</h1><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">unzip</span> phpredis-develop.zip</span><br></pre></td></tr></table></figure>
+
+<p>生成扩展配置</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd phpredis-develop</span><br><span class="line"><span class="regexp">/usr/</span>local<span class="regexp">/webserver/</span>php7<span class="regexp">/bin/</span>phpize</span><br></pre></td></tr></table></figure>
+
+<p>编译Redis</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure --<span class="keyword">with</span>-php-<span class="keyword">config</span>=/usr/<span class="keyword">local</span>/webserver/php7/bin/php-<span class="keyword">config</span></span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+
+<h1 id="安装完成，返回模块所在路径"><a href="#安装完成，返回模块所在路径" class="headerlink" title="安装完成，返回模块所在路径"></a>安装完成，返回模块所在路径</h1><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd <span class="regexp">/usr/</span>local<span class="regexp">/webserver/</span>php<span class="regexp">/lib/</span>php<span class="regexp">/extensions/</span>no-debug-non-zts-<span class="number">20100525</span>/</span><br></pre></td></tr></table></figure>
+
+<p>#配置PHP支持redis</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">vim <span class="regexp">/usr/</span>local<span class="regexp">/webserver/</span>php<span class="regexp">/etc/</span>php.ini</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改以下内容</span></span><br><span class="line">extension_dir = <span class="string">&quot;/usr/local/webserver/php/lib/php/extensions/no-debug-non-zts-20100525/&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 增加扩展到php</span></span><br><span class="line">extension = redis.so</span><br><span class="line"><span class="comment">#重新启动php-fpm</span></span><br><span class="line"></span><br><span class="line">kill -USR2 php-fpm 进程</span><br><span class="line">kill -USR2 `cat <span class="regexp">/usr/</span>local<span class="regexp">/webserver/</span>php7<span class="regexp">/var/</span>run/php-fpm.pid`</span><br></pre></td></tr></table></figure>
+<p>在php测试下是否成功</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2017-09-30 16:00:00
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                        <b>#</b> 后端
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/redis/" title="redis">
+                        <b>#</b> redis
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/redis/" title="redis">
+                        <b>#</b> redis
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/posts/93c14ecb.html" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E4%BB%A5%E5%8F%8A%E6%8C%87%E5%AE%9A%E5%AE%89%E8%A3%85%E8%B7%AF%E5%BE%84"><span class="toc-text">编译以及指定安装路径</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%A7%BB%E5%8A%A8"><span class="toc-text">配置文件移动</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-text">环境变量</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BF%9D%E5%AD%98%E9%80%80%E5%87%BA"><span class="toc-text">保存退出</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%A9%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E7%AB%8B%E5%8D%B3%E7%94%9F%E6%95%88"><span class="toc-text">让环境变量立即生效</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99%E9%85%8D%E7%BD%AE"><span class="toc-text">防火墙配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85php-redis%E6%89%A9%E5%B1%95%E5%8C%85"><span class="toc-text">安装php redis扩展包</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%AE%8C%E6%88%90%EF%BC%8C%E8%BF%94%E5%9B%9E%E6%A8%A1%E5%9D%97%E6%89%80%E5%9C%A8%E8%B7%AF%E5%BE%84"><span class="toc-text">安装完成，返回模块所在路径</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="gitee" target="_blank" rel="noopener" href="https://gitee.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + redis%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85 + '&url=' + http%3A%2F%2Fyoursite.com%2Fposts%2F6f5ba107.html + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://yoursite.com/posts/6f5ba107.html" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

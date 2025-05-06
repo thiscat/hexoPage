@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="cat" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      mysqlCMark安装 
+      
+      
+      |
+    
+     thisofcat
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <link rel="icon" href="/images/logo.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/logo.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">cat</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">mysqlCMark安装</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2017-11-07 01:56:27
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                    <b>#</b> 后端
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/" title="MYSQL">
+                    <b>#</b> MYSQL
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E5%AE%89%E8%A3%85%E6%96%87%E6%A1%A3/" title="安装文档">
+                    <b>#</b> 安装文档
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>&lt;Excerpt in index | 首页摘要&gt;</p>
+<span id="more"></span>
+<p>&lt;The rest of contents | 余下全文&gt;</p>
+<p><a target="_blank" rel="noopener" href="https://www.linuxidc.com/Linux/2016-11/137645.htm">https://www.linuxidc.com/Linux/2016-11/137645.htm</a></p>
+<h1 id="一、yum安装相关依赖"><a href="#一、yum安装相关依赖" class="headerlink" title="一、yum安装相关依赖"></a>一、yum安装相关依赖</h1><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum -y install gcc gcc-c++ gcc-g77 <span class="built_in">auto</span>conf <span class="built_in">auto</span>make zlib* fiex* libxml* ncurses-devel libmcrypt* libtool-ltdl-devel* \ </span><br><span class="line">make cmake bison git openssl openssl-devel</span><br></pre></td></tr></table></figure>
+
+<h1 id="二、编译安装"><a href="#二、编译安装" class="headerlink" title="二、编译安装"></a>二、编译安装</h1><p>添加用户</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">groupadd mysql</span><br><span class="line">useradd -<span class="attribute">r</span> -<span class="selector-tag">g</span> mysql mysql</span><br></pre></td></tr></table></figure>
+
+<p>2.编译安装</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">curl</span> https://cdn.mysql.com//Downloads/MySQL-<span class="number">5</span>.<span class="number">6</span>/mysql-<span class="number">5</span>.<span class="number">6</span>.<span class="number">45</span>-linux-glibc2.<span class="number">12</span>-x86_64.tar.gz</span><br><span class="line"><span class="attribute">tar</span> xf mysql-<span class="number">5</span>.<span class="number">6</span>.<span class="number">34</span>.tar.gz</span><br><span class="line"><span class="attribute">cd</span> mysql-<span class="number">5</span>.<span class="number">6</span>.<span class="number">34</span></span><br></pre></td></tr></table></figure>
+
+<p> 默认情况下是安装在&#x2F;usr&#x2F;local&#x2F;webserver&#x2F;mysql<br> cmake编译参数可以自己调整</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cmake . <span class="attribute">-DCMAKE_INSTALL_PREFIX</span>=/usr/local/webserver/mysql <span class="attribute">-DMYSQL_DATADIR</span>=/data/mysqlData <span class="attribute">-DSYSCONFDIR</span>=/etc \ </span><br><span class="line"><span class="attribute">-DWITH_INNOBASE_STORAGE_ENGINE</span>=1 <span class="attribute">-DWITH_MYISAM_STORAGE_ENGINE</span>=1 <span class="attribute">-DWITH_ARCHIVE_STORAGE_ENGINE</span>=1 \</span><br><span class="line"><span class="attribute">-DWITH_PARTITION_STORAGE_ENGINE</span>=1 <span class="attribute">-DWITH_BLACKHOLE_STORAGE_ENGINE</span>=1 <span class="attribute">-DWITH_READLINE</span>=1 <span class="attribute">-DWITH_SSL</span>=system \</span><br><span class="line"><span class="attribute">-DWITH_ZLIB</span>=system <span class="attribute">-DMYSQL_UNIX_ADDR</span>=/tmp/mysql.sock <span class="attribute">-DMYSQL_TCP_PORT</span>=3306 <span class="attribute">-DENABLED_LOCAL_INFILE</span>=1 \</span><br><span class="line"><span class="attribute">-DEXTRA_CHARSETS</span>=all <span class="attribute">-DDEFAULT_CHARSET</span>=utf8 <span class="attribute">-DWITH_LIBWRAP</span>=0 <span class="attribute">-DDEFAULT_COLLATION</span>=utf8_general_ci \</span><br><span class="line"><span class="attribute">-DWITH_BOOST</span>=/home/cat/installData/mysql/mysql-8.0.11/boost (最后一句为mysql8才需要使用)</span><br></pre></td></tr></table></figure>
+
+
+<p>cmake编译报错需要删除编译缓存，修复错误后再次重新编译</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> <span class="operator">-f</span> CMakeCache.txt</span><br></pre></td></tr></table></figure>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">make</span> &amp;&amp; <span class="built_in">make</span> install</span><br></pre></td></tr></table></figure>
+
+<p>注意事项：<br>重新编译时，需要清除旧的对象文件和缓存信息。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">make clean</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="built_in">rm</span> -f CMakeCache.txt</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="built_in">rm</span> -rf /etc/my.cnf</span></span><br></pre></td></tr></table></figure>
+
+<p>4.改变数据存储目录所有者为mysql</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chown</span> -R mysql.mysql /usr/local/webserver/mysql</span><br><span class="line"><span class="built_in">chown</span> -R mysql.mysql /data/mysqlData</span><br></pre></td></tr></table></figure>
+
+<p>5.启动脚本初始化数据库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/webserver/mysql</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">scripts/mysql_install_db --user=mysql --basedir=/usr/local/webserver/mysql --datadir=/data/mysqlData</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">mysql8</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">bin/mysqld --initialize --user=mysql --datadir=/data/mysqlData/</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">bin/mysql_ssl_rsa_setup</span></span><br><span class="line"></span><br><span class="line">D38j.)H_yU3J</span><br></pre></td></tr></table></figure>
+
+<p>6.注册服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> support-files/mysql.server /etc/rc.d/init.d/mysqld</span><br></pre></td></tr></table></figure>
+<p>使用默认配置文件</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cp</span> support-<span class="keyword">files</span>/my-default.<span class="keyword">cnf</span> /etc/my.<span class="keyword">cnf</span></span><br></pre></td></tr></table></figure>
+
+<p>让chkconfig管理mysql服务</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chkconfig --<span class="built_in">add</span> mysqld</span><br></pre></td></tr></table></figure>
+
+<p>开机启动</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">chkconfig</span> mysqld <span class="literal">on</span></span><br></pre></td></tr></table></figure>
+
+<p>编辑&#x2F;etc&#x2F;my.cnf配置，加入以下内容</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">innodb_file_per_table</span> = <span class="number">1</span></span><br><span class="line"><span class="attr">datadir</span> = /data/mysqlData</span><br><span class="line"><span class="attr">log-bin</span>=/data/binlogs/mysql-bin</span><br></pre></td></tr></table></figure>
+<p>注意：<br>经过实际测试innodb_file_per_table &#x3D; ON这条参数需要innodb_file_per_table &#x3D; 1 才能生效，具体可以通过</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show <span class="keyword">variables</span> like <span class="comment">&#x27;%per_table%&#x27;</span>;来查询</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> /data/binlogs</span><br><span class="line"><span class="built_in">chown</span> -R mysql.mysql /data/binlogs</span><br></pre></td></tr></table></figure>
+
+<p>8.将mysql命令加入环境变量中</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim <span class="regexp">/etc/</span>profile.d/mysql.sh</span><br><span class="line">加入</span><br><span class="line">export PATH=<span class="regexp">/usr/</span>local<span class="regexp">/webserver/my</span>sql/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
+
+
+<p>默认密码为空</p>
+<p>9修改&#x2F;etc&#x2F;security&#x2F;limits.conf，然后加入以下内容，退出再重新登陆即可(不需要重启，退出当前的连接shell即可)</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># ulimit -n 查看参数是否生效</span></span><br><span class="line"><span class="bullet">*</span> hard nofile 655350</span><br><span class="line"><span class="bullet">*</span> soft nofile 655350</span><br></pre></td></tr></table></figure>
+
+
+<p>否则报错如下：<br>错误#23: Out of resources when opening file ‘.&#x2F;XX&#x2F;USER.MYD’ (Errcode: 24)</p>
+<p>10修改密码</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">命令:<span class="keyword">SET</span> <span class="keyword">PASSWORD</span> <span class="keyword">FOR</span> <span class="string">&#x27;username&#x27;</span>@<span class="string">&#x27;host&#x27;</span> = <span class="keyword">PASSWORD</span>(<span class="string">&#x27;newpassword&#x27;</span>);</span><br><span class="line">如果是当前登陆用户用<span class="keyword">SET</span> <span class="keyword">PASSWORD</span> = <span class="keyword">PASSWORD</span>(&quot;newpassword&quot;); </span><br><span class="line"></span><br><span class="line"><span class="keyword">update</span> mysql.<span class="keyword">user</span> <span class="keyword">set</span> <span class="keyword">password</span>=<span class="keyword">password</span>(<span class="string">&#x27;zxc406520&#x27;</span>) <span class="keyword">where</span> <span class="keyword">User</span>=<span class="string">&#x27;root&#x27;</span> <span class="keyword">and</span> Host=<span class="string">&#x27;localhost&#x27;</span>;</span><br><span class="line">mysql8</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED <span class="keyword">WITH</span> mysql_native_password <span class="keyword">BY</span> <span class="string">&#x27;你的密码&#x27;</span>; </span><br><span class="line">flush <span class="keyword">privileges</span>;</span><br></pre></td></tr></table></figure>
+
+<p>新建帐号</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">&#x27;username&#x27;</span>@<span class="string">&#x27;host&#x27;</span> IDENTIFIED <span class="keyword">BY</span> <span class="string">&#x27;password&#x27;</span>; </span><br><span class="line">授权</span><br><span class="line">命令:<span class="keyword">GRANT</span> <span class="keyword">privileges</span> <span class="keyword">ON</span> databasename.tablename <span class="keyword">TO</span> <span class="string">&#x27;username&#x27;</span>@<span class="string">&#x27;host&#x27;</span></span><br><span class="line"><span class="keyword">GRANT</span> <span class="keyword">ALL</span> <span class="keyword">ON</span> *.* <span class="keyword">TO</span> <span class="string">&#x27;cat&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>;</span><br><span class="line">注意:用以上命令授权的用户不能给其它用户授权,如果想让该用户可以授权,用以下命令:</span><br><span class="line"><span class="keyword">GRANT</span> <span class="keyword">privileges</span> <span class="keyword">ON</span> databasename.tablename <span class="keyword">TO</span> <span class="string">&#x27;username&#x27;</span>@<span class="string">&#x27;host&#x27;</span> <span class="keyword">WITH</span> <span class="keyword">GRANT</span> <span class="keyword">OPTION</span>;</span><br><span class="line">撤销权限</span><br><span class="line">命令: <span class="keyword">REVOKE</span> privilege <span class="keyword">ON</span> databasename.tablename <span class="keyword">FROM</span> <span class="string">&#x27;username&#x27;</span>@<span class="string">&#x27;host&#x27;</span>;</span><br><span class="line">删除用户</span><br><span class="line">命令: <span class="keyword">DROP</span> <span class="keyword">USER</span> <span class="string">&#x27;username&#x27;</span>@<span class="string">&#x27;host&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>10.错误提示<br>The server requested authentication method unknown to the client [caching_sha2_password]</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql8新特性,需要在my.cnf中新增</span><br><span class="line"><span class="attribute">default_authentication_plugin</span>=mysql_native_password</span><br></pre></td></tr></table></figure>
+
+<h1 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h1><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/usr/</span>local<span class="regexp">/webserver/my</span>sql<span class="regexp">/support-files/my</span>sql.server start</span><br></pre></td></tr></table></figure>
+
+<h1 id="重启"><a href="#重启" class="headerlink" title="重启"></a>重启</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">kill</span> -USR2 `<span class="built_in">cat</span> /data/mysqlData/mysql.pid`</span><br></pre></td></tr></table></figure>
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/posts/2799a02a.html" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2017-11-07 01:56:27
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                        <b>#</b> 后端
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/" title="MYSQL">
+                        <b>#</b> MYSQL
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E5%AE%89%E8%A3%85%E6%96%87%E6%A1%A3/" title="安装文档">
+                        <b>#</b> 安装文档
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/posts/3610db45.html" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81yum%E5%AE%89%E8%A3%85%E7%9B%B8%E5%85%B3%E4%BE%9D%E8%B5%96"><span class="toc-text">一、yum安装相关依赖</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85"><span class="toc-text">二、编译安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8"><span class="toc-text">启动</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%87%8D%E5%90%AF"><span class="toc-text">重启</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="gitee" target="_blank" rel="noopener" href="https://gitee.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + mysqlCMark%E5%AE%89%E8%A3%85 + '&url=' + http%3A%2F%2Fyoursite.com%2Fposts%2Fde5ef85f.html + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://yoursite.com/posts/de5ef85f.html" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

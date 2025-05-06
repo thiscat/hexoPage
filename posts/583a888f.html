@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="cat" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      mysql缓存机制 
+      
+      
+      |
+    
+     thisofcat
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <link rel="icon" href="/images/logo.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/logo.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">cat</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">mysql缓存机制</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2022-02-23 01:35:00
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                    <b>#</b> 后端
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/" title="MYSQL">
+                    <b>#</b> MYSQL
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/MYSQL/" title="MYSQL">
+                    <b>#</b> MYSQL
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>&lt;Excerpt in index | 首页摘要&gt;</p>
+<span id="more"></span>
+<p>&lt;The rest of contents | 余下全文&gt;</p>
+<h1 id="一、-MySQL缓存简介"><a href="#一、-MySQL缓存简介" class="headerlink" title="一、 MySQL缓存简介"></a>一、 MySQL缓存简介</h1><h2 id="1-MySQL缓存机制说明"><a href="#1-MySQL缓存机制说明" class="headerlink" title="1. MySQL缓存机制说明"></a>1. MySQL缓存机制说明</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MySQL缓存机制即缓存<span class="keyword">sql</span> 文本及缓存结果，用KV形式保存再服务器内存中，如果运行相同的<span class="keyword">sql</span>，服务器直接从缓存中去获取结果，不需要再去解析、优化、执行<span class="keyword">sql</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-MySQL缓存失效"><a href="#2-MySQL缓存失效" class="headerlink" title="2. MySQL缓存失效"></a>2. MySQL缓存失效</h2><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 在表的结构或数据发生改变时，查询缓存中的数据不再有效，查询缓存值的相关条目将被清空</span><br><span class="line"><span class="number">2.</span> <span class="keyword">INSERT</span>、<span class="keyword">UPDATE</span>、 <span class="keyword">DELETE</span>、<span class="keyword">TRUNCATE</span>、<span class="keyword">ALTER</span> <span class="keyword">TABLE</span>、<span class="keyword">DROP</span> <span class="keyword">TABLE</span>或<span class="keyword">DROP</span> <span class="keyword">DATABASE</span>会导致缓存数据失效</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-使用场景"><a href="#3-使用场景" class="headerlink" title="3. 使用场景"></a>3. 使用场景</h2><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">1.</span> 对于频繁更新的表，查询缓存不合适</span><br><span class="line"><span class="bullet">2.</span> 对于一些不变的数据且有大量相同sql查询的表，查询缓存可以大大提高查询的性能</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、-命中条件"><a href="#二、-命中条件" class="headerlink" title="二、 命中条件"></a>二、 命中条件</h2><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 大小写敏感的hash查找实现的</span><br><span class="line"><span class="number">2.</span> 以<span class="keyword">SQL</span>、数据库名和客户端协议等作为KEY</span><br><span class="line"><span class="number">3.</span> 在判断命中前，MySQL不会解析<span class="keyword">SQL</span>，而是使用<span class="keyword">SQL</span>去查询缓存，<span class="keyword">SQL</span>上的任何字符的不同，如空格、注释等都会导致缓存不命中</span><br><span class="line"><span class="number">4.</span> 如果查询有不确定的数据，如<span class="keyword">like</span> now()、<span class="built_in">current_date</span>()，那么查询完成后结果都不会被缓存</span><br></pre></td></tr></table></figure>
+
+<h1 id="三、工作流程"><a href="#三、工作流程" class="headerlink" title="三、工作流程"></a>三、工作流程</h1><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 服务器接收<span class="keyword">SQL</span>，以<span class="keyword">SQL</span>和一些其他条件为key查找缓存表</span><br><span class="line"><span class="number">2.</span> 如果缓存命中，则直接返回缓存</span><br><span class="line"><span class="number">3.</span> 如果缓存没有命中，则执行<span class="keyword">SQL</span>查询，包括<span class="keyword">SQL</span>解析、预处理、再由优化器生成对应的执行计划。</span><br><span class="line"><span class="number">4.</span> MySql根据优化器生成的执行计划，调用存储引擎的API执行查询。</span><br><span class="line"><span class="number">4.</span> 将<span class="keyword">SQL</span>查询结果写入缓存表(不确定函数不缓存，例如now())，将结果返回给客户端。</span><br></pre></td></tr></table></figure>
+
+<h1 id="四、MySQL缓存管理"><a href="#四、MySQL缓存管理" class="headerlink" title="四、MySQL缓存管理"></a>四、MySQL缓存管理</h1><h2 id="1-缓存的内存管理"><a href="#1-缓存的内存管理" class="headerlink" title="1. 缓存的内存管理"></a>1. 缓存的内存管理</h2><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">1.</span> MySQL缓存机制会在内存中开辟一块内存（query<span class="emphasis">_cache_</span>size）区来维护缓存数据，其中大概有40K的空间是用来维护缓存数据的元数据的，</span><br><span class="line">例如空间内存、数据表和查询结果的映射，SQL和查询结果的映射。</span><br><span class="line"><span class="bullet">2.</span> MySQL缓存机制将大内存块分为小内存块（query<span class="emphasis">_cache_</span>min<span class="emphasis">_res_</span>unit)，每个小块中存储自身的类型、大小和查询结果数据，还有前后内存块的指针。</span><br><span class="line"><span class="bullet">3.</span> MySQL缓存机制会在SQL查询开始（还未得到结果）时就去申请一块内存空间，所以即使缓存数据没有达到这个大小也需要占用申请的内存块空间（like linux filesystem’s block)。</span><br><span class="line">如果超出申请内存块的大小，则需要再申请一个内存块。当查询完成发现申请的内存有富余，则会将富余的内存空间释放掉，因而可能会造成内存碎片。</span><br></pre></td></tr></table></figure>
+<h2 id="2-缓存失败"><a href="#2-缓存失败" class="headerlink" title="2. 缓存失败"></a>2. 缓存失败</h2><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">1.</span> 当某个表正在写入数据，则这个表的缓存将会处于失效状态</span><br><span class="line"><span class="bullet">2.</span> 在InnoDB中，如果某个事务修改了表，则这个表的缓存在事务提交前都会处于失效状态，即在事务提交前，这个表的相关查询都无法被缓存</span><br></pre></td></tr></table></figure>
+
+<h1 id="五、缓存的使用时机"><a href="#五、缓存的使用时机" class="headerlink" title="五、缓存的使用时机"></a>五、缓存的使用时机</h1><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">1.</span> 通过缓存命中率判断</span><br><span class="line">缓存命中率 = 缓存命中次数 (Qcache<span class="emphasis">_hits) / 查询次数 (Com_</span>select)</span><br><span class="line"></span><br><span class="line"><span class="bullet">2.</span> 通过缓存写入率判断</span><br><span class="line">写入率 = 缓存写入次数 (Qcache<span class="emphasis">_inserts) / 查询次数 (Qcache_</span>inserts)</span><br><span class="line"></span><br><span class="line"><span class="bullet">3.</span> 通过命中-写入率判断</span><br><span class="line">比率 = 命中次数 (Qcache<span class="emphasis">_hits) / 写入次数 (Qcache_</span>inserts),</span><br><span class="line"></span><br><span class="line">高性能MySQL中称之为比较能反映性能提升的指数，一般来说达到3:1则算是查询缓存有效，而最好能够达到10:1</span><br></pre></td></tr></table></figure>
+<h1 id="六、缓存参数配置"><a href="#六、缓存参数配置" class="headerlink" title="六、缓存参数配置"></a>六、缓存参数配置</h1><h2 id="1-查看缓存相关配置"><a href="#1-查看缓存相关配置" class="headerlink" title="1. 查看缓存相关配置"></a>1. 查看缓存相关配置</h2><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;<span class="keyword">SHOW</span> VARIABLES <span class="keyword">LIKE</span> <span class="string">&#x27;%query_cache%&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="number">1.</span>query_cache_type</span><br><span class="line">是否打开缓存，可选参数有：</span><br><span class="line">- <span class="keyword">OFF</span>（<span class="number">0</span>）：关闭 ，不使用查询缓存</span><br><span class="line">- <span class="keyword">ON</span>（<span class="number">1</span>）：总是打开 ，始终使用查询缓存</span><br><span class="line">- DEMAND（<span class="number">2</span>）：按需使用查询缓存，只有明确写了SQL_CACHE的查询才会写入缓存</span><br><span class="line"></span><br><span class="line">如果query_cache_type为<span class="number">1</span>而又不想利用查询缓存中的数据，可以用下面的<span class="keyword">SQL</span>：</span><br><span class="line">- <span class="keyword">SELECT</span> SQL_NO_CACHE * <span class="keyword">FROM</span> my_table <span class="keyword">WHERE</span> condition;</span><br><span class="line">如果值为<span class="number">2</span>，要使用缓存的话，需要使用SQL_CACHE开关参数：</span><br><span class="line">- <span class="keyword">SELECT</span> SQL_CACHE * <span class="keyword">FROM</span> my_table <span class="keyword">WHERE</span> condition;</span><br><span class="line"></span><br><span class="line"><span class="number">2.</span>query_cache_size</span><br><span class="line">缓存使用的总内存空间大小，单位是字节，这个值必须是<span class="number">1024</span>的整数倍；否则MySQL实际分配可能跟这个数值不同(感觉这个应该跟文件系统的blcok大小有关)</span><br><span class="line">默认情况下query_cache_size为<span class="number">0</span>，表示为查询缓存预留的内存为<span class="number">0</span>，则无法使用查询缓存</span><br><span class="line">设置query_cache_size的值</span><br><span class="line">- <span class="keyword">SET</span> <span class="keyword">GLOBAL</span> query_cache_size = <span class="number">134217728</span>; <span class="comment">-- 注意值如果设得太小不会生效</span></span><br><span class="line"></span><br><span class="line"><span class="number">3.</span>query_cache_min_res_unit</span><br><span class="line">分配内存块时的最小单位大小</span><br><span class="line"></span><br><span class="line"><span class="number">4.</span>query_cache_limit</span><br><span class="line">MySQL能够缓存的最大结果，如果超出，则增加 Qcache_not_cached的值，并删除查询结果</span><br><span class="line"></span><br><span class="line"><span class="number">5.</span>query_cache_wlock_invalidate</span><br><span class="line">如果某个数据表被锁住，是否仍然从缓存中返回数据，默认是<span class="keyword">OFF</span>，表示仍然可以返回</span><br><span class="line"></span><br><span class="line"><span class="number">6.</span> <span class="keyword">GLOBAL</span> STATUS 中关于缓存的参数解释</span><br><span class="line">Qcache_free_blocks：缓存池中空闲块的个数</span><br><span class="line">Qcache_free_memory：缓存中空闲内存量</span><br><span class="line">Qcache_hits：缓存命中次数</span><br><span class="line">Qcache_inserts：缓存写入次数</span><br><span class="line">Qcache_lowmen_prunes：因内存不足删除缓存次数</span><br><span class="line">Qcache_not_cached：查询未被缓存次数,例如查询结果超出缓存块大小,查询中包含可变函数等</span><br><span class="line">Qcache_queries_in_cache：当前缓存中缓存的<span class="keyword">SQL</span>数量</span><br><span class="line">Qcache_total_blocks：缓存总block数</span><br></pre></td></tr></table></figure>
+
+<h1 id="七、减少缓存碎片策略"><a href="#七、减少缓存碎片策略" class="headerlink" title="七、减少缓存碎片策略"></a>七、减少缓存碎片策略</h1><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">选择合适的<span class="keyword">block</span>大小</span><br><span class="line">使用 <span class="keyword">FLUSH</span> QUERY CACHE 命令整理碎片，这个命令在整理缓存期间，会导致其他连接无法使用查询缓存</span><br></pre></td></tr></table></figure>
+
+<h1 id="八、清空缓存的命令"><a href="#八、清空缓存的命令" class="headerlink" title="八、清空缓存的命令"></a>八、清空缓存的命令</h1><figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RESET QUERY <span class="keyword">CACHE</span>; <span class="comment">// 从查询缓存中移出所有查询。</span></span><br><span class="line">FLUSH TABLES; <span class="comment">//关闭所有打开的表，同时该操作将会清空查询缓存中的内容。</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="九-InnoDB查询缓存"><a href="#九-InnoDB查询缓存" class="headerlink" title="九. InnoDB查询缓存"></a>九. InnoDB查询缓存</h1><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">InnoDB存储引擎会对每个表设置一个事务计数器，里面存储当前最大的事务ID</span><br><span class="line">当一个事务提交时，InnoDB会使用MVCC中系统最大的事务ID更新当前表的计数器</span><br><span class="line">只有比这个最大ID大的事务能使用查询缓存，其他比这个ID小的事务则不能使用查询缓存</span><br><span class="line">在InnoDB中，所有加锁操作的事务都不使用任何查询缓存</span><br><span class="line">查询必须是完全相同的(逐字节相同)才能够被认为是相同的。</span><br><span class="line">查询字符串由于其它原因使用不同的数据库、不同的协议版本或者不同的默认字符集都会被认为是不同的查询而分别进行缓存。</span><br></pre></td></tr></table></figure>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/posts/9ad8d7b0.html" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2022-02-23 01:35:00
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                        <b>#</b> 后端
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/" title="MYSQL">
+                        <b>#</b> MYSQL
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/MYSQL/" title="MYSQL">
+                        <b>#</b> MYSQL
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/posts/7d7d04c8.html" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81-MySQL%E7%BC%93%E5%AD%98%E7%AE%80%E4%BB%8B"><span class="toc-text">一、 MySQL缓存简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-MySQL%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6%E8%AF%B4%E6%98%8E"><span class="toc-text">1. MySQL缓存机制说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-MySQL%E7%BC%93%E5%AD%98%E5%A4%B1%E6%95%88"><span class="toc-text">2. MySQL缓存失效</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">3. 使用场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-%E5%91%BD%E4%B8%AD%E6%9D%A1%E4%BB%B6"><span class="toc-text">二、 命中条件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="toc-text">三、工作流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81MySQL%E7%BC%93%E5%AD%98%E7%AE%A1%E7%90%86"><span class="toc-text">四、MySQL缓存管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%BC%93%E5%AD%98%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="toc-text">1. 缓存的内存管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%BC%93%E5%AD%98%E5%A4%B1%E8%B4%A5"><span class="toc-text">2. 缓存失败</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E7%BC%93%E5%AD%98%E7%9A%84%E4%BD%BF%E7%94%A8%E6%97%B6%E6%9C%BA"><span class="toc-text">五、缓存的使用时机</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E7%BC%93%E5%AD%98%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE"><span class="toc-text">六、缓存参数配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%9F%A5%E7%9C%8B%E7%BC%93%E5%AD%98%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE"><span class="toc-text">1. 查看缓存相关配置</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E5%87%8F%E5%B0%91%E7%BC%93%E5%AD%98%E7%A2%8E%E7%89%87%E7%AD%96%E7%95%A5"><span class="toc-text">七、减少缓存碎片策略</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E6%B8%85%E7%A9%BA%E7%BC%93%E5%AD%98%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="toc-text">八、清空缓存的命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B9%9D-InnoDB%E6%9F%A5%E8%AF%A2%E7%BC%93%E5%AD%98"><span class="toc-text">九. InnoDB查询缓存</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="gitee" target="_blank" rel="noopener" href="https://gitee.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + mysql%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6 + '&url=' + http%3A%2F%2Fyoursite.com%2Fposts%2F583a888f.html + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://yoursite.com/posts/583a888f.html" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

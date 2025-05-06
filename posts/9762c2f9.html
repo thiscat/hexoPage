@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="cat" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      MYSQL ORDER BY 详解 
+      
+      
+      |
+    
+     thisofcat
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <link rel="icon" href="/images/logo.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/logo.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">cat</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">MYSQL ORDER BY 详解</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2023-02-09 16:00:00
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                    <b>#</b> 后端
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/" title="MYSQL">
+                    <b>#</b> MYSQL
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/%E7%B4%A2%E5%BC%95/" title="索引">
+                    <b>#</b> 索引
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/MYSQL/" title="MYSQL">
+                    <b>#</b> MYSQL
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E7%B4%A2%E5%BC%95/" title="索引">
+                    <b>#</b> 索引
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>&lt;Excerpt in index | 首页摘要&gt;</p>
+<span id="more"></span>
+<p>&lt;The rest of contents | 余下全文&gt;</p>
+<h1 id="ORDER-BY-能否走索引及原理"><a href="#ORDER-BY-能否走索引及原理" class="headerlink" title="ORDER BY 能否走索引及原理"></a>ORDER BY 能否走索引及原理</h1><p><a target="_blank" rel="noopener" href="https://www.teqng.com/2021/09/10/%E7%9C%8B%E4%B8%80%E9%81%8D%E5%B0%B1%E7%90%86%E8%A7%A3%EF%BC%9Aorder-by%E8%AF%A6%E8%A7%A3">参考链接</a></p>
+<h1 id="是否走索引"><a href="#是否走索引" class="headerlink" title="是否走索引"></a>是否走索引</h1><ol>
+<li>如果其中任何一个字段没有建立索引，那么order by就不会走索引，而是利用filesort进行辅助排序</li>
+<li>要想使多个字段能够满足索引查询的话，需要给这些个字段建立联合索引，并且出现在order by后面的顺序需要满足最左前缀匹配原则，否则的话会出现filesort的情况而不会走索引。</li>
+</ol>
+<h1 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h1><h2 id="全字段排序"><a href="#全字段排序" class="headerlink" title="全字段排序"></a>全字段排序</h2><p>将查询所需的字段全部读取到sort_buffer中，就是全字段排序。  </p>
+<p>MySQL 会给每个查询线程分配一块小内存，用于排序的，称为 sort_buffer。什么时候把字段放进去排序呢，其实是通过idx_city索引找到对应的数据，才把数据放进去啦。</p>
+<p>执行流程:</p>
+<ol>
+<li>MySQL 为对应的线程初始化sort_buffer，放入需要查询的name、age、city字段</li>
+<li>从索引树idx_city， 找到第一个满足 city&#x3D;’深圳’条件的主键 id，也就是图中的id&#x3D;9；</li>
+<li>到主键 id 索引树拿到id&#x3D;9的这一行数据， 取name、age、city三个字段的值，存到sort_buffer；</li>
+<li>从索引树idx_city 拿到下一个记录的主键 id，即图中的id&#x3D;13；</li>
+<li>重复步骤 3、4 直到city的值不等于深圳为止；</li>
+<li>前面5步已经查找到了所有city为深圳的数据，在 sort_buffer中，将所有数据根据age进行排序；</li>
+<li>按照排序结果取前10行返回给客户端。<br><img src="/images/%E5%90%8E%E7%AB%AF/mysql/%E5%85%A8%E5%AD%97%E6%AE%B5%E6%8E%92%E5%BA%8F.png" alt="执行示意图"></li>
+</ol>
+<h2 id="磁盘临时文件辅助排序"><a href="#磁盘临时文件辅助排序" class="headerlink" title="磁盘临时文件辅助排序"></a>磁盘临时文件辅助排序</h2><p>实际上，sort_buffer的大小是由一个参数控制的：sort_buffer_size。如果要排序的数据小于sort_buffer_size，排序在sort_buffer 内存中完成，如果要排序的数据大于sort_buffer_size，则借助磁盘文件来进行排序</p>
+<p>执行流程:</p>
+<ol>
+<li>从主键Id索引树，拿到需要的数据，并放到sort_buffer内存块中。当sort_buffer快要满时，就对sort_buffer中的数据排序，排完后，把数据临时放到磁盘一个小文件中。</li>
+<li>继续回到主键 id 索引树取数据，继续放到sort_buffer内存中，排序后，也把这些数据写入到磁盘临时小文件中。</li>
+<li>继续循环，直到取出所有满足条件的数据。最后把磁盘的临时排好序的小文件，合并成一个有序的大文件。</li>
+</ol>
+<h2 id="rowid-排序"><a href="#rowid-排序" class="headerlink" title="rowid 排序"></a>rowid 排序</h2><p>rowid 排序就是，只把查询SQL需要用于排序的字段和主键id，放到sort_buffer中。那怎么确定走的是全字段排序还是rowid 排序排序呢？  </p>
+<p>实际上有个参数控制的。这个参数就是max_length_for_sort_data，它表示MySQL用于排序行数据的长度的一个参数，如果单行的长度超过这个值，MySQL 就认为单行太大，就换rowid 排序。我们可以通过命令看下这个参数取值。  </p>
+<p>max_length_for_sort_data 默认值是1024。因为本文示例中name,age,city长度&#x3D;64+4+64 &#x3D;132 &lt; 1024, 所以走的是全字段排序。我们来改下这个参数，改小一点。</p>
+<p>执行流程:</p>
+<ol>
+<li>MySQL 为对应的线程初始化sort_buffer，放入需要排序的age字段，以及主键id；</li>
+<li>从索引树idx_city， 找到第一个满足 city&#x3D;’深圳’条件的主键 id，也就是图中的id&#x3D;9；</li>
+<li>到主键 id 索引树拿到id&#x3D;9的这一行数据， 取age和主键id的值，存到sort_buffer；</li>
+<li>从索引树idx_city 拿到下一个记录的主键 id，即图中的id&#x3D;13；</li>
+<li>重复步骤 3、4 直到city的值不等于深圳为止；</li>
+<li>前面5步已经查找到了所有city为深圳的数据，在 sort_buffer中，将所有数据根据age进行排序；</li>
+<li>遍历排序结果，取前10行，并按照 id 的值回到原表中，取出city、name 和 age 三个字段返回给客户端。</li>
+</ol>
+<p><img src="/images/%E5%90%8E%E7%AB%AF/mysql/ROWID%E6%8E%92%E5%BA%8F.png" alt="执行示意图"></p>
+<h2 id="全字段排序与rowid排序对比"><a href="#全字段排序与rowid排序对比" class="headerlink" title="全字段排序与rowid排序对比"></a>全字段排序与rowid排序对比</h2><ol>
+<li>全字段排序：sort_buffer内存不够的话，就需要用到磁盘临时文件，造成磁盘访问。</li>
+<li>rowid排序：sort_buffer可以放更多数据，但是需要再回到原表去取数据，比全字段排序多一次回表。</li>
+</ol>
+<p>一般情况下，对于InnoDB存储引擎，会优先使用全字段排序。可以发现 max_length_for_sort_data 参数设置为1024，这个数比较大的。一般情况下，排序字段不会超过这个值，也就是都会走全字段排序。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/posts/5532bb23.html" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2023-02-09 16:00:00
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                        <b>#</b> 后端
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/" title="MYSQL">
+                        <b>#</b> MYSQL
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/%E7%B4%A2%E5%BC%95/" title="索引">
+                        <b>#</b> 索引
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/MYSQL/" title="MYSQL">
+                        <b>#</b> MYSQL
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E7%B4%A2%E5%BC%95/" title="索引">
+                        <b>#</b> 索引
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/posts/1eee99d3.html" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ORDER-BY-%E8%83%BD%E5%90%A6%E8%B5%B0%E7%B4%A2%E5%BC%95%E5%8F%8A%E5%8E%9F%E7%90%86"><span class="toc-text">ORDER BY 能否走索引及原理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%98%AF%E5%90%A6%E8%B5%B0%E7%B4%A2%E5%BC%95"><span class="toc-text">是否走索引</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-text">工作原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%A8%E5%AD%97%E6%AE%B5%E6%8E%92%E5%BA%8F"><span class="toc-text">全字段排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A3%81%E7%9B%98%E4%B8%B4%E6%97%B6%E6%96%87%E4%BB%B6%E8%BE%85%E5%8A%A9%E6%8E%92%E5%BA%8F"><span class="toc-text">磁盘临时文件辅助排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rowid-%E6%8E%92%E5%BA%8F"><span class="toc-text">rowid 排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%A8%E5%AD%97%E6%AE%B5%E6%8E%92%E5%BA%8F%E4%B8%8Erowid%E6%8E%92%E5%BA%8F%E5%AF%B9%E6%AF%94"><span class="toc-text">全字段排序与rowid排序对比</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="gitee" target="_blank" rel="noopener" href="https://gitee.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + MYSQL%20ORDER%20BY%20%E8%AF%A6%E8%A7%A3 + '&url=' + http%3A%2F%2Fyoursite.com%2Fposts%2F9762c2f9.html + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://yoursite.com/posts/9762c2f9.html" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

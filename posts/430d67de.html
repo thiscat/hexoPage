@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="cat" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      杂记 
+      
+      
+      |
+    
+     thisofcat
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <link rel="icon" href="/images/logo.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/logo.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">cat</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">杂记</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2017-11-07 01:56:27
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                    <b>#</b> 后端
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/php/" title="php">
+                    <b>#</b> php
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/php/" title="php">
+                    <b>#</b> php
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>&lt;Excerpt in index | 首页摘要&gt;</p>
+<span id="more"></span>
+<p>&lt;The rest of contents | 余下全文&gt;</p>
+<h1 id="php数组遍历顺序"><a href="#php数组遍历顺序" class="headerlink" title="php数组遍历顺序"></a>php数组遍历顺序</h1><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">foreach</span>通过移动数组内部指针实现遍历顺序，遍历结束，指针指向末端。此时获取指针位置(使用移动指针的命令prev/next/<span class="keyword">current</span>/<span class="keyword">end</span>/<span class="keyword">each</span>)将失败,需要执行<span class="keyword">reset</span>才行。</span><br><span class="line"><span class="keyword">foreach</span>遍历顺序是根据元素插入数组的先后顺序遍历的。</span><br><span class="line">按照数字索引大小进行循环应该使用<span class="keyword">for</span>。</span><br></pre></td></tr></table></figure>
+
+<h1 id="字符和0比较"><a href="#字符和0比较" class="headerlink" title="字符和0比较"></a>字符和0比较</h1><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>和任意不可转化为数字的字符串比较(操作符为==), 均返回 <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="php-float写入redis导致精度丢失"><a href="#php-float写入redis导致精度丢失" class="headerlink" title="php float写入redis导致精度丢失"></a>php float写入redis导致精度丢失</h1><h1 id="php-配置中小数都是转换为double-读取14位数-第十五位四舍五入"><a href="#php-配置中小数都是转换为double-读取14位数-第十五位四舍五入" class="headerlink" title="php 配置中小数都是转换为double,读取14位数,第十五位四舍五入"></a>php 配置中小数都是转换为double,读取14位数,第十五位四舍五入</h1><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">; The number of significant digits displayed in floating point numbers.</span></span><br><span class="line"><span class="comment">; http://php.net/precision</span></span><br><span class="line"><span class="attribute">precision</span> <span class="operator">=</span> <span class="number">14</span></span><br></pre></td></tr></table></figure>
+<h1 id="redis的小数会转换为double-double双精度浮点数据的有效位是16位-导致偏差"><a href="#redis的小数会转换为double-double双精度浮点数据的有效位是16位-导致偏差" class="headerlink" title="redis的小数会转换为double, double双精度浮点数据的有效位是16位,导致偏差"></a>redis的小数会转换为double, double双精度浮点数据的有效位是16位,导致偏差</h1><h1 id="php-float写入-hSet-zAdd-sAdd-lPush-redis时-需要转换为sting类型"><a href="#php-float写入-hSet-zAdd-sAdd-lPush-redis时-需要转换为sting类型" class="headerlink" title="php float写入(hSet zAdd sAdd lPush)redis时,需要转换为sting类型"></a>php float写入(hSet zAdd sAdd lPush)redis时,需要转换为sting类型</h1><h1 id="md5-file替代方式"><a href="#md5-file替代方式" class="headerlink" title="md5_file替代方式"></a>md5_file替代方式</h1><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$url</span> = <span class="string">&#x27;http://pic.917.com/2019/07/23/02104856lkwlfyid76qiii.jpg&#x27;</span>;</span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(<span class="title function_ invoke__">md5_file</span>(<span class="variable">$url</span>));</span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(<span class="title function_ invoke__">md5</span>(<span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$url</span>)));</span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(<span class="title function_ invoke__">md5</span>(<span class="title function_ invoke__">curl_content</span>(<span class="variable">$url</span>)));</span><br></pre></td></tr></table></figure>
+<h1 id="取模计算方式"><a href="#取模计算方式" class="headerlink" title="取模计算方式"></a>取模计算方式</h1><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 先将两个整数看作是正数，再作除法运算:</span></span><br><span class="line"><span class="comment">// 1、能整除时，其值为 0</span></span><br><span class="line"><span class="comment">// 2、不能整除时，其值=除数×(整商+1)-被除数</span></span><br><span class="line"><span class="comment">// 91/26=3.5取3, (3+1)*26 - 91 = 13 </span></span><br><span class="line"><span class="keyword">echo</span> <span class="number">91</span> % <span class="number">26</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="php-hash-hmac-sha256加密对应java加密"><a href="#php-hash-hmac-sha256加密对应java加密" class="headerlink" title="php hash_hmac sha256加密对应java加密"></a>php hash_hmac sha256加密对应java加密</h1><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// php hash加密对应java加密，如果还是不行，可能加密的字符串中存在转义字符</span></span><br><span class="line"><span class="comment">// Java中sha256HMAC后得到的值为二进制,php 也需要转换为二进制</span></span><br><span class="line"><span class="variable">$signature</span> = <span class="title function_ invoke__">hash_hmac</span>(<span class="string">&#x27;sha256&#x27;</span>, <span class="variable">$callback_url</span>, <span class="variable">$akey</span>, <span class="literal">true</span>);</span><br><span class="line"><span class="variable">$signature</span> = <span class="title function_ invoke__">base64_encode</span>(<span class="variable">$signature</span>);</span><br><span class="line"><span class="comment">// java中Base64.encodeBase64URLSafeString(bytes) 会将 特殊字符‘+/’替换为&#x27;-_&#x27;,会将‘=’去掉</span></span><br><span class="line"><span class="comment">// php需要手动处理替换</span></span><br><span class="line"><span class="variable">$signature</span> = <span class="title function_ invoke__">str_replace</span>(<span class="keyword">array</span>(<span class="string">&#x27;+&#x27;</span>,<span class="string">&#x27;/&#x27;</span>),<span class="keyword">array</span>(<span class="string">&#x27;-&#x27;</span>,<span class="string">&#x27;_&#x27;</span>),<span class="variable">$signature</span>);</span><br></pre></td></tr></table></figure>
+
+<h1 id="判断是否纯数字"><a href="#判断是否纯数字" class="headerlink" title="判断是否纯数字"></a>判断是否纯数字</h1><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 判断数字，如果开头是数字的字符串也会判定为数字</span></span><br><span class="line"><span class="title function_ invoke__">is_number</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 判断纯数字</span></span><br><span class="line"><span class="title function_ invoke__">ctype_digit</span>();</span><br></pre></td></tr></table></figure>
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/posts/d271472.html" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2017-11-07 01:56:27
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                        <b>#</b> 后端
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/php/" title="php">
+                        <b>#</b> php
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/php/" title="php">
+                        <b>#</b> php
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/posts/4fe082bb.html" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#php%E6%95%B0%E7%BB%84%E9%81%8D%E5%8E%86%E9%A1%BA%E5%BA%8F"><span class="toc-text">php数组遍历顺序</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E5%92%8C0%E6%AF%94%E8%BE%83"><span class="toc-text">字符和0比较</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#php-float%E5%86%99%E5%85%A5redis%E5%AF%BC%E8%87%B4%E7%B2%BE%E5%BA%A6%E4%B8%A2%E5%A4%B1"><span class="toc-text">php float写入redis导致精度丢失</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#php-%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%B0%8F%E6%95%B0%E9%83%BD%E6%98%AF%E8%BD%AC%E6%8D%A2%E4%B8%BAdouble-%E8%AF%BB%E5%8F%9614%E4%BD%8D%E6%95%B0-%E7%AC%AC%E5%8D%81%E4%BA%94%E4%BD%8D%E5%9B%9B%E8%88%8D%E4%BA%94%E5%85%A5"><span class="toc-text">php 配置中小数都是转换为double,读取14位数,第十五位四舍五入</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#redis%E7%9A%84%E5%B0%8F%E6%95%B0%E4%BC%9A%E8%BD%AC%E6%8D%A2%E4%B8%BAdouble-double%E5%8F%8C%E7%B2%BE%E5%BA%A6%E6%B5%AE%E7%82%B9%E6%95%B0%E6%8D%AE%E7%9A%84%E6%9C%89%E6%95%88%E4%BD%8D%E6%98%AF16%E4%BD%8D-%E5%AF%BC%E8%87%B4%E5%81%8F%E5%B7%AE"><span class="toc-text">redis的小数会转换为double, double双精度浮点数据的有效位是16位,导致偏差</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#php-float%E5%86%99%E5%85%A5-hSet-zAdd-sAdd-lPush-redis%E6%97%B6-%E9%9C%80%E8%A6%81%E8%BD%AC%E6%8D%A2%E4%B8%BAsting%E7%B1%BB%E5%9E%8B"><span class="toc-text">php float写入(hSet zAdd sAdd lPush)redis时,需要转换为sting类型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#md5-file%E6%9B%BF%E4%BB%A3%E6%96%B9%E5%BC%8F"><span class="toc-text">md5_file替代方式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%96%E6%A8%A1%E8%AE%A1%E7%AE%97%E6%96%B9%E5%BC%8F"><span class="toc-text">取模计算方式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#php-hash-hmac-sha256%E5%8A%A0%E5%AF%86%E5%AF%B9%E5%BA%94java%E5%8A%A0%E5%AF%86"><span class="toc-text">php hash_hmac sha256加密对应java加密</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%A4%E6%96%AD%E6%98%AF%E5%90%A6%E7%BA%AF%E6%95%B0%E5%AD%97"><span class="toc-text">判断是否纯数字</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="gitee" target="_blank" rel="noopener" href="https://gitee.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E6%9D%82%E8%AE%B0 + '&url=' + http%3A%2F%2Fyoursite.com%2Fposts%2F430d67de.html + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://yoursite.com/posts/430d67de.html" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

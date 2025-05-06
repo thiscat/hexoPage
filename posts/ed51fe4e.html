@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="cat" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      YII日志功能 
+      
+      
+      |
+    
+     thisofcat
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <link rel="icon" href="/images/logo.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/logo.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">cat</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">YII日志功能</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2017-11-07 01:56:27
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                    <b>#</b> 后端
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/php/" title="php">
+                    <b>#</b> php
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/php/%E6%A1%86%E6%9E%B6/" title="框架">
+                    <b>#</b> 框架
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/php/%E6%A1%86%E6%9E%B6/YII/" title="YII">
+                    <b>#</b> YII
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/php/" title="php">
+                    <b>#</b> php
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>&lt;Excerpt in index | 首页摘要&gt;</p>
+<span id="more"></span>
+<p>&lt;The rest of contents | 余下全文&gt;</p>
+<figure class="highlight zephir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">yii日志功能详解：</span><br><span class="line">一、基本日志功能</span><br><span class="line"></span><br><span class="line">详细的介绍查看官网的document：http:<span class="comment">//www.yiiframework.com/doc/guide/1.1/en/topics.logging</span></span><br><span class="line"></span><br><span class="line">也可以看 Yii <span class="number">1.1</span> Application Development Cookbook     这本书很好</span><br><span class="line"></span><br><span class="line">默认的日志是输出到<span class="keyword">protected</span>/runtime/application.log </span><br><span class="line"></span><br><span class="line">如果需要修改那么需要在main.php里面的 components 下面增加log配置，如下：</span><br><span class="line"></span><br><span class="line"><span class="string">&#x27;preload&#x27;</span> =&gt; <span class="keyword">array</span>(<span class="string">&#x27;log&#x27;</span>),<span class="comment">//这句也必须加上</span></span><br><span class="line"></span><br><span class="line"><span class="string">&#x27;components&#x27;</span> =&gt; <span class="keyword">array</span>( </span><br><span class="line">        <span class="string">&#x27;log&#x27;</span>=&gt;<span class="keyword">array</span>( </span><br><span class="line">            <span class="string">&#x27;class&#x27;</span>=&gt;<span class="string">&#x27;CLogRouter&#x27;</span>, </span><br><span class="line">            <span class="string">&#x27;routes&#x27;</span>=&gt;<span class="keyword">array</span>(</span><br><span class="line">               <span class="comment">//这是一个文件route表示category为test开头的所有类型的输出都会记录到runtime/test.log下面 </span></span><br><span class="line">                 <span class="keyword">array</span>( </span><br><span class="line">                     <span class="string">&#x27;class&#x27;</span>=&gt;<span class="string">&#x27;CFileLogRoute&#x27;</span>, </span><br><span class="line">                     <span class="string">&#x27;levels&#x27;</span>=&gt;<span class="string">&#x27;trace, info, debug, warn, error, fatal, profile&#x27;</span>, </span><br><span class="line">                     <span class="string">&#x27;categories&#x27;</span>=&gt;<span class="string">&#x27;test.*&#x27;</span>, </span><br><span class="line">                     <span class="string">&#x27;maxFileSize&#x27;</span>=&gt;<span class="number">1048576</span>,<span class="comment">//单文件最大1G </span></span><br><span class="line">                     <span class="string">&#x27;logFile&#x27;</span>=&gt;<span class="string">&#x27;test.log&#x27;</span>, </span><br><span class="line">                 ), </span><br><span class="line">                  <span class="comment">// </span></span><br><span class="line">  </span><br><span class="line"><span class="comment">//                开发过程中所有日志直接输出到浏览器了，这样不需要登录服务器看日志了    </span></span><br><span class="line"></span><br><span class="line">                     </span><br><span class="line">                 <span class="keyword">array</span>( </span><br><span class="line">                    <span class="string">&#x27;class&#x27;</span> =&gt; <span class="string">&#x27;CWebLogRoute&#x27;</span>, <span class="comment">//在页面上显示日志</span></span><br><span class="line">                    <span class="string">&#x27;categories&#x27;</span> =&gt; <span class="string">&#x27;test.*&#x27;</span>, </span><br><span class="line">                    <span class="string">&#x27;levels&#x27;</span> =&gt; CLogger::LEVEL_PROFILE, </span><br><span class="line">                    <span class="string">&#x27;showInFireBug&#x27;</span> =&gt; <span class="keyword">true</span>, <span class="comment">//在console显示日志</span></span><br><span class="line">                    <span class="string">&#x27;ignoreAjaxInFireBug&#x27;</span> =&gt; <span class="keyword">true</span>, </span><br><span class="line">                ), </span><br><span class="line">                <span class="keyword">array</span>( </span><br><span class="line">                    <span class="string">&#x27;class&#x27;</span> =&gt; <span class="string">&#x27;CWebLogRoute&#x27;</span>, </span><br><span class="line">                    <span class="string">&#x27;categories&#x27;</span> =&gt; <span class="string">&#x27;test.* &#x27;</span>, </span><br><span class="line">                ), </span><br><span class="line"></span><br><span class="line">                <span class="keyword">array</span>( </span><br><span class="line">                    <span class="string">&#x27;class&#x27;</span>=&gt;<span class="string">&#x27;CEmailLogRoute&#x27;</span>, </span><br><span class="line">                    <span class="string">&#x27;levels&#x27;</span>=&gt;<span class="string">&#x27;error, warning&#x27;</span>, </span><br><span class="line">                    <span class="string">&#x27;emails&#x27;</span>=&gt;<span class="string">&#x27;admin@example.com&#x27;</span>, </span><br><span class="line">                ), </span><br><span class="line">            ), </span><br><span class="line">        ), </span><br><span class="line">  </span><br><span class="line">    ),</span><br><span class="line"></span><br><span class="line">如果在某处调用了Yii::log(<span class="string">&quot;jdkshgds&quot;</span>,<span class="string">&quot;info&quot;</span>,<span class="string">&#x27;test.xx&#x27;</span>);</span><br><span class="line"></span><br><span class="line">这个log首先被记录在了内存中一个CLogger类的<span class="keyword">array</span>中，然后会逐一的判断每个LogRoute，判断是否需要输出，注意是逐一判断，不是其中一个输出下一个就不管了。</span><br><span class="line"></span><br><span class="line">拿上面的配置来说：</span><br><span class="line"></span><br><span class="line">第一个CFileLogRoute，<span class="string">&#x27;categories&#x27;</span>=&gt;<span class="string">&#x27;test.*&#x27;</span>,levels里包含了info, test.xx满足条件，所以会执行，将这条log输出到test.log中，然后下一个CWebLogRoute， <span class="string">&#x27;levels&#x27;</span> =&gt; CLogger::LEVEL_PROFILE,。而这条log是info的，所以不会执行，再下一个CWebLogRoute，<span class="string">&#x27;categories&#x27;</span> =&gt; <span class="string">&#x27;test.* &#x27;</span>,levels没指定，那就说不过滤，所以这个也会被执行，所以这条log将被输出到浏览器中。</span><br><span class="line"></span><br><span class="line">二、profile功能</span><br><span class="line">另外logger还有一个很强大的功能:profile, </span><br><span class="line"></span><br><span class="line">Yii::beginProfile(<span class="string">&#x27;blockID&#x27;</span>);</span><br><span class="line">...code block being profiled...</span><br><span class="line">Yii::endProfile(<span class="string">&#x27;blockID&#x27;</span>);</span><br><span class="line">这样就能测试这个code block的执行效率了，非常的方便啊。</span><br><span class="line"></span><br><span class="line">更详细的配置查看：http:<span class="comment">//www.yiiframework.com/doc/api/1.1/CProfileLogRoute</span></span><br><span class="line"></span><br><span class="line">然后还有一个很BUG的功能，Profiling SQL Executions</span><br><span class="line"></span><br><span class="line">很多时候sql语句写的不好会非常影响效率的，但是要确定哪一条语句影响了效率就需要profiling了。YII也提供了这个bug级别的功能。具体参看http:<span class="comment">//www.yiiframework.com/doc/api/1.1/CDbConnection#enableProfiling-detail</span></span><br><span class="line"></span><br><span class="line">下面是截取的片段：</span><br><span class="line"></span><br><span class="line">Profiling is especially useful when working with database since SQL executions are often the main performance bottleneck of an application. While we can manually insert   beginProfile   and   endProfile   statements at appropriate places to measure the time spent in each SQL execution, Yii provides a more systematic approach to solve this problem.</span><br><span class="line"></span><br><span class="line">By setting   CDbConnection::enableProfiling   to be <span class="keyword">true</span> in the application configuration, every SQL statement being executed will be profiled. The results can be readily displayed using the aforementioned   CProfileLogRoute , which can show us how much time is spent in executing what SQL statement. We can also call  CDbConnection::getStats()   to retrieve the total number SQL statements executed and their total execution time.</span><br><span class="line"></span><br><span class="line">三、BUG级功能：调试sql query每个语句执行的耗时</span><br><span class="line"></span><br><span class="line">在配置中的log下加上下面这个Route</span><br><span class="line"></span><br><span class="line"><span class="comment">//这个配置专门负责数据库操作的profile </span></span><br><span class="line"><span class="keyword">array</span>( </span><br><span class="line">       <span class="string">&#x27;class&#x27;</span>=&gt;<span class="string">&#x27;CProfileLogRoute&#x27;</span>, </span><br><span class="line">       <span class="string">&#x27;levels&#x27;</span> =&gt; CLogger::LEVEL_PROFILE, </span><br><span class="line">       <span class="string">&#x27;showInFireBug&#x27;</span> =&gt; <span class="keyword">true</span>, </span><br><span class="line">       <span class="string">&#x27;ignoreAjaxInFireBug&#x27;</span> =&gt; <span class="keyword">true</span>, </span><br><span class="line">       <span class="string">&#x27;categories&#x27;</span> =&gt; <span class="string">&#x27;system.db.* &#x27;</span>, <span class="comment">//只记录db的操作日志，其他的忽略 </span></span><br><span class="line">),</span><br><span class="line"></span><br><span class="line">然后在某个controller的某个action中加入：</span><br><span class="line"></span><br><span class="line">Yii::beginProfile(<span class="string">&#x27;db&#x27;</span>, <span class="string">&#x27;pocketpet&#x27;</span>); </span><br><span class="line"><span class="keyword">for</span>($i=<span class="number">0</span>;$i&lt;<span class="number">1000</span>;$i++)&#123; </span><br><span class="line">      $user = UserModel::model()-&gt;findByPk(<span class="string">&quot;1&quot;</span>);<span class="comment">//这里只要是数据库操作就行，这个只是个例子 </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Yii::endProfile(<span class="string">&#x27;db&#x27;</span>, <span class="string">&#x27;pocketpet&#x27;</span>);</span><br><span class="line"></span><br><span class="line">在浏览器中访问这个action，记得先打开firebug，然后firebug中就能看到如下图的记录：</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/%E5%90%8E%E7%AB%AF/php/YII/Yii%E6%97%A5%E5%BF%97.jpg" alt="Tii日志"></p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">相同的query会进行归类，计算total和<span class="keyword">average</span>，这个对于分析还是非常有帮助的。</span><br><span class="line"></span><br><span class="line">也可以将db的日志写到文件，配置如下（不建议使用，还是到浏览器用firebug方便）：</span><br><span class="line"></span><br><span class="line"><span class="built_in">array</span>( </span><br><span class="line">    <span class="string">&#x27;class&#x27;</span>=&gt;<span class="string">&#x27;CFileLogRoute&#x27;</span>, </span><br><span class="line">    <span class="string">&#x27;levels&#x27;</span> =&gt; CLogger<span class="type">::LEVEL_PROFILE</span>, </span><br><span class="line">    <span class="string">&#x27;categories&#x27;</span> =&gt; <span class="string">&#x27;system.db.* &#x27;</span>, <span class="comment">//只记录db的操作日志，其他的忽略 </span></span><br><span class="line">    <span class="string">&#x27;logFile&#x27;</span>=&gt;<span class="string">&#x27;db.log&#x27;</span>, </span><br><span class="line">),</span><br><span class="line"></span><br><span class="line">当然，想要生效还得有下面两步配置:</span><br><span class="line"></span><br><span class="line"><span class="number">1</span> . 记得在index.php, 中加入以下配置，高亮的那些</span><br><span class="line"></span><br><span class="line">$yii = dirname(__FILE__).<span class="string">&#x27;/../yii/framework/yii.php&#x27;</span>;</span><br><span class="line">$config = dirname(__FILE__).<span class="string">&#x27;/protected/config/main.php&#x27;</span>;</span><br><span class="line"></span><br><span class="line">defined(<span class="string">&#x27;YII_DEBUG&#x27;</span>) <span class="literal">or</span> <span class="class"><span class="keyword">define</span></span>(<span class="string">&#x27;YII_DEBUG&#x27;</span>,<span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">defined(<span class="string">&#x27;YII_DEBUG_SHOW_PROFILER&#x27;</span>) <span class="literal">or</span> <span class="class"><span class="keyword">define</span></span>(<span class="string">&#x27;YII_DEBUG_SHOW_PROFILER&#x27;</span>,<span class="literal">true</span>);</span><br><span class="line"><span class="comment">//enable profiling</span></span><br><span class="line">defined(<span class="string">&#x27;YII_DEBUG_PROFILING&#x27;</span>) <span class="literal">or</span> <span class="class"><span class="keyword">define</span></span>(<span class="string">&#x27;YII_DEBUG_PROFILING&#x27;</span>,<span class="literal">true</span>);</span><br><span class="line"><span class="comment">//trace level</span></span><br><span class="line">defined(<span class="string">&#x27;YII_TRACE_LEVEL&#x27;</span>) <span class="literal">or</span> <span class="class"><span class="keyword">define</span></span>(<span class="string">&#x27;YII_TRACE_LEVEL&#x27;</span>,<span class="number">3</span>);</span><br><span class="line"><span class="comment">//execution time</span></span><br><span class="line">defined(<span class="string">&#x27;YII_DEBUG_DISPLAY_TIME&#x27;</span>) <span class="literal">or</span> <span class="class"><span class="keyword">define</span></span>(<span class="string">&#x27;YII_DEBUG_DISPLAY_TIME&#x27;</span>,<span class="literal">false</span>);</span><br><span class="line">require_once($yii);</span><br><span class="line">Yii<span class="type">::createWebApplication</span>($config)-&gt;run();</span><br><span class="line"><span class="number">2.</span> 在main.php主配置文件里面，的components db 里将enableProfiling设置为<span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="string">&#x27;components&#x27;</span> =&gt; <span class="built_in">array</span>(</span><br><span class="line"><span class="string">&#x27;db&#x27;</span> =&gt; <span class="built_in">array</span>(</span><br><span class="line">        <span class="string">&#x27;enableProfiling&#x27;</span> =&gt; <span class="literal">true</span>, <span class="comment">//这个是用来记录日志的，会记录每一条语句执行的时间</span></span><br><span class="line">        <span class="string">&#x27;enableParamLogging&#x27;</span> =&gt; <span class="literal">true</span>,<span class="comment">//true表示包括sql语句的参数在内的信息都会记录到日志里，非常详细</span></span><br><span class="line">    ),</span><br><span class="line">)</span><br><span class="line">四、调用示例</span><br><span class="line">Yii<span class="type">::log</span>(<span class="string">&quot;dfdf&quot;</span>,CLogger<span class="type">::LEVEL_INFO</span>,<span class="string">&quot;example&quot;</span>); </span><br><span class="line">Yii<span class="type">::log</span>(<span class="string">&quot;dfdf&quot;</span>,CLogger<span class="type">::LEVEL_INFO</span>,<span class="string">&quot;example&quot;</span>); </span><br><span class="line">Yii<span class="type">::log</span>(<span class="string">&quot;dfdf&quot;</span>,CLogger<span class="type">::LEVEL_ERROR</span>,<span class="string">&quot;example&quot;</span>); </span><br><span class="line">Yii<span class="type">::trace</span>(<span class="string">&quot;dfdf&quot;</span>, <span class="string">&quot;example&quot;</span>); </span><br><span class="line">Yii<span class="type">::trace</span>(<span class="string">&#x27;example trace message&#x27;</span>, <span class="string">&#x27;example&#x27;</span>); </span><br><span class="line">Yii<span class="type">::log</span>(<span class="string">&#x27;info&#x27;</span>, CLogger<span class="type">::LEVEL_INFO</span>, <span class="string">&#x27;example&#x27;</span>); </span><br><span class="line">Yii<span class="type">::log</span>(<span class="string">&#x27;error&#x27;</span>, CLogger<span class="type">::LEVEL_ERROR</span>, <span class="string">&#x27;example&#x27;</span>); </span><br><span class="line">Yii<span class="type">::log</span>(<span class="string">&#x27;trace&#x27;</span>, CLogger<span class="type">::LEVEL_TRACE</span>, <span class="string">&#x27;example&#x27;</span>); </span><br><span class="line">Yii<span class="type">::log</span>(<span class="string">&#x27;warning&#x27;</span>, CLogger<span class="type">::LEVEL_WARNING</span>, <span class="string">&#x27;example&#x27;</span>); </span><br><span class="line">Yii<span class="type">::beginProfile</span>(<span class="string">&#x27;db&#x27;</span>, <span class="string">&#x27;example&#x27;</span>); </span><br><span class="line">for($i=<span class="number">0</span>;$i&lt;<span class="number">1000</span>;$i++)&#123; </span><br><span class="line">    $user = UserModel<span class="type">::model</span>()-&gt;findByPk(<span class="string">&quot;1&quot;</span>); </span><br><span class="line">&#125; </span><br><span class="line">Yii<span class="type">::endProfile</span>(<span class="string">&#x27;db&#x27;</span>, <span class="string">&#x27;example&#x27;</span>); </span><br><span class="line">echo <span class="string">&#x27;done&#x27;</span>;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/posts/93c14ecb.html" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2017-11-07 01:56:27
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                        <b>#</b> 后端
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/php/" title="php">
+                        <b>#</b> php
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/php/%E6%A1%86%E6%9E%B6/" title="框架">
+                        <b>#</b> 框架
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/php/%E6%A1%86%E6%9E%B6/YII/" title="YII">
+                        <b>#</b> YII
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/php/" title="php">
+                        <b>#</b> php
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/posts/b9cb5dc4.html" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="gitee" target="_blank" rel="noopener" href="https://gitee.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + YII%E6%97%A5%E5%BF%97%E5%8A%9F%E8%83%BD + '&url=' + http%3A%2F%2Fyoursite.com%2Fposts%2Fed51fe4e.html + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://yoursite.com/posts/ed51fe4e.html" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

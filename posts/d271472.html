@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="cat" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      nginx配置文件 
+      
+      
+      |
+    
+     thisofcat
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <link rel="icon" href="/images/logo.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/logo.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">cat</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">nginx配置文件</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2017-11-07 01:56:27
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                    <b>#</b> 后端
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/nginx/" title="nginx">
+                    <b>#</b> nginx
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" title="配置文件">
+                    <b>#</b> 配置文件
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>&lt;Excerpt in index | 首页摘要&gt;</p>
+<span id="more"></span>
+<p>&lt;The rest of contents | 余下全文&gt;</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#作为守护进程运行 Nginx</span></span><br><span class="line"><span class="comment">#daemon on;</span></span><br><span class="line">user www www;</span><br><span class="line"><span class="comment">#工作进程数</span></span><br><span class="line">worker_processes 12;</span><br><span class="line"><span class="comment">#保存进程id号</span></span><br><span class="line">pid logs/nginx.pid;</span><br><span class="line"><span class="comment">#加大 Nginx 所能操作的文件句柄数</span></span><br><span class="line">worker_rlimit_nofile 65535;</span><br><span class="line">events &#123;</span><br><span class="line">    <span class="comment"># 一般是配置nginx连接的特性，如1个word能同时允许多少连接</span></span><br><span class="line">    <span class="comment"># 使用epoll的I/O 模型。linux建议epoll，FreeBSD建议采用kqueue，window下不指定。</span></span><br><span class="line">    use epoll;</span><br><span class="line">    <span class="comment">#每线程最多可接受的连接数，worker_processes * worker_connections</span></span><br><span class="line">    worker_connections 65535;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include mime.types;</span><br><span class="line">    default_type application/octet-stream;</span><br><span class="line">    <span class="comment">#charset gb2312;</span></span><br><span class="line">    <span class="comment"># 开启重写日志</span></span><br><span class="line">    <span class="comment">#rewrite_log on;</span></span><br><span class="line">    <span class="comment"># 隐藏版本号,因为如果设置了该命令，服务器名称就固定了</span></span><br><span class="line">    server_tokens off;</span><br><span class="line">    <span class="comment">#系统错误日志</span></span><br><span class="line">    error_log /data/logs/nginx_error.log  crit;</span><br><span class="line">    server_names_hash_bucket_size 128;</span><br><span class="line">    <span class="comment"># 客户端请求头部的缓冲区大小。这个可以根据你的系统分页大小来设置，一般一个请求的头部大小不会超过1k，不过由于一般系统分页都要大于1k，</span></span><br><span class="line">    <span class="comment"># 所以这里设置为分页大小。分页大小可以用命令getconf PAGESIZE取得。</span></span><br><span class="line">    client_header_buffer_size 32k;</span><br><span class="line">    <span class="comment"># 客户请求头缓冲大小。nginx默认会用client_header_buffer_size这个buffer来读取header值，如果</span></span><br><span class="line">    <span class="comment"># header过大，它会使用large_client_header_buffers来读取。</span></span><br><span class="line">    large_client_header_buffers 4 32k;</span><br><span class="line">    <span class="comment"># 设定通过nginx上传文件的大小</span></span><br><span class="line">    client_max_body_size 8m;</span><br><span class="line">    <span class="comment"># sendfile: 设置为on表示启动高效传输文件的模式。</span></span><br><span class="line">    <span class="comment"># sendfile可以让Nginx在传输文件时直接在磁盘和tcp socket之间传输数据。</span></span><br><span class="line">    <span class="comment"># 如果这个参数不开启，会先在用户空间（Nginx进程空间）申请一个buffer，用read函数把数据从磁盘读到cache，再从cache读取到用户空间的buffer，</span></span><br><span class="line">    <span class="comment"># 再用write函数把数据从用户空间的buffer写入到内核的buffer，最后到tcp socket。开启这个参数后可以让数据不用经过用户buffer</span></span><br><span class="line">    sendfile on;</span><br><span class="line">    <span class="comment">#Linux 内核 tcp_nopush TCP 函数调用，关闭；</span></span><br><span class="line">    <span class="comment"># 此选项允许或禁止使用socke的TCP_CORK的选项，此选项仅在使用sendfile的时候使用</span></span><br><span class="line">    tcp_nopush on;</span><br><span class="line">    <span class="comment">#Linux &amp; FreeBSD 内核 TCP 函数调用，开启；</span></span><br><span class="line">    tcp_nodelay on;</span><br><span class="line">    <span class="comment">#每个链接保存的时长(单位：秒)</span></span><br><span class="line">    keepalive_timeout 60;</span><br><span class="line">    fastcgi_connect_timeout 300;</span><br><span class="line">    fastcgi_send_timeout 300;</span><br><span class="line">    fastcgi_read_timeout 300;</span><br><span class="line">    fastcgi_buffer_size 64k;</span><br><span class="line">    fastcgi_buffers 4 64k;</span><br><span class="line">    <span class="comment"># 默认值是fastcgi_buffer的2倍</span></span><br><span class="line">    fastcgi_busy_buffers_size 128k;</span><br><span class="line">    <span class="comment"># 写入缓存文件使用多大的数据块，默认值是fastcgi_buffer的2倍</span></span><br><span class="line">    fastcgi_temp_file_write_size 128k;</span><br><span class="line">    gzip on;</span><br><span class="line">    gzip_min_length 1k;</span><br><span class="line">    gzip_buffers 4 16k;</span><br><span class="line">    gzip_http_version 1.0;</span><br><span class="line">    gzip_comp_level 2;</span><br><span class="line">    <span class="comment">#gzip_types text/plain text/css application/xml text/javascript;#application/x-javascript;</span></span><br><span class="line">    gzip_types text/plain text/css application/json application/x-javascript application/javascript image/jpeg image/gif image/png text/xml application/xml application/xml+rss text/javascript;</span><br><span class="line"></span><br><span class="line">    gzip_vary on;</span><br><span class="line"></span><br><span class="line">    geo <span class="variable">$whiteiplist</span>  &#123;</span><br><span class="line">        default 1;</span><br><span class="line">        <span class="comment">#127.0.0.1 0;</span></span><br><span class="line">    &#125;</span><br><span class="line">    map <span class="variable">$whiteiplist</span>  <span class="variable">$limit</span> &#123;</span><br><span class="line">        <span class="comment"># 通过remote_addr这个标识来做限制，“binary_”的目的是缩写内存占用量，是限制同一客户端ip地址</span></span><br><span class="line">        1 <span class="variable">$binary_remote_addr</span>;</span><br><span class="line">        0 <span class="string">&quot;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment"># zone=allips:128m表示生成一个大小为10M，名字为one的内存区域，用来存储访问的频次信息</span></span><br><span class="line">    <span class="comment"># rate=50r/s表示允许相同标识的客户端的访问频次，这里限制的是每秒50次，还可以有比如30r/m的</span></span><br><span class="line">    limit_req_zone <span class="variable">$limit</span> zone=allips:128m rate=50r/s;</span><br><span class="line">        log_format access <span class="string">&#x27;$remote_addr - $remote_user [$time_local] $request &#x27;</span></span><br><span class="line">                    <span class="string">&#x27;&quot;$status&quot; $body_bytes_sent &quot;$http_referer&quot; &#x27;</span></span><br><span class="line">                    <span class="string">&#x27;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#x27;</span>;</span><br><span class="line">    server&#123;</span><br><span class="line">        listen      80;</span><br><span class="line">        server_name cat.io;</span><br><span class="line">        <span class="built_in">set</span> <span class="variable">$demain</span> <span class="string">&quot;www.&quot;</span>;</span><br><span class="line">        <span class="keyword">if</span> ( <span class="variable">$http_user_agent</span> ~* <span class="string">&quot;(Mobile|Android|iPhone|Windows Phone|UC|Kindle|SAMSUNG|SonyEricsson|Opera Mini|LG|MOT|BlackBerry|HTC|Nokia|J2ME)&quot;</span> )&#123;</span><br><span class="line">                <span class="built_in">set</span> <span class="variable">$demain</span> <span class="string">&quot;m.&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        rewrite ^/(.*)$ http://<span class="variable">$&#123;demain&#125;</span>cat.io/<span class="variable">$1</span> permanent;</span><br><span class="line">        access_log off;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        <span class="comment">#charset koi8-r;</span></span><br><span class="line"></span><br><span class="line">        root   /data/html/public;</span><br><span class="line">        index  index.html index.htm;</span><br><span class="line">        access_log  /data/logs/hexo.access.log  access;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ( <span class="variable">$http_user_agent</span> ~* <span class="string">&quot;(wordPress|PHP|java\/|curl|scan|bot|Go-http)&quot;</span> )&#123;</span><br><span class="line">             <span class="built_in">return</span> 404;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> ( <span class="variable">$http_user_agent</span> = <span class="string">&quot;&quot;</span> )&#123;</span><br><span class="line">             <span class="built_in">return</span> 404;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment"># 禁止GET外的请求</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$request_method</span> !~* GET)&#123;</span><br><span class="line">            <span class="built_in">return</span> 404;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment"># 禁止访问指定的后缀url</span></span><br><span class="line">        <span class="keyword">if</span> ( <span class="variable">$uri</span> ~* \.(php|java|asp|net|txt|<span class="built_in">log</span>)$)&#123;</span><br><span class="line">            <span class="built_in">return</span> 404;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment"># 禁止包含function exce sh字符串(目前应该是thinkphp漏洞注入相关)</span></span><br><span class="line">        <span class="keyword">if</span> ( <span class="variable">$uri</span> ~* \[<span class="keyword">function</span>|<span class="built_in">exec</span>|mstshash|cookie]$ )&#123;</span><br><span class="line">            <span class="built_in">return</span> 404;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> ( <span class="variable">$uri</span> ~* sh[^A-Za-z]+ )&#123;</span><br><span class="line">            <span class="built_in">return</span> 403;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        error_page  301              /404.html;</span><br><span class="line"></span><br><span class="line">        <span class="comment"># redirect server error pages to the static page /50x.html</span></span><br><span class="line">        <span class="comment">#</span></span><br><span class="line">        error_page   500 502 503 504  /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">            root   /data/html;</span><br><span class="line">        &#125;</span><br><span class="line">        location ~ /\.php &#123;</span><br><span class="line">            deny  all;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/posts/e66d5b16.html" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2017-11-07 01:56:27
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                        <b>#</b> 后端
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/nginx/" title="nginx">
+                        <b>#</b> nginx
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" title="配置文件">
+                        <b>#</b> 配置文件
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/posts/430d67de.html" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="gitee" target="_blank" rel="noopener" href="https://gitee.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + nginx%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6 + '&url=' + http%3A%2F%2Fyoursite.com%2Fposts%2Fd271472.html + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://yoursite.com/posts/d271472.html" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

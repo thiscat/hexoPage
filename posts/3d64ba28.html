@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="cat" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      索引原理 
+      
+      
+      |
+    
+     thisofcat
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <link rel="icon" href="/images/logo.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/logo.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">cat</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">索引原理</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2023-02-09 16:00:00
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                    <b>#</b> 后端
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/" title="MYSQL">
+                    <b>#</b> MYSQL
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/MYSQL/" title="MYSQL">
+                    <b>#</b> MYSQL
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>&lt;Excerpt in index | 首页摘要&gt;</p>
+<span id="more"></span>
+<p>&lt;The rest of contents | 余下全文&gt;</p>
+<p>索引就是帮助数据库高效查找数据的存储结构，存储再磁盘中，需要消耗磁盘IO</p>
+<h1 id="1-存储引擎"><a href="#1-存储引擎" class="headerlink" title="1. 存储引擎"></a>1. 存储引擎</h1><ol>
+<li>myisam 支持表锁，索引和数据分开存储适合跨服务器迁移</li>
+<li>innodb 支持行锁，索引和数据存储再一个文件</li>
+</ol>
+<h1 id="2-索引类型"><a href="#2-索引类型" class="headerlink" title="2. 索引类型"></a>2. 索引类型</h1><h2 id="1-hash索引"><a href="#1-hash索引" class="headerlink" title="1. hash索引"></a>1. hash索引</h2><ol>
+<li>适合精确查询且效率高</li>
+<li>无法排序、不适合范围查询</li>
+<li>hash冲突的情况下需要遍历链表（php数组的实现原理、redis zset 的实现原理类似）</li>
+</ol>
+<h2 id="2-b-tree-和-b-tree-的区别"><a href="#2-b-tree-和-b-tree-的区别" class="headerlink" title="2. b-tree 和 b+tree 的区别"></a>2. b-tree 和 b+tree 的区别</h2><ol>
+<li>b+tree 的数据全部存储在叶子节点，内部节点只存key,一次磁盘IO能获取到更多的节点</li>
+<li>b-tree 的内部节点和叶子节点都存储key和数据，查找数据不需要找到叶子节点，内部节点可以直接返回数据</li>
+<li>b+tree 增加了叶子节点到相邻节点的指针，方便返回查询遍历</li>
+</ol>
+<h1 id="1-聚簇索引和非聚簇索引"><a href="#1-聚簇索引和非聚簇索引" class="headerlink" title="1. 聚簇索引和非聚簇索引"></a>1. 聚簇索引和非聚簇索引</h1><h2 id="1-概念"><a href="#1-概念" class="headerlink" title="1. 概念"></a>1. 概念</h2><ol>
+<li>聚簇索引  :索引和数据存储在一个节点</li>
+<li>非聚簇索引:索引和数据分开存储，通过索引找到数据实际存储的地址</li>
+</ol>
+<h2 id="2-详解"><a href="#2-详解" class="headerlink" title="2. 详解:"></a>2. 详解:</h2><ol>
+<li>innodb 使用的聚簇索引,且默认主键索引为聚簇索引（没有主键索引的时候，选择一个非空索引，还没有则隐式的主键索引），辅助索引指向聚簇索引位置，然后在找到实际存储地址</li>
+<li>myisam 使用非聚簇索引，所有的索引都只需要查询一次就能找到数据</li>
+</ol>
+<h2 id="3-聚簇索引的优势和略势"><a href="#3-聚簇索引的优势和略势" class="headerlink" title="3. 聚簇索引的优势和略势"></a>3. 聚簇索引的优势和略势</h2><ol>
+<li>索引和数据在一起，同一页的数据会被缓存到（buffer）内存中，所以查看同一页数据的时候只需要从内存中取出，</li>
+<li>数据更新之后之只需要维护主键索引即可，辅助索引不受影响</li>
+<li>辅助索引存的是主键索引的值，占用更多的物理空间。所以会受到影响</li>
+<li>使用随机的UUID，数据分布不均匀，导致聚簇索引可能扫全表，降低效率，所以尽量使用自增主键id</li>
+</ol>
+<h1 id="索引原理补充"><a href="#索引原理补充" class="headerlink" title="索引原理补充"></a>索引原理补充</h1><h2 id="1-索引原理"><a href="#1-索引原理" class="headerlink" title="1. 索引原理"></a>1. 索引原理</h2><h3 id="1-磁盘IO："><a href="#1-磁盘IO：" class="headerlink" title="1. 磁盘IO："></a>1. 磁盘IO：</h3><ol>
+<li>寻道时间：指的是磁臂移动到指定磁道所需要的时间，主流磁盘一般在5ms以下</li>
+<li>旋转延迟：指的是我们经常听说的磁盘转速，比如一个磁盘7200转，表示每分钟能转7200次，也就是说1秒钟能转120次，旋转延迟就是1&#x2F;120&#x2F;2 &#x3D; 4.17ms</li>
+<li>传输时间：指的是从磁盘读出或将数据写入磁盘的时间，一般在零点几毫秒，相对于前两个时间可以忽略不计。</li>
+<li>磁盘读取数据靠的是机械运动，每次读取数据花费的时间可以分为寻道时间、旋转延迟、传输时间三个部分。访问一次磁盘的时间，即一次磁盘IO的时间约等于5+4.17 &#x3D; 9ms左右</li>
+</ol>
+<h3 id="2-预读"><a href="#2-预读" class="headerlink" title="2. 预读"></a>2. 预读</h3><ol>
+<li>考虑到磁盘IO是非常高昂的操作，计算机操作系统做了一些优化，当一次IO时，不光把当前磁盘地址的数据，而是把相邻的数据也都读取到内存缓冲区内，因为局部预读性原理告诉我们，当计算机访问一个地址的数据的时候，与其相邻的数据也会很快被访问到。每一次IO读取的数据我们称之为一页(page)</li>
+<li>具体一页有多大数据跟操作系统有关，一般为4k或8k，也就是我们读取一页内的数据时候，实际上才发生了一次IO，这个理论对于索引的数据结构设计非常有帮助。</li>
+</ol>
+<h3 id="3-B-tree"><a href="#3-B-tree" class="headerlink" title="3. B+tree"></a>3. B+tree</h3><ol>
+<li>一次IO将一页的数据加载到内存中</li>
+<li>为什么索引字段尽量小并且数据只存在叶子节点：字节越少，每次IO请求扫描的节点就越多<ol>
+<li>假设当前数据表的数据为N，每个磁盘块的数据项的数量是m，则有h&#x3D;㏒(m+1)N，当数据量N一定的情况下，m越大，h越小；而m &#x3D; 磁盘块的大小 &#x2F; 数据项的大小，磁盘块的大小也就是一个数据页的大小，是固定的，如果数据项占的空间越小，数据项的数量越多，树的高度越低</li>
+</ol>
+</li>
+<li>最左前缀特性：b+数是按照从左到右的顺序来建立搜索树的</li>
+</ol>
+<h2 id="2-索引创建原则"><a href="#2-索引创建原则" class="headerlink" title="2. 索引创建原则"></a>2. 索引创建原则</h2><ol>
+<li>最左前缀原则：mysql会一直向右匹配直到遇到范围查询(&gt;、&lt;、between、like)就停止匹配。联合索引（A,B,C） &#x3D; (A) + (A,B) +(A,B,C)</li>
+<li>&#x3D;和in可以乱序,mysql查询优化器会自动识别成需要使用索引的类型</li>
+<li>尽量选择区分度高的列作为索引</li>
+<li>索引列不能参与计算</li>
+<li>尽量的扩展索引，不要新建索引，入过已经存在A索引 需要加一个新的索引，建议修改原来的索引为（A,B）联合索引</li>
+</ol>
+<h2 id="走索引的情况和不走索引的情况"><a href="#走索引的情况和不走索引的情况" class="headerlink" title="走索引的情况和不走索引的情况"></a>走索引的情况和不走索引的情况</h2><ol>
+<li>in走索引</li>
+<li>范围查询走索引</li>
+<li>模糊查询只有左前缀使用索引</li>
+<li>反向条件不走索引 !&#x3D; 、 &lt;&gt; 、 NOT IN、IS NOT NULL</li>
+<li>对条件计算(使用函数或者算数表达式)不走索引</li>
+<li>查询时必须使用正确的数据类型，字段类型和查询的数据类型对应</li>
+</ol>
+<h3 id="1-OR-是否能走索引及原理"><a href="#1-OR-是否能走索引及原理" class="headerlink" title="1. OR 是否能走索引及原理"></a>1. OR 是否能走索引及原理</h3><ol>
+<li>必须所有的or条件都必须是覆盖索引</li>
+<li>用UNION或者IN替换OR</li>
+</ol>
+<h3 id="4-前缀索引"><a href="#4-前缀索引" class="headerlink" title="4. 前缀索引"></a>4. 前缀索引</h3><ol>
+<li>前缀索引是一种能使索引更小、更快的有效办法，但它也有缺点：MySQL无法使用前缀索引做ORDER BY和GROUP BY操作，也无法使用前缀索引做覆盖扫描。</li>
+</ol>
+<h3 id="其他情况"><a href="#其他情况" class="headerlink" title="其他情况"></a>其他情况</h3><ol>
+<li><a href="./5532bb23.html">MYSQL GROUP BY 详解</a> <a href="./GROUP%20BY%20%E8%AF%A6%E8%A7%A3.md"></a></li>
+<li><a href="./9762c2f9.html">MYSQL ORDER BY 详解</a> <a href="./ORDER%20BY%E8%AF%A6%E8%A7%A3.md"></a></li>
+</ol>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/posts/e56e688.html" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2023-02-09 16:00:00
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                        <b>#</b> 后端
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/" title="MYSQL">
+                        <b>#</b> MYSQL
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/MYSQL/" title="MYSQL">
+                        <b>#</b> MYSQL
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/posts/5532bb23.html" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E"><span class="toc-text">1. 存储引擎</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E7%B4%A2%E5%BC%95%E7%B1%BB%E5%9E%8B"><span class="toc-text">2. 索引类型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-hash%E7%B4%A2%E5%BC%95"><span class="toc-text">1. hash索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-b-tree-%E5%92%8C-b-tree-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">2. b-tree 和 b+tree 的区别</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E8%81%9A%E7%B0%87%E7%B4%A2%E5%BC%95%E5%92%8C%E9%9D%9E%E8%81%9A%E7%B0%87%E7%B4%A2%E5%BC%95"><span class="toc-text">1. 聚簇索引和非聚簇索引</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%A6%82%E5%BF%B5"><span class="toc-text">1. 概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%AF%A6%E8%A7%A3"><span class="toc-text">2. 详解:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E8%81%9A%E7%B0%87%E7%B4%A2%E5%BC%95%E7%9A%84%E4%BC%98%E5%8A%BF%E5%92%8C%E7%95%A5%E5%8A%BF"><span class="toc-text">3. 聚簇索引的优势和略势</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E5%8E%9F%E7%90%86%E8%A1%A5%E5%85%85"><span class="toc-text">索引原理补充</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%B4%A2%E5%BC%95%E5%8E%9F%E7%90%86"><span class="toc-text">1. 索引原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%A3%81%E7%9B%98IO%EF%BC%9A"><span class="toc-text">1. 磁盘IO：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E9%A2%84%E8%AF%BB"><span class="toc-text">2. 预读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-B-tree"><span class="toc-text">3. B+tree</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%B4%A2%E5%BC%95%E5%88%9B%E5%BB%BA%E5%8E%9F%E5%88%99"><span class="toc-text">2. 索引创建原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%B0%E7%B4%A2%E5%BC%95%E7%9A%84%E6%83%85%E5%86%B5%E5%92%8C%E4%B8%8D%E8%B5%B0%E7%B4%A2%E5%BC%95%E7%9A%84%E6%83%85%E5%86%B5"><span class="toc-text">走索引的情况和不走索引的情况</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-OR-%E6%98%AF%E5%90%A6%E8%83%BD%E8%B5%B0%E7%B4%A2%E5%BC%95%E5%8F%8A%E5%8E%9F%E7%90%86"><span class="toc-text">1. OR 是否能走索引及原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%89%8D%E7%BC%80%E7%B4%A2%E5%BC%95"><span class="toc-text">4. 前缀索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E6%83%85%E5%86%B5"><span class="toc-text">其他情况</span></a></li></ol></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="gitee" target="_blank" rel="noopener" href="https://gitee.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E7%B4%A2%E5%BC%95%E5%8E%9F%E7%90%86 + '&url=' + http%3A%2F%2Fyoursite.com%2Fposts%2F3d64ba28.html + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://yoursite.com/posts/3d64ba28.html" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="cat" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      高性能mysql笔记 
+      
+      
+      |
+    
+     thisofcat
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <link rel="icon" href="/images/logo.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/logo.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">cat</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">高性能mysql笔记</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2022-02-16 16:00:00
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                    <b>#</b> 后端
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/" title="MYSQL">
+                    <b>#</b> MYSQL
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/%E9%AB%98%E6%80%A7%E8%83%BDmysql/" title="高性能mysql">
+                    <b>#</b> 高性能mysql
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/MYSQL/" title="MYSQL">
+                    <b>#</b> MYSQL
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>&lt;Excerpt in index | 首页摘要&gt;</p>
+<span id="more"></span>
+<p>&lt;The rest of contents | 余下全文&gt;</p>
+<h1 id="一、加快ALTER-TABLE操作速度"><a href="#一、加快ALTER-TABLE操作速度" class="headerlink" title="一、加快ALTER TABLE操作速度"></a>一、加快ALTER TABLE操作速度</h1><p>MYSQL执行大部分修改表的操作，都是创建新的表，然后从旧的表复制数据到新表，然后删除旧表。</p>
+<h2 id="1-修改默认值"><a href="#1-修改默认值" class="headerlink" title="1.修改默认值"></a>1.修改默认值</h2><p>修改默认值，不触发重建表操作</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;ALTER TABLE table ALTER COLUMN name SET DEFAULT &#x27;&#x27;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-只修改-frm"><a href="#2-只修改-frm" class="headerlink" title="2.只修改.frm"></a>2.只修改.frm</h2><h3 id="1-创建一张相同结构的空表，并进行所需要的修改"><a href="#1-创建一张相同结构的空表，并进行所需要的修改" class="headerlink" title="1. 创建一张相同结构的空表，并进行所需要的修改"></a>1. 创建一张相同结构的空表，并进行所需要的修改</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;CREATE TABLE table_new LIKE table;</span><br><span class="line">mysql&gt;ALTER TABLE table_new MODIFY COLUMN updateTime INT();</span><br></pre></td></tr></table></figure>
+<h3 id="2-执行FLUSH-TABLES-WITH-READ-LOCK-这将会关闭所有正在使用的表，并禁止任何表被打开。"><a href="#2-执行FLUSH-TABLES-WITH-READ-LOCK-这将会关闭所有正在使用的表，并禁止任何表被打开。" class="headerlink" title="2. 执行FLUSH TABLES WITH READ LOCK,这将会关闭所有正在使用的表，并禁止任何表被打开。"></a>2. 执行FLUSH TABLES WITH READ LOCK,这将会关闭所有正在使用的表，并禁止任何表被打开。</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;FLUSH TABLES WITH READ LOCK;</span><br></pre></td></tr></table></figure>
+<h3 id="3-交换-frm"><a href="#3-交换-frm" class="headerlink" title="3. 交换.frm"></a>3. 交换.frm</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">mv</span> table.frm table_tmp.frm</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">mv</span> table_new.frm table.frm</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">mv</span> table_tmp.frm table_new.frm</span></span><br></pre></td></tr></table></figure>
+<h3 id="4-执行UNLOCK-TABLES，释放只读锁"><a href="#4-执行UNLOCK-TABLES，释放只读锁" class="headerlink" title="4. 执行UNLOCK TABLES，释放只读锁"></a>4. 执行UNLOCK TABLES，释放只读锁</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;UNLOCK TABLES;</span><br></pre></td></tr></table></figure>
+<h3 id="5-删除创建的临时表"><a href="#5-删除创建的临时表" class="headerlink" title="5. 删除创建的临时表"></a>5. 删除创建的临时表</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;DROP TABLE table_new;</span><br></pre></td></tr></table></figure>
+
+<h1 id="二、EXPLAIN说明"><a href="#二、EXPLAIN说明" class="headerlink" title="二、EXPLAIN说明"></a>二、EXPLAIN说明</h1><h2 id="1-type说明"><a href="#1-type说明" class="headerlink" title="1.type说明"></a>1.type说明</h2><p>由上到下，性能由最差到最好<br>ALL：Full Table Scan， MySQL将遍历全表以找到匹配的行<br>index：Full Index Scan，index与ALL区别为index类型只遍历索引树<br>range：索引范围扫描，对索引的扫描开始于某一点，返回匹配值域的行，常见于between、&lt;、&gt;等的查询<br>ref：非唯一性索引扫描，返回匹配某个单独值的所有行。常见于使用非唯一索引即唯一索引的非唯一前缀进行的查找<br>eq_ref：唯一性索引扫描，对于每个索引键，表中只有一条记录与之匹配。常见于主键或唯一索引扫描<br>const、system：当MySQL对查询某部分进行优化，并转换为一个常量时，使用这些类型访问。如将主键置于where列表中，MySQL就能将该查询转换为一个常量<br>NULL：MySQL在优化过程中分解语句，执行时甚至不用访问表或索引  </p>
+<h2 id="2-Extra说明"><a href="#2-Extra说明" class="headerlink" title="2.Extra说明"></a>2.Extra说明</h2><p>Using index (JSON property: using_index)<br>表示直接访问索引就能够获取到所需要的数据（覆盖索引），不需要通过索引回表；<br>覆盖索引:一个索引包含（或者说覆盖）所有需要查询的字段的值。我们称之为“覆盖索引”。也不需要回表操作</p>
+<p>Using where (JSON property: attached_condition)<br>表示MySQL服务器在存储引擎收到记录后进行“后过滤”（Post-filter）,如果查询未能使用索引，Using where的作用只是提醒我们MySQL将用where子句来过滤结果集。  这个一般发生在MySQL服务器，而不是存储引擎层。一般发生在不能走索引扫描的情况下或者走索引扫描，但是有些查询条件不在索引当中的情况下。</p>
+<p>Using index condition (JSON property: using_index_condition)<br>通过访问索引元组并首先测试它们以确定是否读取完整表行来读取表。以这种方式，索引信息用于推迟读取完整表行，除非是必要的。</p>
+<p>Using temporary<br>表示MySQL需要使用临时表来存储结果集，常见于排序和分组查询</p>
+<p>Using filesort<br>MySQL中无法利用索引完成的排序操作称为“文件排序”</p>
+<p>Using Index Condition<br>在MySQL 5.6版本后加入的新特性（Index Condition Pushdown）;会先条件过滤索引，过滤完索引后找到所有符合索引条件的数据行，随后用 WHERE 子句中的其他条件去过滤这些数据行；</p>
+<h2 id="3-使用EXTENDED"><a href="#3-使用EXTENDED" class="headerlink" title="3.使用EXTENDED"></a>3.使用EXTENDED</h2><p>额外显示mysql优化后的语句</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;<span class="keyword">EXPLAIN</span> EXTENDED <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">user</span>;</span><br><span class="line">mysql&gt;<span class="keyword">SHOW</span> WARNINGS;</span><br></pre></td></tr></table></figure>
+
+<h1 id="二、索引"><a href="#二、索引" class="headerlink" title="二、索引"></a>二、索引</h1><h2 id="1-索引匹配"><a href="#1-索引匹配" class="headerlink" title="1. 索引匹配"></a>1. 索引匹配</h2><p>全值匹配：和索引中的所有列进行匹配<br>匹配最左前缀：只使用索引的第一列<br>匹配列前缀：只匹配列的值开头部分<br>    (ALTER TABLE ADD KEY(column_name, 4); 可以减少索引大小)<br>匹配范围值：精确匹配某一列并范围匹配另外一列：<br>只访问索引的查询：</p>
+<h2 id="3-选择合适的索引列顺序"><a href="#3-选择合适的索引列顺序" class="headerlink" title="3.选择合适的索引列顺序"></a>3.选择合适的索引列顺序</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;SELECT COUNT(*), SUM(uid=1), SUM(group_id=111) FROM (table);</span><br><span class="line">******************************************************************</span><br><span class="line">    COUNT(*): 20000</span><br><span class="line">    SUM(uid=1): 50</span><br><span class="line">    SUM(group_id=111): 18000</span><br><span class="line">假设输出数据如上，group_id和总数相近，该列添加索引则没有什么意义</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;SELECT COUNT(DISTINCT column1) / COUNT(*) AS column1, COUNT(DISTINCT column2) / COUNT(*) AS column2, COUNT(*) FROM (table);</span><br><span class="line">*******************************************************************</span><br><span class="line">    column1： 0.03</span><br><span class="line">    column2：0.02</span><br><span class="line">索引列按照输出结果值从大到小排列。</span><br><span class="line">mysql&gt;ALTER TABLE (table) ADD KEY (column1, column2);</span><br></pre></td></tr></table></figure>
+
+<h1 id="三、使用索引扫描来做排序"><a href="#三、使用索引扫描来做排序" class="headerlink" title="三、使用索引扫描来做排序"></a>三、使用索引扫描来做排序</h1><p>如果索引不能覆盖查询的全部列，就不得不扫描一条索引就回表查询一次对应的行。这基本上都是随机的IO，通常比顺序全表扫描慢，尤其在IO密集型工作负载时。</p>
+<h2 id="1-必要条件"><a href="#1-必要条件" class="headerlink" title="1.必要条件"></a>1.必要条件</h2><ol>
+<li>索引的列和ORDER BY 子句的顺序完全一致，并且所有列的排序方向一致，才能使用索引排序。</li>
+<li>联表时，必须ORDER BY的列为一个表的列才行，既符合第一条</li>
+<li>必须符合最左前缀要求(前导列为常量时除外)</li>
+<li>前导列(索引前几个列)为常量时(field&#x3D;’xxx’或者ref为常量)，WHERE或者JOIN的这些列指定了常量</li>
+</ol>
+<h2 id="2-ORDER-BY-前导列常量索引排序"><a href="#2-ORDER-BY-前导列常量索引排序" class="headerlink" title="2.ORDER BY 前导列常量索引排序"></a>2.ORDER BY 前导列常量索引排序</h2><p>前导列为常量时，WHERE或者JOIN的这些列指定了常量，即使ORDER BY 不符合最左前缀，也可以按照索引排序。</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">索引(<span class="type">date</span>, uid, custom_id)</span><br><span class="line">mysql&gt;<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> (<span class="keyword">table</span>) <span class="keyword">WHERE</span> <span class="type">date</span>=<span class="string">&#x27;&#x27;</span> <span class="keyword">AND</span> uid=<span class="string">&#x27;x&#x27;</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> custom_id;</span><br></pre></td></tr></table></figure>
+<h2 id="3-索引检测"><a href="#3-索引检测" class="headerlink" title="3.索引检测"></a>3.索引检测</h2><p>pt-duplicate-key-checker：通过分析表结构来找出冗余和重复的索引。<br>pt-index-usage：读取查询日志，并对每条查询进行EXPLAIN操作，然后打印出关于索引和查询的报告，找出未使用的索引和服务质量差的查询。</p>
+<h2 id="4-延迟关联"><a href="#4-延迟关联" class="headerlink" title="4.延迟关联"></a>4.延迟关联</h2><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;<span class="keyword">SELECT</span> 非索引的字段 <span class="keyword">FROM</span> (<span class="keyword">table</span>) <span class="keyword">INNER</span> <span class="keyword">JOIN</span> (<span class="keyword">SELECT</span> <span class="keyword">primary key</span> <span class="keyword">FROM</span> (<span class="keyword">table</span>)) <span class="keyword">AS</span> A <span class="keyword">USING</span> (<span class="keyword">primary key</span>);</span><br><span class="line">mysql&gt;<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> (<span class="keyword">table</span>) <span class="keyword">INNER</span> <span class="keyword">JOIN</span> (<span class="keyword">SELECT</span> id <span class="keyword">FROM</span> (<span class="keyword">table</span>)) <span class="keyword">AS</span> A <span class="keyword">USING</span> (id);</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-数据碎片类型"><a href="#5-数据碎片类型" class="headerlink" title="5. 数据碎片类型:"></a>5. 数据碎片类型:</h2><p>行碎片：<br>    数据行被存储为多个地方的多个片段中。即使查询只从索引中访问一行记录，行碎片也会导致性能下降</p>
+<p>行间碎片：<br>    逻辑上的顺序的页或者行在磁盘上不是顺序存储的。<br>    行间碎片对诸如全表扫描和聚簇索引扫描之类的操作有很大的影响，因为这些操作原本能够从磁盘上顺序存储的数据中获益。</p>
+<p>剩余空间碎片：<br>    数据页中有大量的空余空间。这会导致服务器读取大量不需要的数据，从而造成浪费。</p>
+<p>对于MyISAM表，这三种碎片化都可能发生。InnoDB不会出现短小的行碎片，InnoDB会在移动短小的行并重写到一个片段中。<br>可以通过OPTIMIZE TABLE或者重新导入导出来重新整理数据。</p>
+<p>MyISAM可以通过排序算法重建索引来消除碎片。<br>InnoDB可以通过删除索引，重新创建索引消除碎片。<br>对于不支持OPTIMIZE TABLE的存储引擎，可以通过将表的存储引擎修改为当前的引擎即可。</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;ALERT TABLE (table) ENGINE<span class="operator">=</span>(engine)<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以通过XtraBackUp –stats以非备份的方式运行，只打印索引和表的统计情况，<br>包括页中的数据量和空余空间，也可以用来确定数据的碎片化程度。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">xtrabackup --backup --stats --user=root --password=123456 --datadir=/mydata/data --target-dir=/backdir/fullback</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5.总结"></a>5.总结</h2><p>选择索引和编写利用这些索引的查询时，有如下三个原则：</p>
+<ol>
+<li>单行访问是很慢的。如果服务器从存储中读取一个数据块只是为了获取其中一行，那么就浪费很多工作。<br>最好读取的块尽可能多所需要的行。使用索引可以创建位置引用以提升效率。</li>
+</ol>
+<p>2.按顺序访问范围数据是很快的，这有两个原因。第一，顺序IO不需要多次磁盘寻道，所以比随机IO快很多。<br>第二，如果服务器能够按照需要顺序读取数据，那么不需要再额外的排序操作，并且GROUP BY查询也无需再做排序和将行按组进行聚合计算了。</p>
+<ol start="3">
+<li>索引覆盖查询是很快的。如果一个索引包含所需要的所有列，那么存储引擎就不需要再回表查询找行。这避免了大量的单行访问。</li>
+</ol>
+<h1 id="五、查询优化处理"><a href="#五、查询优化处理" class="headerlink" title="五、查询优化处理"></a>五、查询优化处理</h1><h2 id="1-查询优化器"><a href="#1-查询优化器" class="headerlink" title="1.查询优化器"></a>1.查询优化器</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 查看</span><br><span class="line">msyql<span class="operator">&gt;</span><span class="keyword">select</span> SQL_NO_CACHE <span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> <span class="keyword">user</span>;</span><br><span class="line">mysql<span class="operator">&gt;</span><span class="keyword">show</span> status <span class="keyword">like</span> <span class="string">&#x27;Last_query_cost&#x27;</span>;</span><br><span class="line"># <span class="keyword">value</span>表示优化器认为大概需要做<span class="number">41187</span>个数据页的随机查找才能完成上面的查询。</span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------+--------------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name   <span class="operator">|</span> <span class="keyword">Value</span>        <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------+--------------+</span></span><br><span class="line"><span class="operator">|</span> Last_query_cost <span class="operator">|</span> <span class="number">41187.199000</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------+--------------+</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-查询状态"><a href="#2-查询状态" class="headerlink" title="2.查询状态"></a>2.查询状态</h2><p>对于MySql的连接，或者说一个线程，任何时刻都有一个状态，该状态表示MySql当前正在做什么。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span><span class="keyword">SHOW</span> <span class="keyword">FULL</span> PROCESSLIST;</span><br></pre></td></tr></table></figure>
+<p>sleep<br>线程正在等待客户端发送新的请求</p>
+<p>query<br>线程正在执行查询或者正在将结果发送给客户端</p>
+<p>locked<br>在MySQL的服务层，该线程正在等待表锁。在存储引擎级别实现的行锁，例如InnoDb的行锁，并不会体现在线程状态中</p>
+<p>analying and statistics<br>线程正在收集存储引擎的统计信息，并生成查询的执行计划</p>
+<p>copying to tmp table (on disk)<br>线程正在执行查询，并且将一个结果集复制到一个临时表中。这个状态要么执行GROUP BY，要么文件排序操作，或者UNION操作。<br>如果这个状态后面有”on disk”，表示MySQL正在将一个内存临时表放到磁盘上</p>
+<p>sorting result<br>线程正在对结果集进行排序</p>
+<p>sending data<br>线程可能在多种状态之间传递数据，或者生成结果集，或者在向客户端返回数据</p>
+<h2 id="3-COUNT-优化"><a href="#3-COUNT-优化" class="headerlink" title="3.COUNT(*)优化"></a>3.COUNT(*)优化</h2><p>MyISAM，不带where下的COUNT(*)非常快，可以通过内置的特性直接获取。<br>可以通过以下方式来避免使用WHERE。<br>基于100w数据的情况下，测试出效率由高到低如下：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;<span class="keyword">select</span> count(<span class="keyword">type</span>=<span class="number">1</span> <span class="keyword">or</span> <span class="keyword">NULL</span>),count(<span class="keyword">type</span>=<span class="number">2</span> <span class="keyword">or</span> <span class="keyword">NULL</span>) <span class="keyword">from</span> city_house.(<span class="keyword">table</span>);</span><br><span class="line">mysql&gt;<span class="keyword">select</span> SUM(<span class="keyword">type</span>=<span class="number">1</span>),SUM(<span class="keyword">type</span>=<span class="number">2</span>) <span class="keyword">from</span> city_house.(<span class="keyword">table</span>);</span><br><span class="line">mysql&gt;<span class="keyword">select</span> count(*) <span class="keyword">from</span> city_house.(<span class="keyword">table</span>) <span class="keyword">where</span> <span class="keyword">type</span> = <span class="number">1</span> <span class="keyword">or</span> <span class="keyword">type</span> =<span class="number">2</span> <span class="keyword">GROUP</span> <span class="keyword">by</span> `<span class="keyword">type</span>`;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-LIMIT优化"><a href="#4-LIMIT优化" class="headerlink" title="4.LIMIT优化"></a>4.LIMIT优化</h2><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># <span class="keyword">limit</span>会获取<span class="number">100010</span>，然后抛弃<span class="number">100000</span>条数据。对于获取非索引的字段会很慢</span><br><span class="line">mysql&gt;<span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">limit</span> <span class="number">100000</span>,<span class="number">10</span>;</span><br><span class="line"># 通过延迟关联优化</span><br><span class="line">mysql&gt;<span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">join</span> (<span class="keyword">select</span> id <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">limit</span> <span class="number">100000</span>,<span class="number">10</span>) <span class="keyword">using</span> (id);</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-UNION优化"><a href="#5-UNION优化" class="headerlink" title="5.UNION优化"></a>5.UNION优化</h2><p>MySQL总是通过创建并填充临时表的方式来执行UNION查询。<br>除非确实需要服务器消除重复的行，否则一定要使用UNION ALL。<br>如果没有ALL关键词，MySQL会给临时表加上DISTINCT，这会导致对整个临时表的数据做唯一性检查，这样做代价非常大。</p>
+<h2 id="编写偷懒的UNION，抑制查询"><a href="#编写偷懒的UNION，抑制查询" class="headerlink" title="编写偷懒的UNION，抑制查询"></a>编写偷懒的UNION，抑制查询</h2><p>通过偷懒的UNIONX抑制数据返回。只有当第一个表没有数据时，才会去第二个表查询。<br>一旦在第一个表查询岛数据，我们就定义一个@found变量。我们通过在结果中做一次赋值实现，然后将赋值放在行数greatest中来避免返回额外的数据。<br>为了明确数据来源于哪张表，新增了一个表明的列。最后我们需要在查询的末尾将变量重置为null，这样保证遍历时，不干扰后面的结果。</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;<span class="keyword">select</span> <span class="string">&#x27;base&#x27;</span>,greatest(@<span class="built_in">found</span> := <span class="number">-1</span>, uid) <span class="keyword">as</span> maxuid <span class="keyword">user</span> <span class="keyword">where</span> uid =<span class="number">143557</span></span><br><span class="line"><span class="keyword">union</span> <span class="keyword">all</span></span><br><span class="line"><span class="keyword">select</span> <span class="string">&#x27;info&#x27;</span>,uid <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> uid = <span class="number">143556</span> <span class="keyword">and</span> @<span class="built_in">found</span> <span class="keyword">is</span> <span class="keyword">null</span> <span class="keyword">and</span> (@<span class="built_in">found</span>:=<span class="keyword">NUll</span>) <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="分区表"><a href="#分区表" class="headerlink" title="分区表"></a>分区表</h2><h3 id="分区表原理"><a href="#分区表原理" class="headerlink" title="分区表原理"></a>分区表原理</h3><p>分区表由多个相关的底层表实现，这些底层也是句柄对象表示，所以我们可以直接访问各个分区。<br>存储引擎管理分区的各个底层表和管理普通表一样(所有的底层表都要使用相同的存储引擎)，分区表的索引只是在所有的底层表上各自添加了相同的索引。<br>5.7.6以前文件上存在多个#part的文件</p>
+<p>分区表select insert update delete，分区表都会先打开并锁定所有底层表</p>
+<h3 id="分区表会出现问题的情况"><a href="#分区表会出现问题的情况" class="headerlink" title="分区表会出现问题的情况"></a>分区表会出现问题的情况</h3><ol>
+<li><p>NULL值会导致分区过滤无效<br>当分区方法返回null时，会被存放到第一个分区</p>
+</li>
+<li><p>分区表的列和索引列不匹配<br>如果定义的索引和分区的列不匹配，会导致查询无法进行分区过滤。</p>
+</li>
+<li><p>选择分区的成本可能很高<br>特别范围分区时，服务器需要扫描所有的分区来找到正确的答案。类似这种线性搜索的效果不高，随着分区的增加，成本随着增加，对于大多数系统来说100个左右的分区没有问题</p>
+</li>
+<li><p>打开和锁定所有底层表的成本可能很高  </p>
+</li>
+<li><p>维护分区的成本可能很高<br>重组分区或者ALTER语句的操作，需要先创建临时分区，再复制数据到其中，最后删除原分区</p>
+</li>
+</ol>
+<h3 id="查询优化"><a href="#查询优化" class="headerlink" title="查询优化"></a>查询优化</h3><p>对于访问分区表来说，很重要的一点是在where条件中带入分区列，这样可以过滤掉无须访问的分区。</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 查看优化器是否执行了分区过滤</span><br><span class="line">mysql&gt;<span class="keyword">EXPLAIN</span> PARTITIONS <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">USER</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="绑定变量"><a href="#绑定变量" class="headerlink" title="绑定变量"></a>绑定变量</h3><p>当创建一个绑定变量的SQL时，客户端向服务器发送一个SQL语句的原型。<br>服务器端收到这个SQL语句框架后，解析并保存这个SQL语句的部分执行计划，返回给客户端一个SQL语句处理句柄。以后每次执行这类查询，客户端都执行这个句柄。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;insert into tbname <span class="variable constant_">VALUES</span> (<span class="string">?,</span> <span class="string">?,</span> <span class="string">?)</span>;</span><br></pre></td></tr></table></figure>
+<p>MySql使用绑定变量的时候，可以更高效的执行大量的重复语句：</p>
+<ol>
+<li>在服务器端只要解析一次SQL语句</li>
+<li>在服务器端某些优化器的工作只需要执行一次，因为它会缓存一部分的执行计划。 (如果需要根据传入参数进行计算时，无法缓存这部分计划)</li>
+<li>以二进制的方式只发送参数和句柄，比起每次都发送ASCII码文本效率更高。<br>一个二进制的日期字段只需要三个字节，但如果是ASCII则需要十个字节。<br>不过最大的节省还是来自于BLOB和TEXT字段，绑定变量的形式可以分块传输，而无须一次性传输。<br>二进制协议在客户端也可能节省很多内存，减少了网络开销，另外还节省了将数据从存储原始格式转换为文本格式的开销。</li>
+<li>仅仅是参数，而不是整个查询语句需要发送到服务器端，所以网络开销会更小</li>
+<li>MySQL在存储参数的时候，直接将其存放到缓存中，不再需要在内存中多次复制。</li>
+</ol>
+<p>绑定变量也更安全，无须在应用程序中处理转义，一则更简单，二则也大大减少了SQL注入和攻击的风险。</p>
+<h3 id="全文索引"><a href="#全文索引" class="headerlink" title="全文索引"></a>全文索引</h3><p>MySql优先使用全文索引，然后才使用WHERE</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/posts/2d04e539.html" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2022-02-16 16:00:00
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                        <b>#</b> 后端
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/" title="MYSQL">
+                        <b>#</b> MYSQL
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/%E9%AB%98%E6%80%A7%E8%83%BDmysql/" title="高性能mysql">
+                        <b>#</b> 高性能mysql
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/MYSQL/" title="MYSQL">
+                        <b>#</b> MYSQL
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/posts/9ad8d7b0.html" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%8A%A0%E5%BF%ABALTER-TABLE%E6%93%8D%E4%BD%9C%E9%80%9F%E5%BA%A6"><span class="toc-text">一、加快ALTER TABLE操作速度</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E5%80%BC"><span class="toc-text">1.修改默认值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%8F%AA%E4%BF%AE%E6%94%B9-frm"><span class="toc-text">2.只修改.frm</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%88%9B%E5%BB%BA%E4%B8%80%E5%BC%A0%E7%9B%B8%E5%90%8C%E7%BB%93%E6%9E%84%E7%9A%84%E7%A9%BA%E8%A1%A8%EF%BC%8C%E5%B9%B6%E8%BF%9B%E8%A1%8C%E6%89%80%E9%9C%80%E8%A6%81%E7%9A%84%E4%BF%AE%E6%94%B9"><span class="toc-text">1. 创建一张相同结构的空表，并进行所需要的修改</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%89%A7%E8%A1%8CFLUSH-TABLES-WITH-READ-LOCK-%E8%BF%99%E5%B0%86%E4%BC%9A%E5%85%B3%E9%97%AD%E6%89%80%E6%9C%89%E6%AD%A3%E5%9C%A8%E4%BD%BF%E7%94%A8%E7%9A%84%E8%A1%A8%EF%BC%8C%E5%B9%B6%E7%A6%81%E6%AD%A2%E4%BB%BB%E4%BD%95%E8%A1%A8%E8%A2%AB%E6%89%93%E5%BC%80%E3%80%82"><span class="toc-text">2. 执行FLUSH TABLES WITH READ LOCK,这将会关闭所有正在使用的表，并禁止任何表被打开。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%BA%A4%E6%8D%A2-frm"><span class="toc-text">3. 交换.frm</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%89%A7%E8%A1%8CUNLOCK-TABLES%EF%BC%8C%E9%87%8A%E6%94%BE%E5%8F%AA%E8%AF%BB%E9%94%81"><span class="toc-text">4. 执行UNLOCK TABLES，释放只读锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%88%A0%E9%99%A4%E5%88%9B%E5%BB%BA%E7%9A%84%E4%B8%B4%E6%97%B6%E8%A1%A8"><span class="toc-text">5. 删除创建的临时表</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81EXPLAIN%E8%AF%B4%E6%98%8E"><span class="toc-text">二、EXPLAIN说明</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-type%E8%AF%B4%E6%98%8E"><span class="toc-text">1.type说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Extra%E8%AF%B4%E6%98%8E"><span class="toc-text">2.Extra说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E4%BD%BF%E7%94%A8EXTENDED"><span class="toc-text">3.使用EXTENDED</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%B4%A2%E5%BC%95"><span class="toc-text">二、索引</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%B4%A2%E5%BC%95%E5%8C%B9%E9%85%8D"><span class="toc-text">1. 索引匹配</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84%E7%B4%A2%E5%BC%95%E5%88%97%E9%A1%BA%E5%BA%8F"><span class="toc-text">3.选择合适的索引列顺序</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%BD%BF%E7%94%A8%E7%B4%A2%E5%BC%95%E6%89%AB%E6%8F%8F%E6%9D%A5%E5%81%9A%E6%8E%92%E5%BA%8F"><span class="toc-text">三、使用索引扫描来做排序</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%BF%85%E8%A6%81%E6%9D%A1%E4%BB%B6"><span class="toc-text">1.必要条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-ORDER-BY-%E5%89%8D%E5%AF%BC%E5%88%97%E5%B8%B8%E9%87%8F%E7%B4%A2%E5%BC%95%E6%8E%92%E5%BA%8F"><span class="toc-text">2.ORDER BY 前导列常量索引排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%B4%A2%E5%BC%95%E6%A3%80%E6%B5%8B"><span class="toc-text">3.索引检测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%BB%B6%E8%BF%9F%E5%85%B3%E8%81%94"><span class="toc-text">4.延迟关联</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%95%B0%E6%8D%AE%E7%A2%8E%E7%89%87%E7%B1%BB%E5%9E%8B"><span class="toc-text">5. 数据碎片类型:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%80%BB%E7%BB%93"><span class="toc-text">5.总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E5%A4%84%E7%90%86"><span class="toc-text">五、查询优化处理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E5%99%A8"><span class="toc-text">1.查询优化器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%9F%A5%E8%AF%A2%E7%8A%B6%E6%80%81"><span class="toc-text">2.查询状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-COUNT-%E4%BC%98%E5%8C%96"><span class="toc-text">3.COUNT(*)优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-LIMIT%E4%BC%98%E5%8C%96"><span class="toc-text">4.LIMIT优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-UNION%E4%BC%98%E5%8C%96"><span class="toc-text">5.UNION优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E5%86%99%E5%81%B7%E6%87%92%E7%9A%84UNION%EF%BC%8C%E6%8A%91%E5%88%B6%E6%9F%A5%E8%AF%A2"><span class="toc-text">编写偷懒的UNION，抑制查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%8C%BA%E8%A1%A8"><span class="toc-text">分区表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%8C%BA%E8%A1%A8%E5%8E%9F%E7%90%86"><span class="toc-text">分区表原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%8C%BA%E8%A1%A8%E4%BC%9A%E5%87%BA%E7%8E%B0%E9%97%AE%E9%A2%98%E7%9A%84%E6%83%85%E5%86%B5"><span class="toc-text">分区表会出现问题的情况</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96"><span class="toc-text">查询优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%91%E5%AE%9A%E5%8F%98%E9%87%8F"><span class="toc-text">绑定变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%A8%E6%96%87%E7%B4%A2%E5%BC%95"><span class="toc-text">全文索引</span></a></li></ol></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="gitee" target="_blank" rel="noopener" href="https://gitee.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E9%AB%98%E6%80%A7%E8%83%BDmysql%E7%AC%94%E8%AE%B0 + '&url=' + http%3A%2F%2Fyoursite.com%2Fposts%2F32ec3ef1.html + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://yoursite.com/posts/32ec3ef1.html" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

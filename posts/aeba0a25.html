@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="cat" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      pt-query-digest 慢日志分析 
+      
+      
+      |
+    
+     thisofcat
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <link rel="icon" href="/images/logo.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/logo.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">cat</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">pt-query-digest 慢日志分析</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2022-01-19 16:00:00
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                    <b>#</b> 后端
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/" title="MYSQL">
+                    <b>#</b> MYSQL
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/%E6%85%A2%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" title="慢日志分析">
+                    <b>#</b> 慢日志分析
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/MYSQL/" title="MYSQL">
+                    <b>#</b> MYSQL
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>&lt;Excerpt in index | 首页摘要&gt;</p>
+<span id="more"></span>
+<p>&lt;The rest of contents | 余下全文&gt;</p>
+<h1 id="一、安装"><a href="#一、安装" class="headerlink" title="一、安装"></a>一、安装</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">sudo</span> yum install https://repo.percona.com/yum/percona-release-latest.noarch.rpm</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">sudo</span> percona-release <span class="built_in">enable</span> tools release</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">sudo</span> yum install percona-toolkit</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="二、语法和使用"><a href="#二、语法和使用" class="headerlink" title="二、语法和使用"></a>二、<a target="_blank" rel="noopener" href="https://www.percona.com/doc/percona-toolkit/3.0/pt-query-digest.html">语法和使用</a></h1><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">pt</span>-query-digest mysql-slow.<span class="built_in">log</span></span><br><span class="line"># 指定数据库分析</span><br><span class="line">$ <span class="keyword">pt</span>-query-digest mysql-slow.<span class="built_in">log</span> --<span class="built_in">type</span>=slowlog --<span class="built_in">filter</span> <span class="string">&#x27;($event-&gt;&#123;db&#125; || &quot;&quot;) =~ m/^mysql/i&#x27;</span></span><br><span class="line"># 执行用户分析</span><br><span class="line">$ <span class="keyword">pt</span>-query-digest mysql-slow.<span class="built_in">log</span> --<span class="built_in">type</span>=slowlog --<span class="built_in">filter</span> <span class="string">&#x27;($event-&gt;&#123;user&#125; || &quot;&quot;) =~ m/^root/i&#x27;</span> </span><br></pre></td></tr></table></figure>
+
+<h2 id="1-语法"><a href="#1-语法" class="headerlink" title="1.语法"></a>1.语法</h2><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">pt-query-digest <span class="selector-attr">[OPTIONS]</span> <span class="selector-attr">[FILES]</span> <span class="selector-attr">[DSN]</span></span><br><span class="line"><span class="attr">--create-review-table</span> 当使用<span class="attr">--review</span>参数把分析结果输出到表中时，如果没有表就自动创建。</span><br><span class="line"><span class="attr">--create-history-table</span> 当使用<span class="attr">--history</span>参数把分析结果输出到表中时，如果没有表就自动创建。</span><br><span class="line"><span class="attr">--filter</span> 对输入的慢查询按指定的字符串进行匹配过滤后再进行分析</span><br><span class="line"><span class="attr">--limit</span> 限制输出结果百分比或数量，默认值是<span class="number">20</span>,即将最慢的<span class="number">20</span>条语句输出，如果是<span class="number">50%</span>则按总响应时间占比从大到小排序，输出到总和达到<span class="number">50%</span>位置截止。</span><br><span class="line"><span class="attr">--host</span> mysql服务器地址</span><br><span class="line"><span class="attr">--user</span> mysql用户名</span><br><span class="line"><span class="attr">--password</span> mysql用户密码</span><br><span class="line"><span class="attr">--history</span> 将分析结果保存到表中，分析结果比较详细，下次再使用<span class="attr">--history</span>时，如果存在相同的语句，且查询所在的时间区间和历史表中的不同，则会记录到数据表中，可以通过查询同一CHECKSUM来比较某类型查询的历史变化。</span><br><span class="line"><span class="attr">--review</span> 将分析结果保存到表中，这个分析只是对查询条件进行参数化，一个类型的查询一条记录，比较简单。当下次使用<span class="attr">--review</span>时，如果存在相同的语句分析，就不会记录到数据表中。</span><br><span class="line"><span class="attr">--output</span> 分析结果输出类型，值可以是<span class="built_in">report</span>(标准分析报告)、<span class="built_in">slowlog</span>(Mysql slow log)、json、json-anon，一般使用report，以便于阅读。</span><br><span class="line"><span class="attr">--since</span> 从什么时间开始分析，值为字符串，可以是指定的某个”yyyy-mm-<span class="selector-tag">dd</span> <span class="selector-attr">[hh:mm:ss]</span>”格式的时间点，也可以是简单的一个时间值：<span class="built_in">s</span>(秒)、<span class="built_in">h</span>(小时)、<span class="built_in">m</span>(分钟)、<span class="built_in">d</span>(天)，如<span class="number">12</span>h就表示从<span class="number">12</span>小时前开始统计。</span><br><span class="line"><span class="attr">--until</span> 截止时间，配合—since可以分析一段时间内的慢查询。</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-输出结果解析"><a href="#2-输出结果解析" class="headerlink" title="2.输出结果解析"></a>2.输出结果解析</h2><h3 id="1-总体统计结果"><a href="#1-总体统计结果" class="headerlink" title="(1) 总体统计结果"></a>(1) 总体统计结果</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">用户时间，系统时间，物理内存占用大小，虚拟内存占用大小</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">5.3s user <span class="keyword">time</span>, 530ms system <span class="keyword">time</span>, 28.73M rss, 125.29M vsz</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Current <span class="built_in">date</span>: Thu Jan 20 14:29:24 2022</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Hostname: centos7-v1</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Files: mysql-slow.log</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Overall(总查询数): 13.32k total, 52 unique(唯一查询数), 0.00 QPS(Query Per Second 每秒请求数), 0.00x concurrency(并发数) __________</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># Time range(查询执行的时间范围): 2021-07-22 09:18:21 to 2022-01-19 10:36:09</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Attribute          total     min     max     avg     95%  stddev(标准)  median(中等)</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">============     ======= ======= ======= ======= ======= ======= =======</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Exec <span class="keyword">time</span>         39987s      1s   1964s      3s      7s     22s      2s</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Lock <span class="keyword">time</span>             3s       0   124ms   215us   273us     2ms   194us</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Rows sent        340.80M       0 352.77k  26.21k  83.83k  43.04k   9.33k (发送到客户端行数)</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Rows examine       9.39G       0   6.00M 739.43k   1.39M 479.10k 790.84k (sql扫描行数)</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Query size         6.91M       6  28.34k  544.19  719.66  360.75  719.66 (查询字节数)</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-分组统计结果"><a href="#2-分组统计结果" class="headerlink" title="(2) 分组统计结果"></a>(2) 分组统计结果</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Profile</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">排名 查询指纹 Response <span class="keyword">time</span>：总的响应时间 Calls：执行次数 R/Call：平均每次执行的响应时间</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Rank Query ID                            Response <span class="keyword">time</span>    Calls R/Call</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">==== =================================== ================ ===== =======</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">   1 0xF7E793AD5965FDE698A73EDDF501A102  25710.4656 64.3%  8518  3.0184  1.49 SELECT</span> </span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">   2 0x15945C636C00F53419144C6B43DD503F   6883.2103 17.2%  3061  2.2487  1.74 SELECT</span> </span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">MISC 0xMISC(剩余查询的小时)                5133.6071 12.8%   104 49.3616   0.0 &lt;40 ITEMS&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-查询SQL概况"><a href="#3-查询SQL概况" class="headerlink" title="(3) 查询SQL概况"></a>(3) 查询SQL概况</h3><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"># 查询的顺序号和分组统计的Rank一致。每秒请求数、并发数、查询指纹</span><br><span class="line"># 通过tail -c +<span class="number">968618</span> mysql-slow.log 查看细节</span><br><span class="line"># Query <span class="number">1</span>: <span class="number">0.01</span> QPS, <span class="number">0.02</span>x concurrency, ID <span class="number">0xF7E793AD5965FDE698A73EDDF501A102</span> at byte <span class="number">968618</span></span><br><span class="line"># This item is included <span class="keyword">in</span> the report because it matches --limit.</span><br><span class="line"># V/M：响应时间Variance-to-mean的比率，离差指数。指数高的查询对应的执行时间变化较大，这类查询比较值得优化，通常可以使用--explain 来查看查询的执行计划</span><br><span class="line"># Item：查询对象</span><br><span class="line"># Scores: V/M = <span class="number">1.49</span></span><br><span class="line"># Time range: <span class="number">2022</span><span class="number">-01</span><span class="number">-01</span> <span class="number">10</span>:<span class="number">06</span>:<span class="number">14</span> to <span class="number">2022</span><span class="number">-01</span><span class="number">-17</span> <span class="number">08</span>:<span class="number">01</span>:<span class="number">17</span></span><br><span class="line"># Attribute    pct   total     min     max     avg     <span class="number">95</span>%  stddev  median</span><br><span class="line"># ============ === ======= ======= ======= ======= ======= ======= =======</span><br><span class="line"># Count         <span class="number">63</span>    <span class="number">8518</span></span><br><span class="line"># Exec time     <span class="number">64</span>  <span class="number">25710</span>s      <span class="number">1</span>s     <span class="number">25</span>s      <span class="number">3</span>s      <span class="number">8</span>s      <span class="number">2</span>s      <span class="number">3</span>s</span><br><span class="line"># Lock time     <span class="number">66</span>      <span class="number">2</span>s   <span class="number">116</span>us    <span class="number">33</span>ms   <span class="number">224</span>us   <span class="number">273</span>us   <span class="number">400</span>us   <span class="number">204</span>us</span><br><span class="line"># Rows sent     <span class="number">22</span>  <span class="number">77.18</span>M       <span class="number">0</span>   <span class="number">9.77</span>k   <span class="number">9.28</span>k   <span class="number">9.33</span>k   <span class="number">1.90</span>k   <span class="number">9.33</span>k</span><br><span class="line"># Rows examine  <span class="number">90</span>   <span class="number">8.50</span>G <span class="number">120.04</span>k   <span class="number">1.49</span>M   <span class="number">1.02</span>M   <span class="number">1.46</span>M <span class="number">269.00</span>k <span class="number">961.27</span>k</span><br><span class="line"># Query size    <span class="number">85</span>   <span class="number">5.91</span>M     <span class="number">723</span>     <span class="number">728</span>  <span class="number">727.56</span>  <span class="number">719.66</span>       <span class="number">0</span>  <span class="number">719.66</span></span><br><span class="line"># String:</span><br><span class="line"># Databases    spider_scheduler</span><br><span class="line"># Hosts        localhost</span><br><span class="line"># Users        dataUseWeb</span><br><span class="line"># Query_time distribution</span><br><span class="line"># 查询执行时间分布的直方图：<span class="number">1</span>微妙、<span class="number">10</span>微妙、<span class="number">100</span>微妙、<span class="number">1</span>毫秒、<span class="number">10</span>毫秒、<span class="number">100</span>毫秒，<span class="number">1</span>秒，<span class="number">10</span>秒以上查询的分布情况</span><br><span class="line">#   <span class="number">1</span>us</span><br><span class="line">#  <span class="number">10</span>us</span><br><span class="line"># <span class="number">100</span>us</span><br><span class="line">#   <span class="number">1</span>ms</span><br><span class="line">#  <span class="number">10</span>ms</span><br><span class="line"># <span class="number">100</span>ms</span><br><span class="line">#    <span class="number">1</span>s  ################################################################</span><br><span class="line">#  <span class="number">10</span>s+  #</span><br><span class="line"># Tables</span><br><span class="line">#    SHOW TABLE STATUS FROM `mysql` LIKE <span class="string">&#x27;user&#x27;</span>\G</span><br><span class="line"># 执行计划信息</span><br><span class="line"># EXPLAIN <span class="comment">/*!50100 PARTITIONS*/</span></span><br><span class="line"># 执行的语句</span><br><span class="line">SELECT * FROM mysql.user;</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、常用工具使用"><a href="#三、常用工具使用" class="headerlink" title="三、常用工具使用"></a>三、常用工具使用</h2><h3 id="1-所有工具"><a href="#1-所有工具" class="headerlink" title="1.所有工具"></a>1.所有工具</h3><table cellspacing="0" cellpadding="2" border="1">
+   <tbody>
+    <tr>
+     <td><p>工具类别</p></td>
+     <td><p>工具命令</p></td>
+     <td><p>工具作用</p></td>
+     <td><p>备注</p></td>
+    </tr>
+    <tr>
+     <td rowspan="5"><p>开发类</p></td>
+     <td><p><span lang="EN-US">pt-duplicate-key-checker</span></p></td>
+     <td><p>列出并删除重复的索引和外键</p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-online-schema-change</span></p></td>
+     <td><p>在线修改表结构</p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-query-advisor</span></p></td>
+     <td><p>分析查询语句，并给出建议，有<span lang="EN-US">bug</span></p></td>
+     <td><p>已废弃</p></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-show-grants</span></p></td>
+     <td><p>规范化和打印权限</p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-upgrade</span></p></td>
+     <td><p>在多个服务器上执行查询，并比较不同</p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td rowspan="4"><p>性能类</p></td>
+     <td><p><span lang="EN-US">pt-index-usage</span></p></td>
+     <td><p>分析日志中索引使用情况，并出报告</p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-pmp</span></p></td>
+     <td><p>为查询结果跟踪，并汇总跟踪结果</p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-visual-explain</span></p></td>
+     <td><p>格式化执行计划</p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-table-usage</span></p></td>
+     <td><p>分析日志中查询并分析表使用情况</p></td>
+     <td><p><span lang="EN-US">pt 2.2新增命令</span></p></td>
+    </tr>
+    <tr>
+     <td rowspan="3"><p>配置类</p></td>
+     <td><p><span lang="EN-US">pt-config-diff</span></p></td>
+     <td><p>比较配置文件和参数</p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-mysql-summary</span></p></td>
+     <td><p>对<span lang="EN-US">mysql配置和<span lang="EN-US">status进行汇总</span></span></p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-variable-advisor</span></p></td>
+     <td><p>分析参数，并提出建议</p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td rowspan="5"><p>监控类</p></td>
+     <td><p><span lang="EN-US">pt-deadlock-logger</span></p></td>
+     <td><p>提取和记录<span lang="EN-US">mysql死锁信息</span></p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-fk-error-logger</span></p></td>
+     <td><p>提取和记录外键信息</p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-mext</span></p></td>
+     <td><p>并行查看<span lang="EN-US">status样本信息</span></p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-query-digest</span></p></td>
+     <td><p>分析查询日志，并产生报告</p></td>
+     <td><p>常用命令</p></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-trend</span></p></td>
+     <td><p>按照时间段读取<span lang="EN-US">slow日志信息</span></p></td>
+     <td><p>已废弃</p></td>
+    </tr>
+    <tr>
+     <td rowspan="6"><p>复制类</p></td>
+     <td><p><span lang="EN-US">pt-heartbeat</span></p></td>
+     <td><p>监控<span lang="EN-US">mysql复制延迟</span></p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-slave-delay</span></p></td>
+     <td><p>设定从落后主的时间</p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-slave-find</span></p></td>
+     <td><p>查找和打印所有<span lang="EN-US">mysql复制层级关系</span></p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-slave-restart</span></p></td>
+     <td><p>监控<span lang="EN-US">salve错误，并尝试重启<span lang="EN-US">salve</span></span></p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-table-checksum</span></p></td>
+     <td><p>校验主从复制一致性</p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-table-sync</span></p></td>
+     <td><p>高效同步表数据</p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td rowspan="6"><p>系统类</p></td>
+     <td><p><span lang="EN-US">pt-diskstats</span></p></td>
+     <td><p>查看系统磁盘状态</p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-fifo-split</span></p></td>
+     <td><p>模拟切割文件并输出</p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-summary</span></p></td>
+     <td><p>收集和显示系统概况</p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-stalk</span></p></td>
+     <td><p>出现问题时，收集诊断数据</p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-sift</span></p></td>
+     <td><p>浏览由<span lang="EN-US">pt-stalk创建的文件</span></p></td>
+     <td><p><span lang="EN-US">pt 2.2新增命令</span></p></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-ioprofile</span></p></td>
+     <td><p>查询进程<span lang="EN-US">IO并打印一个<span lang="EN-US">IO活动表</span></span></p></td>
+     <td><p><span lang="EN-US">pt 2.2新增命令</span></p></td>
+    </tr>
+    <tr>
+     <td rowspan="5"><p>实用类</p></td>
+     <td><p><span lang="EN-US">pt-archiver</span></p></td>
+     <td><p>将表数据归档到另一个表或文件中</p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-find</span></p></td>
+     <td><p>查找表并执行命令</p></td>
+     <td></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-kill</span></p></td>
+     <td><p><span lang="EN-US">Kill掉符合条件的<span lang="EN-US">sql</span></span></p></td>
+     <td>常用命令</td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-align</span></p></td>
+     <td><p>对齐其他工具的输出</p></td>
+     <td><p><span lang="EN-US">pt 2.2新增命令</span></p></td>
+    </tr>
+    <tr>
+     <td><p><span lang="EN-US">pt-fingerprint</span></p></td>
+     <td><p>将查询转成密文</p></td>
+     <td><p><span lang="EN-US">pt 2.2新增命令</span></p></td>
+    </tr>
+   </tbody>
+  </table>
+
+<h3 id="2-pt-duplicate-key-checker"><a href="#2-pt-duplicate-key-checker" class="headerlink" title="2.pt-duplicate-key-checker"></a>2.pt-duplicate-key-checker</h3><p>该工具通过分析表结构来找出冗余和重复的索引。</p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">$ pt-duplicate-key-checker --host=<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> --port=<span class="number">3306</span> --user=root --password=pwd --database=test --table=table_name</span><br><span class="line"></span><br><span class="line"># ########################################################################</span><br><span class="line"># test.user</span><br><span class="line"># ########################################################################</span><br><span class="line"></span><br><span class="line"># htype_cat_id is a duplicate <span class="keyword">of</span> cat_id_htype</span><br><span class="line"># Key definitions:</span><br><span class="line">#   KEY `htype_cat_id` (`cat_id`,`htype`) USING BTREE,</span><br><span class="line">#   KEY `cat_id_htype` (`cat_id`,`htype`),</span><br><span class="line"># Column types:</span><br><span class="line">#         `cat_id` int(<span class="number">10</span>) default null comment <span class="string">&#x27;??id,?htype???sell?hid,??chuzu?hid&#x27;</span></span><br><span class="line">#         `htype` tinyint(<span class="number">3</span>) not null comment <span class="string">&#x27;???????? 2:sell  3:chuzu\r\n4:news\r\n5:loupan&#x27;</span></span><br><span class="line"># To remove this duplicate index, execute:</span><br><span class="line">ALTER TABLE `test`.`user` DROP INDEX `htype_cat_id`;</span><br><span class="line"></span><br><span class="line"># ########################################################################</span><br><span class="line"># Summary <span class="keyword">of</span> indexes</span><br><span class="line"># ########################################################################</span><br><span class="line"></span><br><span class="line"># Size Duplicate Indexes   <span class="number">36845855</span></span><br><span class="line"># Total Duplicate Indexes  <span class="number">10</span></span><br><span class="line"># Total Indexes            <span class="number">286</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-pt-index-usage"><a href="#3-pt-index-usage" class="headerlink" title="3.pt-index-usage"></a>3.pt-index-usage</h3><p>读取查询日志，并对每条查询进行EXPLAIN操作，然后打印出关于索引和查询的报告，找出未使用的索引和服务质量差的查询。</p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ pt-index-usage mysql-slow.log --host <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> --user=root --password=pwd</span><br><span class="line"></span><br><span class="line">#################################################################</span><br><span class="line"># A software update is available:</span><br><span class="line"></span><br><span class="line">ALTER TABLE `test`.`user` DROP KEY `source`; -- type:non-unique</span><br></pre></td></tr></table></figure>
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/posts/47cab41d.html" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2022-01-19 16:00:00
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                        <b>#</b> 后端
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/" title="MYSQL">
+                        <b>#</b> MYSQL
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/%E6%85%A2%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" title="慢日志分析">
+                        <b>#</b> 慢日志分析
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/MYSQL/" title="MYSQL">
+                        <b>#</b> MYSQL
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/posts/2d04e539.html" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%AE%89%E8%A3%85"><span class="toc-text">一、安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E8%AF%AD%E6%B3%95%E5%92%8C%E4%BD%BF%E7%94%A8"><span class="toc-text">二、语法和使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E8%AF%AD%E6%B3%95"><span class="toc-text">1.语法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C%E8%A7%A3%E6%9E%90"><span class="toc-text">2.输出结果解析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%80%BB%E4%BD%93%E7%BB%9F%E8%AE%A1%E7%BB%93%E6%9E%9C"><span class="toc-text">(1) 总体统计结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%88%86%E7%BB%84%E7%BB%9F%E8%AE%A1%E7%BB%93%E6%9E%9C"><span class="toc-text">(2) 分组统计结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%9F%A5%E8%AF%A2SQL%E6%A6%82%E5%86%B5"><span class="toc-text">(3) 查询SQL概况</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8"><span class="toc-text">三、常用工具使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%89%80%E6%9C%89%E5%B7%A5%E5%85%B7"><span class="toc-text">1.所有工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-pt-duplicate-key-checker"><span class="toc-text">2.pt-duplicate-key-checker</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-pt-index-usage"><span class="toc-text">3.pt-index-usage</span></a></li></ol></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="gitee" target="_blank" rel="noopener" href="https://gitee.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + pt-query-digest%20%E6%85%A2%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90 + '&url=' + http%3A%2F%2Fyoursite.com%2Fposts%2Faeba0a25.html + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://yoursite.com/posts/aeba0a25.html" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

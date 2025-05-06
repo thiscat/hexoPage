@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="cat" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      主主同步 
+      
+      
+      |
+    
+     thisofcat
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <link rel="icon" href="/images/logo.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/logo.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">cat</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">主主同步</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2020-05-31 16:00:00
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                    <b>#</b> 后端
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/" title="MYSQL">
+                    <b>#</b> MYSQL
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5/" title="主从同步">
+                    <b>#</b> 主从同步
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>&lt;Excerpt in index | 首页摘要&gt;</p>
+<span id="more"></span>
+<p>&lt;The rest of contents | 余下全文&gt;</p>
+<h1 id="MYSQL主主同步"><a href="#MYSQL主主同步" class="headerlink" title="MYSQL主主同步"></a>MYSQL主主同步</h1><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># 主服务器 192.168.1.212 master</span></span><br><span class="line"><span class="meta"># 从服务器 192.168.1.213 slave</span></span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h1 id="主服务器配置"><a href="#主服务器配置" class="headerlink" title="主服务器配置"></a>主服务器配置</h1><h2 id="一、配置my-cnf"><a href="#一、配置my-cnf" class="headerlink" title="一、配置my.cnf"></a>一、配置my.cnf</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">vim my.cnf</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">log-bin=mysql-bin-master</span><br><span class="line">server-id=212</span><br><span class="line">binlog-ignore-db = mysql</span><br><span class="line">#把从库的写操作记录到binlog中</span><br><span class="line">log-slave-updates = 1</span><br><span class="line"></span><br><span class="line"># 处理主键冲突</span><br><span class="line">auto-increment-increment = 2</span><br><span class="line">auto-increment-offset = 1</span><br><span class="line"></span><br><span class="line"># 开启gtid模式</span><br><span class="line"># 默认配置非gtid模式，如需开启gtid模式，需做以下修改</span><br><span class="line"># 命令中 MASTER_LOG_FILE=&#x27;mysql-bin.000255&#x27;,MASTER_LOG_POS=120 改为 MASTER_AUTO_POSITION=1;</span><br><span class="line">gtid_mode = on</span><br><span class="line"># 一致性</span><br><span class="line">enforce_gtid_consistency = 1</span><br></pre></td></tr></table></figure>
+<h2 id="二、重启mysql"><a href="#二、重启mysql" class="headerlink" title="二、重启mysql"></a>二、重启mysql</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">kill</span> -USR2 `<span class="built_in">cat</span> /data/mysqlData/mysql.pid`</span></span><br></pre></td></tr></table></figure>
+<h2 id="三、创建账号并且授权"><a href="#三、创建账号并且授权" class="headerlink" title="三、创建账号并且授权"></a>三、创建账号并且授权</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;grant replication slave on  to &#x27;tongbu&#x27;@&#x27;192.168.1.213&#x27; identified by &#x27;123456&#x27;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># mysql8</span><br><span class="line">mysql&gt; CREATE USER &#x27;tongbu&#x27;@&#x27;192.168.1.213&#x27; IDENTIFIED BY &#x27;123456&#x27;;</span><br><span class="line">mysql&gt;GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, RELOAD, PROCESS, REFERENCES, INDEX, ALTER, SHOW DATABASES, SUPER, CREATE TEMPORARY TABLES, LOCK TABLES, EXECUTE, REPLICATION SLAVE, REPLICATION CLIENT, CREATE VIEW, SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, CREATE USER, EVENT, TRIGGER, CREATE ROLE, DROP ROLE ON *.* TO `tongbu`@`192.168.1.213` WITH GRANT OPTION;</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、查看binlog文件以及pos"><a href="#四、查看binlog文件以及pos" class="headerlink" title="四、查看binlog文件以及pos"></a>四、查看binlog文件以及pos</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;show master status;</span><br></pre></td></tr></table></figure>
+<h2 id="五、导出数据库"><a href="#五、导出数据库" class="headerlink" title="五、导出数据库"></a>五、导出数据库</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqldump  -uroot -p123456 cat&gt;cat.sql</span><br></pre></td></tr></table></figure>
+<h2 id="六、将数据库传到从服务器"><a href="#六、将数据库传到从服务器" class="headerlink" title="六、将数据库传到从服务器"></a>六、将数据库传到从服务器</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">scp cat.sql  192.168.1.213:/data</span></span><br></pre></td></tr></table></figure>
+<h2 id="七、mysql命令行下配置slave-logfile和logpos需要在213使用show-master-status"><a href="#七、mysql命令行下配置slave-logfile和logpos需要在213使用show-master-status" class="headerlink" title="七、mysql命令行下配置slave logfile和logpos需要在213使用show master status;"></a>七、mysql命令行下配置slave logfile和logpos需要在213使用show master status;</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;CHANGE MASTER TO MASTER_HOST=&#x27;192.168.1.213&#x27;,MASTER_USER=&#x27;tongbu&#x27;,MASTER_PASSWORD=&#x27;123456&#x27;,</span><br><span class="line">MASTER_LOG_FILE=&#x27;mysql-bin.000255&#x27;,MASTER_LOG_POS=120;</span><br><span class="line">mysql&gt;start slave;</span><br><span class="line">mysql&gt;show slave status \G;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h1 id="从服务器配置"><a href="#从服务器配置" class="headerlink" title="从服务器配置"></a>从服务器配置</h1><h2 id="一、配置my-cnf-1"><a href="#一、配置my-cnf-1" class="headerlink" title="一、配置my.cnf"></a>一、配置my.cnf</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">vim my.cnf</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">log-bin=mysql-bin-master</span><br><span class="line">server-id=213</span><br><span class="line">binlog-ignore-db = mysql</span><br><span class="line">#把从库的写操作记录到binlog中</span><br><span class="line">log-slave-updates = 1</span><br><span class="line"># 处理主键冲突</span><br><span class="line"># mysql的服务器变量auto_increment_increment【增长值】和auto_increment_offset【偏移量】可以协调多主服务器复制和AUTO_INCREMENT列。</span><br><span class="line"># 并且每个变量有一个默认的(并且是最小的)值1，有一个最大值65,535。把这些变量设置为非冲突的值，例如在同 一个表插入新行时，</span><br><span class="line"># 多主服务器配置主的服务器就不会发生AUTO_INCREMENT值冲突，这里就可以解决这个问题</span><br><span class="line">auto-increment-increment = 2</span><br><span class="line">auto-increment-offset = 2</span><br><span class="line"></span><br><span class="line"># 开启gtid模式</span><br><span class="line"># 默认配置非gtid模式，如需开启gtid模式，需做以下修改</span><br><span class="line"># 命令中 MASTER_LOG_FILE=&#x27;mysql-bin.000255&#x27;,MASTER_LOG_POS=120 改为 MASTER_AUTO_POSITION=1;</span><br><span class="line">gtid_mode = on</span><br><span class="line"># 一致性</span><br><span class="line">enforce_gtid_consistency = 1</span><br></pre></td></tr></table></figure>
+<h2 id="二、重启mysql-1"><a href="#二、重启mysql-1" class="headerlink" title="二、重启mysql"></a>二、重启mysql</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">kill</span> -USR2 `<span class="built_in">cat</span> /data/mysqlData/mysql.pid`</span></span><br></pre></td></tr></table></figure>
+<h2 id="三、创建账号并且授权-1"><a href="#三、创建账号并且授权-1" class="headerlink" title="三、创建账号并且授权"></a>三、创建账号并且授权</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;grant replication slave on *.* to &#x27;tongbu&#x27;@&#x27;192.168.1.212&#x27; identified by &#x27;123456&#x27;;</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
+<h2 id="四、查看binlog文件以及pos-1"><a href="#四、查看binlog文件以及pos-1" class="headerlink" title="四、查看binlog文件以及pos"></a>四、查看binlog文件以及pos</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;show master status;</span><br></pre></td></tr></table></figure>
+<h2 id="五、mysql命令行下配置slave-logfile和logpos需要在212使用show-master-status"><a href="#五、mysql命令行下配置slave-logfile和logpos需要在212使用show-master-status" class="headerlink" title="五、mysql命令行下配置slave logfile和logpos需要在212使用show master status;"></a>五、mysql命令行下配置slave logfile和logpos需要在212使用show master status;</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;CHANGE MASTER TO MASTER_HOST=&#x27;192.168.1.212&#x27;,MASTER_USER=&#x27;tongbu&#x27;,MASTER_PASSWORD=&#x27;123456&#x27;,</span><br><span class="line">MASTER_LOG_FILE=&#x27;mysql-bin.000255&#x27;,MASTER_LOG_POS=120;</span><br></pre></td></tr></table></figure>
+<h2 id="六、到主服务器查看状态"><a href="#六、到主服务器查看状态" class="headerlink" title="六、到主服务器查看状态"></a>六、到主服务器查看状态</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;show processlist \G;</span><br></pre></td></tr></table></figure>
+
+<h1 id="三、注意事项"><a href="#三、注意事项" class="headerlink" title="三、注意事项"></a>三、注意事项</h1><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># <span class="selector-tag">binlog_format</span>不等于<span class="selector-tag">row</span>，需要<span class="selector-tag">use</span> <span class="selector-tag">database</span>;后执行语句，才能够同步数据</span><br><span class="line"># <span class="selector-attr">[具体说明]</span>(<span class="attribute">https</span>:<span class="comment">//blog.csdn.net/weixin_33709609/article/details/89865649)</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="一、-跳过错误-非gtid模式"><a href="#一、-跳过错误-非gtid模式" class="headerlink" title="一、 跳过错误(非gtid模式)"></a>一、 跳过错误(非gtid模式)</h2><h3 id="1-mysql语句"><a href="#1-mysql语句" class="headerlink" title="1. mysql语句"></a>1. mysql语句</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 跳过指定数量的事务：</span><br><span class="line">mysql&gt;slave stop;</span><br><span class="line">mysql&gt;SET GLOBAL SQL_SLAVE_SKIP_COUNTER = 1        #跳过一个事务</span><br><span class="line">mysql&gt;slave start;</span><br></pre></td></tr></table></figure>
+<h3 id="2-修改mysql的配置文件，通过slave-skip-errors参数来跳所有错误或指定类型的错误"><a href="#2-修改mysql的配置文件，通过slave-skip-errors参数来跳所有错误或指定类型的错误" class="headerlink" title="2.修改mysql的配置文件，通过slave_skip_errors参数来跳所有错误或指定类型的错误"></a>2.修改mysql的配置文件，通过slave_skip_errors参数来跳所有错误或指定类型的错误</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">vim /etc/my.cnf</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">#slave-skip-errors=1062,1053,1146 #跳过指定error no类型的错误</span><br><span class="line">#slave-skip-errors=all #跳过所有错误</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、跳过错误-gtid模式"><a href="#二、跳过错误-gtid模式" class="headerlink" title="二、跳过错误(gtid模式)"></a>二、跳过错误(gtid模式)</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="三、错误处理"><a href="#三、错误处理" class="headerlink" title="三、错误处理"></a>三、错误处理</h2><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 错误信息:</span></span><br><span class="line">Last_IO_Errno: <span class="number">1236</span></span><br><span class="line">Last_IO_Error: Got fatal error <span class="number">1236</span> from <span class="keyword">master</span> <span class="title">when</span> reading data from binary log: &#x27;Could not find first log file name <span class="keyword">in</span> binary log index file&#x27;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 处理方案</span></span><br><span class="line"><span class="literal">Slave</span>: mysql&gt;<span class="literal">stop</span> <span class="literal">slave</span>;</span><br><span class="line"><span class="literal">Master</span>: mysql&gt;flush logs</span><br><span class="line"><span class="literal">Master</span>: mysql&gt;show <span class="keyword">master</span> <span class="title">status</span>;</span><br><span class="line"><span class="literal">Slave</span>: mysql&gt;CHANGE <span class="keyword">MASTER</span> <span class="title">TO</span> <span class="attr">MASTER_LOG_FILE=</span>&#x27;log-bin.<span class="number">00000</span>X&#x27;, <span class="attr">MASTER_LOG_POS=</span><span class="number">106</span>;</span><br><span class="line"><span class="literal">Slave</span>: mysql&gt;<span class="literal">start</span> <span class="literal">slave</span>;</span><br><span class="line"></span><br><span class="line">错误信息:</span><br><span class="line">ERROR <span class="number">1776</span> (HY000): Parameters MASTER_LOG_FILE, MASTER_LOG_POS, RELAY_LOG_FILE <span class="keyword">and</span> RELAY_LOG_POS cannot be set when MASTER_AUTO_POSITION is active.</span><br><span class="line"></span><br><span class="line"><span class="comment"># 处理方案</span></span><br><span class="line">mysql&gt;change <span class="keyword">master</span> <span class="title">to</span> <span class="attr">master_auto_position=</span><span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/posts/5f109216.html" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2020-05-31 16:00:00
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                        <b>#</b> 后端
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/" title="MYSQL">
+                        <b>#</b> MYSQL
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5/" title="主从同步">
+                        <b>#</b> 主从同步
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/posts/6be05d04.html" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#MYSQL%E4%B8%BB%E4%B8%BB%E5%90%8C%E6%AD%A5"><span class="toc-text">MYSQL主主同步</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%BB%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE"><span class="toc-text">主服务器配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E9%85%8D%E7%BD%AEmy-cnf"><span class="toc-text">一、配置my.cnf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E9%87%8D%E5%90%AFmysql"><span class="toc-text">二、重启mysql</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%88%9B%E5%BB%BA%E8%B4%A6%E5%8F%B7%E5%B9%B6%E4%B8%94%E6%8E%88%E6%9D%83"><span class="toc-text">三、创建账号并且授权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%9F%A5%E7%9C%8Bbinlog%E6%96%87%E4%BB%B6%E4%BB%A5%E5%8F%8Apos"><span class="toc-text">四、查看binlog文件以及pos</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%AF%BC%E5%87%BA%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">五、导出数据库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%B0%86%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BC%A0%E5%88%B0%E4%BB%8E%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-text">六、将数据库传到从服务器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81mysql%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%B8%8B%E9%85%8D%E7%BD%AEslave-logfile%E5%92%8Clogpos%E9%9C%80%E8%A6%81%E5%9C%A8213%E4%BD%BF%E7%94%A8show-master-status"><span class="toc-text">七、mysql命令行下配置slave logfile和logpos需要在213使用show master status;</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%8E%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE"><span class="toc-text">从服务器配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E9%85%8D%E7%BD%AEmy-cnf-1"><span class="toc-text">一、配置my.cnf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E9%87%8D%E5%90%AFmysql-1"><span class="toc-text">二、重启mysql</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%88%9B%E5%BB%BA%E8%B4%A6%E5%8F%B7%E5%B9%B6%E4%B8%94%E6%8E%88%E6%9D%83-1"><span class="toc-text">三、创建账号并且授权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%9F%A5%E7%9C%8Bbinlog%E6%96%87%E4%BB%B6%E4%BB%A5%E5%8F%8Apos-1"><span class="toc-text">四、查看binlog文件以及pos</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81mysql%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%B8%8B%E9%85%8D%E7%BD%AEslave-logfile%E5%92%8Clogpos%E9%9C%80%E8%A6%81%E5%9C%A8212%E4%BD%BF%E7%94%A8show-master-status"><span class="toc-text">五、mysql命令行下配置slave logfile和logpos需要在212使用show master status;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%88%B0%E4%B8%BB%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9F%A5%E7%9C%8B%E7%8A%B6%E6%80%81"><span class="toc-text">六、到主服务器查看状态</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-text">三、注意事项</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81-%E8%B7%B3%E8%BF%87%E9%94%99%E8%AF%AF-%E9%9D%9Egtid%E6%A8%A1%E5%BC%8F"><span class="toc-text">一、 跳过错误(非gtid模式)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-mysql%E8%AF%AD%E5%8F%A5"><span class="toc-text">1. mysql语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BF%AE%E6%94%B9mysql%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%EF%BC%8C%E9%80%9A%E8%BF%87slave-skip-errors%E5%8F%82%E6%95%B0%E6%9D%A5%E8%B7%B3%E6%89%80%E6%9C%89%E9%94%99%E8%AF%AF%E6%88%96%E6%8C%87%E5%AE%9A%E7%B1%BB%E5%9E%8B%E7%9A%84%E9%94%99%E8%AF%AF"><span class="toc-text">2.修改mysql的配置文件，通过slave_skip_errors参数来跳所有错误或指定类型的错误</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E8%B7%B3%E8%BF%87%E9%94%99%E8%AF%AF-gtid%E6%A8%A1%E5%BC%8F"><span class="toc-text">二、跳过错误(gtid模式)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="toc-text">三、错误处理</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="gitee" target="_blank" rel="noopener" href="https://gitee.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E4%B8%BB%E4%B8%BB%E5%90%8C%E6%AD%A5 + '&url=' + http%3A%2F%2Fyoursite.com%2Fposts%2Fc3d98a2c.html + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://yoursite.com/posts/c3d98a2c.html" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="cat" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      图片处理类 
+      
+      
+      |
+    
+     thisofcat
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <link rel="icon" href="/images/logo.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/logo.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">cat</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">图片处理类</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2020-12-09 16:00:00
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                    <b>#</b> 后端
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/python3/" title="python3">
+                    <b>#</b> python3
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/python3/%E5%9B%BE%E7%89%87/" title="图片">
+                    <b>#</b> 图片
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/python/" title="python">
+                    <b>#</b> python
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E5%9B%BE%E7%89%87/" title="图片">
+                    <b>#</b> 图片
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>&lt;Excerpt in index | 首页摘要&gt;</p>
+<span id="more"></span>
+<p>&lt;The rest of contents | 余下全文&gt;</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">图片处理</span></span><br><span class="line"><span class="string">author yfc</span></span><br><span class="line"><span class="string">since 2019/7/31 0031 上午 10:41</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image, ImageSequence, ImageDraw, ImageFont</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> urllib.request <span class="keyword">as</span> request</span><br><span class="line"><span class="keyword">import</span> imghdr</span><br><span class="line"><span class="keyword">import</span> house.function.common <span class="keyword">as</span> common</span><br><span class="line"><span class="keyword">import</span> house.settings <span class="keyword">as</span> settings</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ImageProcess</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">upYunSetUp</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">import</span> upyun</span><br><span class="line">        <span class="keyword">import</span> house.settings <span class="keyword">as</span> settings</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="variable language_">self</span>.upYunClass = upyun.UpYun(settings.UPYUN_NAME, settings.UPYUN_USER, settings.UPYUN_PWD, timeout=<span class="number">60</span>,</span><br><span class="line">                             endpoint=upyun.ED_AUTO)</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            <span class="keyword">raise</span> e</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">upYunUpload</span>(<span class="params">self, image, <span class="built_in">type</span>, delImg=<span class="literal">None</span></span>):</span><br><span class="line">        timeSec = <span class="built_in">int</span>(time.time())</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> image:</span><br><span class="line">            <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>: <span class="number">204</span>, <span class="string">&#x27;msg&#x27;</span>: <span class="string">&#x27;图片为空&#x27;</span>&#125;</span><br><span class="line"></span><br><span class="line">        image = image.replace(<span class="string">&#x27;\\&#x27;</span>, <span class="string">&#x27;/&#x27;</span>)</span><br><span class="line">        <span class="comment"># 获取图片后缀</span></span><br><span class="line">        imageType = image.split(<span class="string">&#x27;.&#x27;</span>)[-<span class="number">1</span>]</span><br><span class="line">        imageName = image.split(<span class="string">&#x27;.&#x27;</span>)[-<span class="number">2</span>]</span><br><span class="line">        fileName = common.myMD5(<span class="string">&#x27;%s%s&#x27;</span> % (imageName, timeSec))[<span class="number">8</span>:-<span class="number">8</span>]</span><br><span class="line">        imageUrl = <span class="string">&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">type</span> == <span class="number">1</span>:</span><br><span class="line">            fileName = <span class="string">&#x27;%s.%s&#x27;</span> % (fileName, imageType)</span><br><span class="line">            imageUrl = <span class="string">&#x27;/lp/%s/%s&#x27;</span> % (time.strftime(<span class="string">&#x27;%Y/%m/%d&#x27;</span>, time.localtime(timeSec)), fileName)</span><br><span class="line">        <span class="keyword">elif</span> <span class="built_in">type</span> == <span class="number">2</span>:</span><br><span class="line">            fileName = <span class="string">&#x27;%s.%s&#x27;</span> % (fileName, imageType)</span><br><span class="line">            imageUrl = <span class="string">&#x27;/u/%s/%s&#x27;</span> % ((time.strftime(<span class="string">&#x27;%Y%m%d&#x27;</span>, time.localtime(timeSec)), fileName))</span><br><span class="line">        <span class="keyword">elif</span> <span class="built_in">type</span>==<span class="number">3</span>:</span><br><span class="line">            fileName = <span class="string">&#x27;%s%s.%s&#x27;</span> % (<span class="built_in">str</span>(fileName)[<span class="number">0</span>:<span class="number">6</span>], common.randomValue(<span class="number">16</span>), imageType)</span><br><span class="line">            imageUrl = <span class="string">&#x27;/%s/%s&#x27;</span> % (time.strftime(<span class="string">&#x27;%Y/%m/%d&#x27;</span>, time.localtime(timeSec)), fileName)</span><br><span class="line">        <span class="keyword">elif</span> <span class="built_in">type</span>==<span class="number">4</span>:</span><br><span class="line">            <span class="comment"># 资讯</span></span><br><span class="line">            fileName = <span class="string">&#x27;%s%s.%s&#x27;</span> % (<span class="built_in">str</span>(fileName)[<span class="number">0</span>:<span class="number">6</span>], common.randomValue(<span class="number">16</span>), imageType)</span><br><span class="line">            imageUrl = <span class="string">&#x27;/news/%s/%s&#x27;</span> % (time.strftime(<span class="string">&#x27;%Y/%m/%d&#x27;</span>, time.localtime(timeSec)), fileName)</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">with</span> <span class="built_in">open</span>(image, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> fh:</span><br><span class="line">                rsp = <span class="variable language_">self</span>.upYunClass.put(imageUrl, fh)  <span class="comment"># 上传图片，自动创建目录</span></span><br><span class="line">                time.sleep(<span class="number">0.5</span>)</span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> rsp.get(<span class="string">&#x27;content-length&#x27;</span>, <span class="string">&#x27;&#x27;</span>):</span><br><span class="line">                    time.sleep(<span class="number">0.5</span>)</span><br><span class="line">                    <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>: <span class="number">204</span>, <span class="string">&#x27;msg&#x27;</span>: <span class="string">&#x27;上传失败1&#x27;</span>&#125;</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            errorMsg = <span class="string">&#x27;图片上传异常:%s&#x27;</span> % e</span><br><span class="line">            time.sleep(<span class="number">5</span>)</span><br><span class="line">            <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>: <span class="number">204</span>, <span class="string">&#x27;msg&#x27;</span>: errorMsg&#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="comment"># 如果delImg没有传值，并且环境为线上环境，默认移除上传成功的图片</span></span><br><span class="line">            <span class="keyword">if</span> delImg <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">and</span> settings.delLocalImg:</span><br><span class="line">                delImg = <span class="literal">True</span></span><br><span class="line">            <span class="keyword">if</span> delImg:</span><br><span class="line">                os.remove(image)</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            errorMsg = <span class="string">&#x27;图片上传后,删除图片异常:%s:%s&#x27;</span> % (image, e)</span><br><span class="line">            common.util_log().errorLog(errorMsg)</span><br><span class="line">            <span class="comment"># return &#123;&#x27;status&#x27;: 204, &#x27;msg&#x27;: errorMsg&#125;</span></span><br><span class="line">        <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>: <span class="number">200</span>, <span class="string">&#x27;msg&#x27;</span>: imageUrl&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">saveFile</span>(<span class="params">self, data, <span class="built_in">type</span>=<span class="number">1</span>, dirPath=<span class="string">&#x27;/&#x27;</span>, filename=<span class="string">&#x27;&#x27;</span>, fileBasePath=<span class="string">&#x27;&#x27;</span></span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        保存文件到本地</span></span><br><span class="line"><span class="string">        :param data: 文件内容 | url地址</span></span><br><span class="line"><span class="string">        :param type: 1-url地址 2-内容</span></span><br><span class="line"><span class="string">        :param filename: 自定义文件名, 如果是url, 默认取url的文件名</span></span><br><span class="line"><span class="string">        :param dirPath: 自定义目录路径 xxx/</span></span><br><span class="line"><span class="string">        :param fileBasePath: 基础目录路径 /xxx/</span></span><br><span class="line"><span class="string">        :return: /path/filename.xx</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> fileBasePath:</span><br><span class="line">            fileBasePath = settings.ROOT_PATH</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 完整路径以及相对路径</span></span><br><span class="line">        timePath = time.strftime(<span class="string">&#x27;%Y%m%d/&#x27;</span>, time.localtime(time.time()))</span><br><span class="line">        shortPath = dirPath + timePath</span><br><span class="line">        path = fileBasePath + shortPath</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(path):</span><br><span class="line">            os.makedirs(path, mode=<span class="number">0o777</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">type</span> == <span class="number">2</span> <span class="keyword">and</span> <span class="keyword">not</span> filename:</span><br><span class="line">            <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>: <span class="number">204</span>, <span class="string">&#x27;msg&#x27;</span>: <span class="string">&#x27;文件名为空&#x27;</span>&#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> filename:</span><br><span class="line">            filename = data.split(<span class="string">&#x27;/&#x27;</span>)[-<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 文件完整路径以及相对路径</span></span><br><span class="line">        <span class="comment"># 如果已存在文件直接返回路径</span></span><br><span class="line">        fullFileName = path + filename</span><br><span class="line">        shortFileName = shortPath + filename</span><br><span class="line">        <span class="keyword">if</span> os.path.exists(fullFileName):</span><br><span class="line">            <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>: <span class="number">200</span>, <span class="string">&#x27;msg&#x27;</span>: &#123;<span class="string">&#x27;fullFileName&#x27;</span>: fullFileName, <span class="string">&#x27;shortFileName&#x27;</span>: shortFileName&#125;&#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            result = <span class="string">&#x27;&#x27;</span></span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">type</span> == <span class="number">1</span>:</span><br><span class="line">                <span class="comment"># 网络下载方式保存文件</span></span><br><span class="line">                result = request.urlretrieve(data, fullFileName)</span><br><span class="line">            <span class="keyword">elif</span> <span class="built_in">type</span> == <span class="number">2</span>:</span><br><span class="line">                <span class="comment"># 读取二进制文件保存文件</span></span><br><span class="line">                <span class="keyword">with</span> <span class="built_in">open</span>(fullFileName, <span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> fh:</span><br><span class="line">                    result = fh.write(data)</span><br><span class="line">            <span class="keyword">if</span> result:</span><br><span class="line">                <span class="comment"># 验证文件是否完整 如果不完整返回None(通过判断文件头部判断图片类型)</span></span><br><span class="line">                <span class="keyword">if</span> imghdr.what(fullFileName) == <span class="literal">None</span>:</span><br><span class="line">                    <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>: <span class="number">204</span>, <span class="string">&#x27;msg&#x27;</span>: <span class="string">&#x27;%s无法获取文件类型，文件可能已损坏&#x27;</span> % shortFileName&#125;</span><br><span class="line">                dealRes = <span class="variable language_">self</span>.dealFile(fullFileName, fullFileName)</span><br><span class="line">                <span class="keyword">if</span> dealRes.get(<span class="string">&#x27;status&#x27;</span>, <span class="number">0</span>) == <span class="number">204</span>:</span><br><span class="line">                    <span class="keyword">return</span> dealRes</span><br><span class="line">                <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>: <span class="number">200</span>, <span class="string">&#x27;msg&#x27;</span>: &#123;<span class="string">&#x27;fullFileName&#x27;</span>: fullFileName, <span class="string">&#x27;shortFileName&#x27;</span>: shortFileName&#125;&#125;</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>: <span class="number">204</span>, <span class="string">&#x27;msg&#x27;</span>: <span class="string">&#x27;%s文件写入失败:%s&#x27;</span> % (shortFileName, e)&#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>: <span class="number">204</span>, <span class="string">&#x27;msg&#x27;</span>: <span class="string">&#x27;&#x27;</span>&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">dealImagePixels</span>(<span class="params">self, imgPath=<span class="string">&#x27;&#x27;</span></span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        获取图片信息，支持修改图片透明度</span></span><br><span class="line"><span class="string">        :param imgPath: 图片地址</span></span><br><span class="line"><span class="string">        :return:</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> imgPath:</span><br><span class="line">            imgPath = settings.logoPath</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            imgOrigin = Image.<span class="built_in">open</span>(imgPath)</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>: <span class="number">204</span>, <span class="string">&#x27;msg&#x27;</span>: <span class="string">&#x27;打开logo图片错误:%s:%s&#x27;</span> % (imgPath, e)&#125;</span><br><span class="line">        imgWidth, imgHeight = imgOrigin.size</span><br><span class="line">        imgPixelsDict = <span class="built_in">dict</span>()</span><br><span class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(imgWidth):</span><br><span class="line">            <span class="keyword">for</span> y <span class="keyword">in</span> <span class="built_in">range</span>(imgHeight):</span><br><span class="line">                <span class="comment"># 通过坐标点，获取(R, G, B, A)</span></span><br><span class="line">                pixel = imgOrigin.getpixel((x, y))</span><br><span class="line">                <span class="comment"># 去除透明度为0的像素</span></span><br><span class="line">                <span class="keyword">if</span> pixel != (<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>):</span><br><span class="line">                    imgPixelsDict[(x, y)] = pixel</span><br><span class="line">                    <span class="comment"># 修改透明度</span></span><br><span class="line">                    <span class="comment"># imgPixelsDict[(x, y)] = pixel[:3]+(100,)</span></span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            <span class="string">&#x27;status&#x27;</span>: <span class="number">200</span>,</span><br><span class="line">            <span class="string">&#x27;msg&#x27;</span>: &#123;</span><br><span class="line">                <span class="string">&#x27;origin&#x27;</span>: imgOrigin,</span><br><span class="line">                <span class="string">&#x27;width&#x27;</span>: imgWidth,</span><br><span class="line">                <span class="string">&#x27;height&#x27;</span>: imgHeight,</span><br><span class="line">                <span class="string">&#x27;pixelsDict&#x27;</span>: imgPixelsDict</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">blendPixel</span>(<span class="params">self, pixel1, pixel2</span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        混合颜色(R, G, B, A)</span></span><br><span class="line"><span class="string">        :param pixel1: 图片像素</span></span><br><span class="line"><span class="string">        :param pixel2: 图片像素</span></span><br><span class="line"><span class="string">        :return:</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="comment"># alpha 透明度</span></span><br><span class="line">        alpha1 = <span class="number">256</span> - pixel2[<span class="number">3</span>]</span><br><span class="line">        alpha2 = pixel2[<span class="number">3</span>] - (alpha1 * pixel2[<span class="number">3</span>]) / <span class="number">256.0</span></span><br><span class="line">        alpha = alpha1 + alpha2</span><br><span class="line">        pixel = (</span><br><span class="line">            <span class="built_in">int</span>((alpha1 * pixel1[<span class="number">0</span>] + alpha2 * pixel2[<span class="number">0</span>]) / alpha),</span><br><span class="line">            <span class="built_in">int</span>((alpha1 * pixel1[<span class="number">1</span>] + alpha2 * pixel2[<span class="number">1</span>]) / alpha),</span><br><span class="line">            <span class="built_in">int</span>((alpha1 * pixel1[<span class="number">2</span>] + alpha2 * pixel2[<span class="number">2</span>]) / alpha),</span><br><span class="line">            <span class="built_in">int</span>(alpha)</span><br><span class="line">        )</span><br><span class="line">        <span class="keyword">return</span> pixel</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">dealImage</span>(<span class="params">self, image, logoPixelsDict, offTop=<span class="literal">None</span>, offLeft=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        处理图片，将图片</span></span><br><span class="line"><span class="string">        :param image: 图片资源</span></span><br><span class="line"><span class="string">        :param logoPixelsDict: logo图片像素</span></span><br><span class="line"><span class="string">        :param offTop: y基于image偏移量</span></span><br><span class="line"><span class="string">        :param offLeft: x基于image偏移量</span></span><br><span class="line"><span class="string">        :return:</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="comment"># 如果图片尺寸小于水印图片，不加水印</span></span><br><span class="line">        <span class="keyword">for</span> coords, logoPixel <span class="keyword">in</span> logoPixelsDict.items():</span><br><span class="line">            <span class="comment"># x轴坐标</span></span><br><span class="line">            coords_x = (coords[<span class="number">0</span>] + offLeft)</span><br><span class="line">            <span class="comment"># y轴坐标</span></span><br><span class="line">            coords_y = (coords[<span class="number">1</span>] + offTop)</span><br><span class="line">            imagePixel = image.getpixel((coords_x, coords_y))</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">isinstance</span>(imagePixel, <span class="built_in">tuple</span>) <span class="keyword">and</span> <span class="built_in">len</span>(imagePixel) &gt; <span class="number">2</span>):</span><br><span class="line">                <span class="comment"># 将坐标的RGBA修改为混合后的RGBA</span></span><br><span class="line">                image.putpixel((coords_x, coords_y), <span class="variable language_">self</span>.blendPixel(imagePixel, logoPixel))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> image</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">dealFile</span>(<span class="params">self, filePath, outFilePath=<span class="string">&#x27;&#x27;</span>,logoDict=<span class="literal">None</span>, offX=-<span class="number">5</span>, offY=-<span class="number">5</span></span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        图片增加水印, 非图片</span></span><br><span class="line"><span class="string">        :param filePath: 图片路径</span></span><br><span class="line"><span class="string">        :param logoDict: logo图片信息</span></span><br><span class="line"><span class="string">        :param offX: logo对于图片x偏移量</span></span><br><span class="line"><span class="string">        :param offY: logo对于图片y偏移量</span></span><br><span class="line"><span class="string">        :return:</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="comment"># 非图片类型图片不进行处理</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> filePath <span class="keyword">or</span> <span class="keyword">not</span> filePath.endswith((<span class="string">&#x27;.gif&#x27;</span>, <span class="string">&#x27;.jpg&#x27;</span>, <span class="string">&#x27;.png&#x27;</span>, <span class="string">&#x27;.jpeg&#x27;</span>)):</span><br><span class="line">            <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>: <span class="number">204</span>, <span class="string">&#x27;msg&#x27;</span>: <span class="string">&#x27;文件格式错误&#x27;</span>&#125;</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            imgOrign = Image.<span class="built_in">open</span>(filePath)</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>: <span class="number">204</span>, <span class="string">&#x27;msg&#x27;</span>: <span class="string">&#x27;dealFile 打开图片失败:%s&#x27;</span> % filePath&#125;</span><br><span class="line">        imgWidth, imgHeight = imgOrign.size</span><br><span class="line">        _, fileType = os.path.splitext(filePath)</span><br><span class="line">        fileType = fileType.lower()</span><br><span class="line">        basename = os.path.basename(filePath)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 如果没有配置输出文件路径，默认为覆盖原本的路径</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> outFilePath:</span><br><span class="line">            outFilePath = filePath</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 如果存在输出文件路径，判断是否为文件，如果非文件则为文件夹，文件名为原文件文件名</span></span><br><span class="line">            _, outFileType = os.path.splitext(outFilePath)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> outFileType:</span><br><span class="line">                outFilePath = <span class="string">&#x27;%s%s&#x27;</span> % (outFilePath, basename)</span><br><span class="line">        <span class="comment"># 如果不存在输出目录，创建输出目录</span></span><br><span class="line">        outFileDir = os.path.dirname(outFilePath)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(outFileDir):</span><br><span class="line">            os.makedirs(outFileDir, mode=<span class="number">0o777</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> logoDict:</span><br><span class="line">            logoRes = <span class="variable language_">self</span>.dealImagePixels()</span><br><span class="line">            <span class="keyword">if</span> logoRes.get(<span class="string">&#x27;status&#x27;</span>, <span class="number">0</span>) == <span class="number">204</span>:</span><br><span class="line">                <span class="keyword">return</span> logoRes</span><br><span class="line">            logoDict = logoRes.get(<span class="string">&#x27;msg&#x27;</span>, &#123;&#125;)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> logoDict:</span><br><span class="line">                <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>: <span class="number">204</span>, <span class="string">&#x27;msg&#x27;</span>: <span class="string">&#x27;dealFile 获取logo图片失败:%s&#x27;</span> % filePath&#125;</span><br><span class="line"></span><br><span class="line">        logoOrigin = logoDict.get(<span class="string">&#x27;origin&#x27;</span>)</span><br><span class="line">        logoWidth = logoDict.get(<span class="string">&#x27;width&#x27;</span>)</span><br><span class="line">        logoHeight = logoDict.get(<span class="string">&#x27;height&#x27;</span>)</span><br><span class="line">        logoPixelsDict = logoDict.get(<span class="string">&#x27;pixelsDict&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># if imgOrign.mode in (&quot;RGBA&quot;, &quot;P&quot;):</span></span><br><span class="line">        <span class="comment"># jpg格式不支持透明度，需要转换</span></span><br><span class="line">        <span class="keyword">if</span> fileType == <span class="string">&#x27;.jpg&#x27;</span>:</span><br><span class="line">            imgOrign = imgOrign.convert(<span class="string">&quot;RGB&quot;</span>)</span><br><span class="line">        <span class="comment"># 如果图片尺寸小于水印图片，不加水印，直接返回原图</span></span><br><span class="line">        <span class="keyword">if</span> imgWidth &lt; logoWidth <span class="keyword">and</span> imgHeight &lt; logoHeight:</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                imgOrign.save(<span class="string">f&#x27;%s&#x27;</span> % outFilePath)</span><br><span class="line">            <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">                <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>: <span class="number">204</span>, <span class="string">&#x27;msg&#x27;</span>: <span class="string">&#x27;dealFile 保存原图:%s失败: %s&#x27;</span> % (filePath, e)&#125;</span><br><span class="line">            <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>: <span class="number">200</span>, <span class="string">&#x27;msg&#x27;</span>: outFilePath&#125;</span><br><span class="line">        offLeft = imgWidth - logoWidth</span><br><span class="line">        <span class="keyword">if</span> offX <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            offLeft += offX</span><br><span class="line">        offTop = imgHeight - logoHeight</span><br><span class="line">        <span class="keyword">if</span> offY <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            offTop += offY</span><br><span class="line">        <span class="keyword">if</span> fileType == <span class="string">&#x27;.gif&#x27;</span>:</span><br><span class="line">            sequence = []</span><br><span class="line">            <span class="comment"># 创建一个迭代器实例，让用户循环访问序列中的所有帧图像。</span></span><br><span class="line">            <span class="keyword">for</span> f <span class="keyword">in</span> ImageSequence.Iterator(imgOrign):</span><br><span class="line">                <span class="comment"># if len(sequence) % 2 == 0:</span></span><br><span class="line">                <span class="comment">#     offX=random.random()</span></span><br><span class="line">                <span class="comment">#     offY=random.random()</span></span><br><span class="line">                <span class="comment"># f.convert图片格式转换</span></span><br><span class="line">                sequence.append(<span class="variable language_">self</span>.dealImage(f.convert(), logoPixelsDict, offTop=offTop, offLeft=offLeft))</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                sequence[<span class="number">0</span>].save(<span class="string">f&#x27;%s&#x27;</span> % outFilePath, save_all=<span class="literal">True</span>, append_images=sequence[<span class="number">1</span>:])</span><br><span class="line">            <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">                <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>: <span class="number">204</span>, <span class="string">&#x27;msg&#x27;</span>: <span class="string">&#x27;dealFile 保存gif图片:%s失败: %s&#x27;</span> % (filePath, e)&#125;</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            imgOut = <span class="variable language_">self</span>.dealImage(imgOrign, logoPixelsDict, offTop=offTop, offLeft=offLeft)</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                imgOut.save(<span class="string">f&#x27;%s&#x27;</span> % outFilePath)</span><br><span class="line">            <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">                <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>: <span class="number">204</span>, <span class="string">&#x27;msg&#x27;</span>: <span class="string">&#x27;dealFile 保存图片:%s失败: %s&#x27;</span> % (filePath, e)&#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> imghdr.what(outFilePath) == <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>: <span class="number">204</span>, <span class="string">&#x27;msg&#x27;</span>: <span class="string">&#x27;无法获取文件类型，文件可能已损坏:%s&#x27;</span> % outFilePath&#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>: <span class="number">200</span>, <span class="string">&#x27;msg&#x27;</span>: outFilePath&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">dealDirImage</span>(<span class="params">self, imageDir, outFilePath=<span class="string">&#x27;&#x27;</span>, logoPath=<span class="literal">None</span>, offX=-<span class="number">5</span>, offY=-<span class="number">5</span></span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        处理文件夹内的所有图片</span></span><br><span class="line"><span class="string">        :param imageDir: 图片文件夹</span></span><br><span class="line"><span class="string">        :param outFilePath: 输出文件</span></span><br><span class="line"><span class="string">        :param logoPath: logo图片路径</span></span><br><span class="line"><span class="string">        :return:</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        logoRes = <span class="variable language_">self</span>.dealImagePixels()</span><br><span class="line">        <span class="keyword">if</span> logoRes.get(<span class="string">&#x27;status&#x27;</span>, <span class="number">0</span>) == <span class="number">204</span>:</span><br><span class="line">            <span class="keyword">return</span> logoRes</span><br><span class="line">        logoDict = logoRes.get(<span class="string">&#x27;msg&#x27;</span>, &#123;&#125;)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> logoDict:</span><br><span class="line">            <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>: <span class="number">204</span>, <span class="string">&#x27;msg&#x27;</span>: <span class="string">&#x27;dealDirImage 获取logo图片失败:%s&#x27;</span> % imageDir&#125;</span><br><span class="line"></span><br><span class="line">        picFiles = [os.path.join(imageDir, fn) <span class="keyword">for</span> fn <span class="keyword">in</span> os.listdir(imageDir)]</span><br><span class="line">        picDict = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> filePath <span class="keyword">in</span> picFiles:</span><br><span class="line">            res = <span class="variable language_">self</span>.dealFile(filePath, outFilePath, logoDict, offX=offX, offY=offY)</span><br><span class="line">            <span class="keyword">if</span> res.get(<span class="string">&#x27;status&#x27;</span>, <span class="number">0</span>) == <span class="number">204</span>:</span><br><span class="line">                common.util_log().errorLog(res.get(<span class="string">&#x27;msg&#x27;</span>))</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            picDict[filePath] = res.get(<span class="string">&#x27;msg&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> picDict</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">randomValue</span>(<span class="params">length, onlyNum=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="keyword">import</span> random</span><br><span class="line">        <span class="keyword">if</span> onlyNum:</span><br><span class="line">            result = random.randint(<span class="number">0</span>, <span class="built_in">pow</span>(<span class="number">10</span>, length - <span class="number">1</span>))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            result = <span class="string">&#x27;&#x27;</span></span><br><span class="line">            chars = <span class="string">&#x27;ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz&#x27;</span></span><br><span class="line">            <span class="built_in">max</span> = <span class="built_in">len</span>(chars) - <span class="number">1</span></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, length - <span class="number">1</span>):</span><br><span class="line">                result = result + <span class="built_in">str</span>(chars[random.randint(<span class="number">0</span>, <span class="built_in">max</span>)])</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">myMD5</span>(<span class="params">  _<span class="built_in">str</span> </span>):</span><br><span class="line">        m1 = hashlib.md5()</span><br><span class="line">        m1.update(_<span class="built_in">str</span>.encode(<span class="string">&#x27;utf-8&#x27;</span>))</span><br><span class="line">        <span class="comment"># print(m1.hexdigest() + &#x27;===md5(&#x27; + _str + &#x27;)&#x27;)</span></span><br><span class="line">        <span class="keyword">return</span> m1.hexdigest()</span><br></pre></td></tr></table></figure>
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/posts/ae9b3c91.html" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2020-12-09 16:00:00
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                        <b>#</b> 后端
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/python3/" title="python3">
+                        <b>#</b> python3
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/python3/%E5%9B%BE%E7%89%87/" title="图片">
+                        <b>#</b> 图片
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/python/" title="python">
+                        <b>#</b> python
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E5%9B%BE%E7%89%87/" title="图片">
+                        <b>#</b> 图片
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/posts/2fce4b74.html" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="gitee" target="_blank" rel="noopener" href="https://gitee.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%9B%BE%E7%89%87%E5%A4%84%E7%90%86%E7%B1%BB + '&url=' + http%3A%2F%2Fyoursite.com%2Fposts%2F16d3e2fc.html + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://yoursite.com/posts/16d3e2fc.html" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

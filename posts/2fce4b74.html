@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="cat" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      windows下安装docker 
+      
+      
+      |
+    
+     thisofcat
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <link rel="icon" href="/images/logo.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/logo.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">cat</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">windows下安装docker</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2019-11-21 06:37:00
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                    <b>#</b> 后端
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/Docker/" title="Docker">
+                    <b>#</b> Docker
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/Docker/%E6%96%87%E6%A1%A3/" title="文档">
+                    <b>#</b> 文档
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/Docker/" title="Docker">
+                    <b>#</b> Docker
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>&lt;Excerpt in index | 首页摘要&gt;</p>
+<span id="more"></span>
+<p>&lt;The rest of contents | 余下全文&gt;</p>
+<h1 id="win7下使用Docker-Toolbox安装"><a href="#win7下使用Docker-Toolbox安装" class="headerlink" title="win7下使用Docker Toolbox安装"></a>win7下使用Docker Toolbox安装</h1><p>一、国内镜像源:  </p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span><span class="comment">//get.daocloud.io/  </span></span><br><span class="line"><span class="symbol">http:</span><span class="comment">//mirrors.aliyun.com/docker-toolbox/</span></span><br></pre></td></tr></table></figure>
+<br>
+
+<p>二、执行Docker Toolbox安装<br>三、在命令行(cmd)下执行命令<br>参数说明:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># --virtualbox-boot2docker-url: 指定boot2docker路径</span></span><br><span class="line"><span class="comment"># --engine-registry-mirror: 指定加速地址</span></span><br><span class="line"><span class="comment"># default virtualBox命名</span></span><br></pre></td></tr></table></figure>
+<p>1.一种方式是在创建的时候直接设置加速地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在cmd中执行创建命令</span></span><br><span class="line">$ docker-machine create --driver virtualbox --virtualbox-boot2docker-url=/Users/Administrator/.docker/machine/cache/boot2docker.iso --engine-registry-mirror=http://f1361db2.m.daocloud.io default</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<br>
+
+<p>2.另外一种方式是先创建virtualBox, 然后设置加速地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在cmd创建virtualBox</span></span><br><span class="line">$ docker-machine create --driver virtualbox --virtualbox-boot2docker-url=/Users/Administrator/.docker/machine/cache/boot2docker.iso default</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入virtualBox中</span></span><br><span class="line">$ docker-machine ssh default</span><br><span class="line"><span class="comment"># 在进入virtualBox后执行命令, 将加速地址添加到文件中 --label provider=virtualbox 的下一行</span></span><br><span class="line">$ <span class="built_in">sudo</span> sed -i <span class="string">&quot;s|EXTRA_ARGS=&#x27;|EXTRA_ARGS=&#x27;--registry-mirror=加速地址 |g&quot;</span> /var/lib/boot2docker/profile</span><br><span class="line"><span class="comment"># 或者sudo vim /var/lib/boot2docker/profile </span></span><br><span class="line"><span class="comment"># 在–label provider=virtualbox的下一行添加--registry-mirror 加速器地址(https://dockerhub.azk8s.cn https://reg-mirror.qiniu.com)</span></span><br><span class="line"><span class="comment"># 退出virtualBox</span></span><br><span class="line">$ <span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 退出后, 回到cmd命令界面, 执行docker重启操作</span></span><br><span class="line">$ docker-machine restart default</span><br><span class="line"><span class="comment"># 执行docker info, 如果没有输出数据则执行</span></span><br><span class="line">$ docker-machine <span class="built_in">env</span> default</span><br><span class="line"><span class="comment"># 执行后会出现 export xxxx Run this command to configure your shell:的语句, 按照提示执行语句</span></span><br><span class="line">$ <span class="built_in">eval</span> $(<span class="string">&quot;C:\Program Files\Docker Toolbox\docker-machine.exe&quot;</span> <span class="built_in">env</span> default)</span><br><span class="line"><span class="comment"># 继续测试docker info, 如果输出数据则说明成功, 可以通过docker pull 镜像执行镜像下载</span></span><br><span class="line">$ docker pull ubuntu</span><br></pre></td></tr></table></figure>
+<br>
+
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ssh</span> 用户名默认是：docker  密码默认：tcuser  端口：<span class="number">22</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Docker虚拟机文件地址修改"><a href="#Docker虚拟机文件地址修改" class="headerlink" title="Docker虚拟机文件地址修改"></a>Docker虚拟机文件地址修改</h1><p>一、未安装时直接修改存储位置</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>、在Windows的系统环境添加MACHINE_STORAGE_PATH ，指向虚拟机的位置（我推荐D:\VM\machine\machines）</span><br><span class="line"><span class="number">2</span>、复制boot2docker.iso到虚拟机的位置同级目录<span class="keyword">cache</span>上（D:\VM\machine\<span class="keyword">cache</span>）</span><br></pre></td></tr></table></figure>
+<p>二、已安装的进行迁移</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span>使用docker-machine stop <span class="keyword">default</span>停掉Docker的虚拟机。</span><br><span class="line"><span class="number">2.</span>打开VirtualBox，选择“管理”菜单下的“虚拟介质管理”，我们可以看到Docker虚拟机用的虚拟硬盘的文件disk。</span><br><span class="line"><span class="number">3.</span>选中“disk”，然后点击菜单中的“复制”命令，根据向导，把当前的disk复制到另一个盘上面去。</span><br><span class="line"><span class="number">4.</span>回到VirtualBox主界面，右键“<span class="keyword">default</span>”这个虚拟机，选择“设置”命令，在弹出的窗口中选择“存储”选项。</span><br><span class="line"><span class="number">5.</span>把disk从“控制器SATA”中删除，然后重新添加我们刚才复制到另外一个磁盘上的那个文件。</span><br></pre></td></tr></table></figure>
+<br>
+
+<h1 id="可能会遇到的坑"><a href="#可能会遇到的坑" class="headerlink" title="可能会遇到的坑"></a>可能会遇到的坑</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 直接使用docker run 运行ubuntu的镜像时会出现 </span></span><br><span class="line"><span class="comment"># the input device is not a TTY.  If you are using mintty, try prefixing the command with &#x27;winpty&#x27; 的错误</span></span><br><span class="line">$ winpty docker run -it ubuntu bash</span><br></pre></td></tr></table></figure>
+
+<h1 id="win7使用toolbox挂载失败"><a href="#win7使用toolbox挂载失败" class="headerlink" title="win7使用toolbox挂载失败"></a>win7使用toolbox挂载失败</h1><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">修改virtualbox中，设置共享文件夹</span><br><span class="line">假设本地地址为d:\dnmp,文件名为<span class="regexp">/d/</span>dnmp,dnmp文件夹需要放在盘根目录，原因未知</span><br></pre></td></tr></table></figure>
+
+<p>docker windows环境变量</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">COMPOSE_CONVERT_WINDOWS_PATHS</span><span class="symbol">:true</span></span><br><span class="line"><span class="variable constant_">DOCKER_CERT_PATH</span><span class="symbol">:D</span><span class="symbol">:</span>\dockerVM\machines\default</span><br><span class="line"><span class="variable constant_">DOCKER_HOST</span><span class="symbol">:tcp</span><span class="symbol">://localhost</span><span class="symbol">:</span><span class="number">2376</span></span><br><span class="line"><span class="variable constant_">DOCKER_MACHINE_NAME</span><span class="symbol">:default</span></span><br><span class="line"><span class="variable constant_">DOCKER_TLS_VERIFY</span><span class="symbol">:</span><span class="number">0</span></span><br><span class="line"><span class="variable constant_">MACHINE_STORAGE_PATH</span><span class="symbol">:D</span><span class="symbol">:</span>\dockerVM</span><br></pre></td></tr></table></figure>
+
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/posts/0.html" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2019-11-21 06:37:00
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                        <b>#</b> 后端
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/Docker/" title="Docker">
+                        <b>#</b> Docker
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/Docker/%E6%96%87%E6%A1%A3/" title="文档">
+                        <b>#</b> 文档
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Docker/" title="Docker">
+                        <b>#</b> Docker
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/posts/ec825a3a.html" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#win7%E4%B8%8B%E4%BD%BF%E7%94%A8Docker-Toolbox%E5%AE%89%E8%A3%85"><span class="toc-text">win7下使用Docker Toolbox安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%96%87%E4%BB%B6%E5%9C%B0%E5%9D%80%E4%BF%AE%E6%94%B9"><span class="toc-text">Docker虚拟机文件地址修改</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%AF%E8%83%BD%E4%BC%9A%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91"><span class="toc-text">可能会遇到的坑</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#win7%E4%BD%BF%E7%94%A8toolbox%E6%8C%82%E8%BD%BD%E5%A4%B1%E8%B4%A5"><span class="toc-text">win7使用toolbox挂载失败</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="gitee" target="_blank" rel="noopener" href="https://gitee.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + windows%E4%B8%8B%E5%AE%89%E8%A3%85docker + '&url=' + http%3A%2F%2Fyoursite.com%2Fposts%2F2fce4b74.html + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://yoursite.com/posts/2fce4b74.html" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="cat" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      错误与异常处理 
+      
+      
+      |
+    
+     thisofcat
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <link rel="icon" href="/images/logo.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/logo.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">cat</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">错误与异常处理</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2017-11-07 01:56:27
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                    <b>#</b> 后端
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/php/" title="php">
+                    <b>#</b> php
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/php/" title="php">
+                    <b>#</b> php
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>&lt;Excerpt in index | 首页摘要&gt;</p>
+<span id="more"></span>
+<p>&lt;The rest of contents | 余下全文&gt;</p>
+<h1 id="PHP错误与异常处理"><a href="#PHP错误与异常处理" class="headerlink" title="PHP错误与异常处理"></a>PHP错误与异常处理</h1><p>没有特殊说明：本例 PHP Version &lt; 7<br>说起PHP异常处理，大家首先会想到try-catch，那好，我们先看一段程序吧：有一个test.php文件，有一段简单的PHP程序，内容如下，然后命令行执行：php test.php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="variable">$num</span> = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">         <span class="keyword">echo</span> <span class="number">1</span>/<span class="variable">$num</span>;</span><br><span class="line">    </span><br><span class="line">     &#125; <span class="keyword">catch</span> (<span class="built_in">Exception</span> <span class="variable">$e</span>)&#123;</span><br><span class="line">         <span class="keyword">echo</span> <span class="variable">$e</span>-&gt;<span class="title function_ invoke__">getMessage</span>();</span><br><span class="line">     &#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><ul>
+<li>一、异常与错误的概述</li>
+<li>二、ERROR的级别</li>
+<li>三、PHP异常处理中的黑科技</li>
+<li>四、巧妙的捕获错误和异常</li>
+<li>五、自定义异常处理和异常嵌套</li>
+<li>六、PHP7中的异常处理</li>
+</ul>
+<h2 id="一、异常与错误的概述"><a href="#一、异常与错误的概述" class="headerlink" title="一、异常与错误的概述"></a>一、异常与错误的概述</h2><p>   PHP中什么是异常：<br>   程序在运行中出现不符合预期的情况，允许发生（你也不想让他出现不正常的情况）但他是一种不正常的情况，按照我们的正常逻辑本不该出的错误，<br>   但仍然会出现的错误，属于逻辑和业务流程的错误，而不是编译或者语法上的错误。  </p>
+<p>　　PHP中什么是错误：<br>　　属于php脚本自身的问题，大部分情况是由错误的语法，服务器环境导致，使得编译器无法通过检查，甚至无法运行的情况。warning、notice都是错误，<br>   只是他们的级别不同而已，并且错误是不能被try-catch捕获的。  </p>
+<p>　　上面的说法是有前提条件的：<br>　　在PHP中，因为在其他语言中就不能这样下结论了，也就是说异常和错误的说法在不同的语言有不同的说法。在PHP中任何自身的错误或者是非正常的代码都会当做错误对待，并不会以异常的形式抛出，但是也有一些情况会当做异常和错误同时抛出(据说是，我没有找到合适的例子)。也就是说，你想在数据库连接失败的时候自动捕获异常是行不通的，因为这就不是异常，是错误。但是在java中就不一样了，他会把很多和预期不一致的行为当做异常来进行捕获。</p>
+<p>　　PHP异常处理很鸡肋？<br>　　在上面的分析中我们可以看出，PHP并不能主动的抛出异常，但是你可以手动抛出异常，既然能手动抛出就证明这个不是异常，而是意料之中。以我的理解，这就是PHP异常处理鸡肋的地方（不一定对啊）。所以PHP的异常机制不是那么的完美，但是使用过框架的同学都知道有这个情况：你在框架中直接写开头那段php“自动”捕获异常的代码是可以的，这是为什么？看过源码的同学都知道框架中都会涉及三个函数：register_shutdown_function，set_error_handler，set_exception_handler后面我会重点讲解着三个黑科技，通过这几个函数我们可以实现PHP假自动捕获异常和错误。</p>
+<h2 id="二、ERROR的级别"><a href="#二、ERROR的级别" class="headerlink" title="二、ERROR的级别"></a>二、ERROR的级别</h2><p>　　只有熟悉错误级别才能对错误捕捉有更好的认识。 <a target="_blank" rel="noopener" href="http://www.cnblogs.com/zyf-zhaoyafei/p/3649434.html">ERROR有不同的错误级别</a><br>　　下面我再总结性的给出这几类错误级别：</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">Fatal <span class="keyword">Error</span>:致命错误（脚本终止运行）</span><br><span class="line">E_ERROR         <span class="comment">// 致命的运行错误，错误无法恢复，暂停执行脚本</span></span><br><span class="line">E_CORE_ERROR    <span class="comment">// PHP启动时初始化过程中的致命错误</span></span><br><span class="line">E_COMPILE_ERROR <span class="comment">// 编译时致命性错，就像由Zend脚本引擎生成了一个E_ERROR</span></span><br><span class="line">E_USER_ERROR    <span class="comment">// 自定义错误消息。像用PHP函数trigger_error（错误类型设置为：E_USER_ERROR）</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">Parse</span> <span class="keyword">Error</span>：编译时解析错误，语法错误（脚本终止运行）</span><br><span class="line">E_PARSE  <span class="comment">//编译时的语法解析错误</span></span><br><span class="line"></span><br><span class="line">Warning <span class="keyword">Error</span>：警告错误（仅给出提示信息，脚本不终止运行）</span><br><span class="line">E_WARNING         <span class="comment">// 运行时警告 (非致命错误)。</span></span><br><span class="line">E_CORE_WARNING    <span class="comment">// PHP初始化启动过程中发生的警告 (非致命错误) 。</span></span><br><span class="line">E_COMPILE_WARNING <span class="comment">// 编译警告</span></span><br><span class="line">E_USER_WARNING    <span class="comment">// 用户产生的警告信息</span></span><br><span class="line"></span><br><span class="line">Notice <span class="keyword">Error</span>：通知错误（仅给出通知信息，脚本不终止运行）</span><br><span class="line">E_NOTICE      <span class="comment">// 运行时通知。表示脚本遇到可能会表现为错误的情况.</span></span><br><span class="line">E_USER_NOTICE <span class="comment">// 用户产生的通知信息。</span></span><br><span class="line"></span><br><span class="line">由此可知有5类是产生<span class="keyword">ERROR</span>级别的错误，这种错误直接导致PHP程序退出。  </span><br><span class="line">可以定义成：  </span><br><span class="line"><span class="keyword">ERROR</span> = E_ERROR | E_CORE_ERROR |  E_COMPILE_ERROR | E_USER_ERROR | E_PARSE</span><br></pre></td></tr></table></figure>
+<h2 id="三、PHP异常处理中的黑科技"><a href="#三、PHP异常处理中的黑科技" class="headerlink" title="三、PHP异常处理中的黑科技"></a>三、PHP异常处理中的黑科技</h2><p>　　前面提到框架中是可以捕获所有的错误和异常的，之所以能实现应该是使用了黑科技，哈哈！其实也不是什么黑科技，主要是三个重要的函数：  </p>
+<p>　　1：set_error_handler()<br>　　看到这个名字估计就知道什么意思了，这个函数用于捕获错误，设置一个用户自定义的错误处理函数。  </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="title function_ invoke__">set_error_handler</span>(<span class="string">&#x27;zyferror&#x27;</span>);</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">zyferror</span>(<span class="params"><span class="variable">$type</span>, <span class="variable">$message</span>, <span class="variable">$file</span>, <span class="variable">$line</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">    　　<span class="title function_ invoke__">var_dump</span>(<span class="string">&#x27;&lt;b&gt;set_error_handler: &#x27;</span> . <span class="variable">$type</span> . <span class="string">&#x27;:&#x27;</span> . <span class="variable">$message</span> . <span class="string">&#x27; in &#x27;</span> . <span class="variable">$file</span> . <span class="string">&#x27; on &#x27;</span> . <span class="variable">$line</span> . <span class="string">&#x27; line .&lt;/b&gt;&lt;br /&gt;&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>　　当程序出现错误的时候自动调用此方法，不过需要注意一下两点：第一，如果存在该方法，相应的error_reporting()就不能在使用了。所有的错误都会交给自定义的函数处理。第二，此方法不能处理以下级别的错误：E_ERROR、 E_PARSE、 E_CORE_ERROR、 E_CORE_WARNING、 E_COMPILE_ERROR、 E_COMPILE_WARNING，set_error_handler() 函数所在文件中产生的E_STRICT，该函数只能捕获系统产生的一些Warning、Notice级别的错误。<br>　　并且他有多种调用的方法：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">     <span class="comment">// 直接传函数名 NonClassFunction</span></span><br><span class="line">     <span class="title function_ invoke__">set_error_handler</span>(<span class="string">&#x27;function_name&#x27;</span>); </span><br><span class="line"></span><br><span class="line">     <span class="comment">// 传 class_name &amp;&amp; function_name</span></span><br><span class="line">     <span class="title function_ invoke__">set_error_handler</span>(<span class="keyword">array</span>(<span class="string">&#x27;class_name&#x27;</span>, <span class="string">&#x27;function_name&#x27;</span>)); </span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p> 　　2：register_shutdown_function()<br>　　捕获PHP的错误：Fatal Error、Parse Error等，这个方法是PHP脚本执行结束前最后一个调用的函数，比如脚本错误、die()、exit、异常、正常结束都会调用，多么牛逼的一个函数啊！通过这个函数就可以在脚本结束前判断这次执行是否有错误产生，这时就要借助于一个函数：error_get_last()；这个函数可以拿到本次执行产生的所有错误。error_get_last();返回的信息：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">　　[type]</span>    - 错误类型</span><br><span class="line"><span class="string">　　[message]</span> - 错误消息</span><br><span class="line"><span class="string">　　[file]</span>    - 发生错误所在的文件</span><br><span class="line"><span class="string">　　[line]</span>    - 发生错误所在的行</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="title function_ invoke__">register_shutdown_function</span>(<span class="string">&#x27;zyfshutdownfunc&#x27;</span>);</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">zyfshutdownfunc</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$error</span> = <span class="title function_ invoke__">error_get_last</span>()) &#123;</span><br><span class="line">            <span class="title function_ invoke__">var_dump</span>(<span class="string">&#x27;&lt;b&gt;register_shutdown_function: Type:&#x27;</span> . <span class="variable">$error</span>[<span class="string">&#x27;type&#x27;</span>] . <span class="string">&#x27; Msg: &#x27;</span> . <span class="variable">$error</span>[<span class="string">&#x27;message&#x27;</span>] . <span class="string">&#x27; in &#x27;</span> . <span class="variable">$error</span>[<span class="string">&#x27;file&#x27;</span>] . <span class="string">&#x27; on line &#x27;</span> . <span class="variable">$error</span>[<span class="string">&#x27;line&#x27;</span>] . <span class="string">&#x27;&lt;/b&gt;&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">　通过这种方法就可以巧妙的打印出程序结束前所有的错误信息。但是我在测试的时候我发现并不是所有的错误终止后都会调用这个函数，可以看下面的一个测试文件，内容是：</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">     <span class="title function_ invoke__">register_shutdown_function</span>(<span class="string">&#x27;zyfshutdownfunc&#x27;</span>);</span><br><span class="line">     <span class="function"><span class="keyword">function</span> <span class="title">zyfshutdownfunc</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">     </span>&#123;</span><br><span class="line">         <span class="keyword">if</span> (<span class="variable">$error</span> = <span class="title function_ invoke__">error_get_last</span>()) &#123;</span><br><span class="line">             <span class="title function_ invoke__">var_dump</span>(<span class="string">&#x27;&lt;b&gt;register_shutdown_function: Type:&#x27;</span> . <span class="variable">$error</span>[<span class="string">&#x27;type&#x27;</span>] . <span class="string">&#x27; Msg: &#x27;</span> . <span class="variable">$error</span>[<span class="string">&#x27;message&#x27;</span>] . <span class="string">&#x27; in &#x27;</span> . <span class="variable">$error</span>[<span class="string">&#x27;file&#x27;</span>] . <span class="string">&#x27; on line &#x27;</span> . <span class="variable">$error</span>[<span class="string">&#x27;line&#x27;</span>] . <span class="string">&#x27;&lt;/b&gt;&#x27;</span>);</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="title function_ invoke__">var_dump</span>(<span class="number">23</span>+-+); <span class="comment">//此处语法错误</span></span><br><span class="line"> <span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line"> 　　自己可以试一下，你可以看到根本就不会触发<span class="title function_ invoke__">zyfshutdownfunc</span>()函数，其实这是一个语法错误，直接报了一个：</span><br><span class="line">    Parse error: syntax error, unexpected <span class="string">&#x27;)&#x27;</span> in /www/mytest/exception/<span class="keyword">try</span>-<span class="keyword">catch</span>.php on line <span class="number">71</span></span><br><span class="line"></span><br><span class="line">　　由此引出一个奇葩的问题：问什么不能触发，为什么框架中是可以的？其实原因很简单，只在parse-time出错时是不会调用本函数的。只有在run-time出错的时候，才会调用本函数，我的理解是语法检查器前没有执行<span class="title function_ invoke__">register_shutdown_function</span>()去把需要注册的函数放到调用的堆栈中，所以就根本不会运行。那框架中为什么任何错误都能进入到<span class="title function_ invoke__">register_shutdown_function</span>()中呢，其实在框架中一般会有统一的入口index.php，然后每个类库文件都会通过<span class="keyword">include</span> ** 的方式加载到index.php中，相当与所有的程序都会在index.php中聚集，同样，你写的具有语法错误的文件也会被引入到入口文件中，这样的话，调用框架，执行index.php，index.php本身并没有语法错误，也就不会产生parse-time错误，而是 <span class="keyword">include</span> 文件出错了，是run-time的时候出错了，所以框架执行完之后就会触发<span class="title function_ invoke__">register_shutdown_function</span>();</span><br><span class="line">　　所以现在可是试一下这个写法，这样就会触发<span class="title function_ invoke__">zyfshutdownfunc</span>()回调了：</span><br><span class="line"></span><br><span class="line"> a.php文件</span><br><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line"> 　　<span class="comment">// 模拟语法错误</span></span><br><span class="line"> 　　<span class="title function_ invoke__">var_dump</span>(<span class="number">23</span>+-+);</span><br><span class="line"> <span class="meta">?&gt;</span></span><br><span class="line"> </span><br><span class="line"> b.php文件</span><br><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line">     <span class="title function_ invoke__">register_shutdown_function</span>(<span class="string">&#x27;zyfshutdownfunc&#x27;</span>);</span><br><span class="line">   <span class="function"><span class="keyword">function</span> <span class="title">zyfshutdownfunc</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">   </span>&#123;</span><br><span class="line">       <span class="keyword">if</span> (<span class="variable">$error</span> = <span class="title function_ invoke__">error_get_last</span>()) &#123;</span><br><span class="line">            <span class="title function_ invoke__">var_dump</span>(<span class="string">&#x27;&lt;b&gt;register_shutdown_function: Type:&#x27;</span> . <span class="variable">$error</span>[<span class="string">&#x27;type&#x27;</span>] . <span class="string">&#x27; Msg: &#x27;</span> . <span class="variable">$error</span>[<span class="string">&#x27;message&#x27;</span>] . <span class="string">&#x27; in &#x27;</span> . <span class="variable">$error</span>[<span class="string">&#x27;file&#x27;</span>] . <span class="string">&#x27; on line &#x27;</span> . <span class="variable">$error</span>[<span class="string">&#x27;line&#x27;</span>] . <span class="string">&#x27;&lt;/b&gt;&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">require</span> <span class="string">&#x27;a.php&#x27;</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line"> 　　<span class="number">3</span>：<span class="title function_ invoke__">set_exception_handler</span>()</span><br><span class="line">　　设置默认的异常处理程序，用在没有用<span class="keyword">try</span>/<span class="keyword">catch</span>块来捕获的异常，也就是说不管你抛出的异常有没有人捕获，如果没有人捕获就会进入到该方法中，并且在回调函数调用后异常会中止。看一下用法：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="title function_ invoke__">set_exception_handler</span>(<span class="string">&#x27;zyfexception&#x27;</span>);</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">zyfexception</span>(<span class="params"><span class="variable">$exception</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="title function_ invoke__">var_dump</span>(<span class="string">&quot;&lt;b&gt;set_exception_handler: Exception: &quot;</span> . <span class="variable">$exception</span>-&gt;<span class="title function_ invoke__">getMessage</span>()  . <span class="string">&#x27;&lt;/b&gt;&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Exception</span>(<span class="string">&quot;zyf exception&quot;</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## 四、巧妙的捕获错误和异常</span></span><br><span class="line">　　<span class="number">1</span>：把错误以异常的形式抛出(不能完全抛出)</span><br><span class="line">　　　　由上面的讲解我们知道，php中的错误是不能以异常的像是捕获的，但是我们需要让他们抛出，已达到扩展 <span class="keyword">try</span>-<span class="keyword">catch</span>的影响范围，我们前面讲到过<span class="title function_ invoke__">set_error_handler</span>() 方法，他是干嘛用的，他是捕获错误的，所以我们就可以借助他来吧错误捕获，然后再以异常的形式抛出，ok，试试下面的写法：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="title function_ invoke__">set_error_handler</span>(<span class="string">&#x27;zyferror&#x27;</span>);</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">zyferror</span>(<span class="params"><span class="variable">$type</span>, <span class="variable">$message</span>, <span class="variable">$file</span>, <span class="variable">$line</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">\Exception</span>(<span class="variable">$message</span> . <span class="string">&#x27;zyf错误当做异常&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$num</span> = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="number">1</span>/<span class="variable">$num</span>;</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">catch</span> (<span class="built_in">Exception</span> <span class="variable">$e</span>)&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="variable">$e</span>-&gt;<span class="title function_ invoke__">getMessage</span>();</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line">　　好了，试一下，会打印出：</span><br><span class="line"></span><br><span class="line"><span class="number">1</span> Division by zero zyf123</span><br><span class="line">　　流程：本来是除<span class="number">0</span>错误，然后触发<span class="title function_ invoke__">set_error_handler</span>()，在<span class="title function_ invoke__">set_error_handler</span>()中相当与杀了个回马枪，再把错误信息以异常的形式抛出来，这样就可以实现错误以异常的形式抛出。大家要注意：这样做是有缺点的，会受到<span class="title function_ invoke__">set_error_handler</span>()函数捕获级别的限制。</span><br><span class="line"></span><br><span class="line">     <span class="number">2</span>：捕获所有的错误</span><br><span class="line">        由<span class="title function_ invoke__">set_error_handler</span>()可知，他能够捕获一部分错误，不能捕获系统级E_ERROR、E_PARSE等错误，但是这部分可以由<span class="title function_ invoke__">register_shutdown_function</span>()捕获。所以两者结合能出现很好的功能。</span><br><span class="line">        看下面的程序：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> a.php内容：</span><br><span class="line"> <span class="meta">&lt;?</span></span><br><span class="line">     <span class="comment">// 模拟Fatal error错误</span></span><br><span class="line">     <span class="comment">//test();</span></span><br><span class="line"> </span><br><span class="line">     <span class="comment">// 模拟用户产生ERROR错误</span></span><br><span class="line">     <span class="comment">//trigger_error(&#x27;zyf-error&#x27;, E_USER_ERROR);</span></span><br><span class="line"> </span><br><span class="line">     <span class="comment">// 模拟语法错误</span></span><br><span class="line">    <span class="title function_ invoke__">var_dump</span>(<span class="number">23</span>+-+);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 模拟Notice错误</span></span><br><span class="line">    <span class="comment">//echo $f;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 模拟Warning错误</span></span><br><span class="line">    <span class="comment">//echo &#x27;123&#x27;;</span></span><br><span class="line">    <span class="comment">//ob_flush();</span></span><br><span class="line">    <span class="comment">//flush();</span></span><br><span class="line">    <span class="comment">//header(&quot;Content-type:text/html;charset=gb2312&quot;);</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line">b.php内容：</span><br><span class="line"><span class="meta">&lt;?</span></span><br><span class="line">    <span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="title function_ invoke__">register_shutdown_function</span>(<span class="string">&#x27;zyfshutdownfunc&#x27;</span>);</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">zyfshutdownfunc</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$error</span> = <span class="title function_ invoke__">error_get_last</span>()) &#123;</span><br><span class="line">            <span class="title function_ invoke__">var_dump</span>(<span class="string">&#x27;&lt;b&gt;register_shutdown_function: Type:&#x27;</span> . <span class="variable">$error</span>[<span class="string">&#x27;type&#x27;</span>] . <span class="string">&#x27; Msg: &#x27;</span> . <span class="variable">$error</span>[<span class="string">&#x27;message&#x27;</span>] . <span class="string">&#x27; in &#x27;</span> . <span class="variable">$error</span>[<span class="string">&#x27;file&#x27;</span>] . <span class="string">&#x27; on line &#x27;</span> . <span class="variable">$error</span>[<span class="string">&#x27;line&#x27;</span>] . <span class="string">&#x27;&lt;/b&gt;&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_ invoke__">set_error_handler</span>(<span class="string">&#x27;zyferror&#x27;</span>);</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">zyferror</span>(<span class="params"><span class="variable">$type</span>, <span class="variable">$message</span>, <span class="variable">$file</span>, <span class="variable">$line</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="title function_ invoke__">var_dump</span>(<span class="string">&#x27;&lt;b&gt;set_error_handler: &#x27;</span> . <span class="variable">$type</span> . <span class="string">&#x27;:&#x27;</span> . <span class="variable">$message</span> . <span class="string">&#x27; in &#x27;</span> . <span class="variable">$file</span> . <span class="string">&#x27; on &#x27;</span> . <span class="variable">$line</span> . <span class="string">&#x27; line .&lt;/b&gt;&lt;br /&gt;&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">require</span> <span class="string">&#x27;a.php&#x27;</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line"> 　　到此就可以解释开头的那个程序了吧，test.php 如果是单文件执行是不能捕获到错误的，如果你在框架中执行就是可以的，当然你按照我上面介绍的来扩展也是可以的。</span><br><span class="line"></span><br><span class="line"><span class="comment">## 五、自定义异常处理和异常嵌套</span></span><br><span class="line"></span><br><span class="line">　　<span class="number">1</span>：自定义异常处理</span><br><span class="line"></span><br><span class="line">　　在复杂的系统中，我们往往需要自己捕获我们需要特殊处理的异常，这些异常可能是特殊情况下抛出的。所以我们就自己定义一个异常捕获类，该类必须是 exception 类的一个扩展，该类继承了 PHP 的 exception 类的所有属性，并且我们可以添加自定义的函数，使用的时候其实和之前的一样，大致写法如下：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line">     <span class="class"><span class="keyword">class</span> <span class="title">zyfException</span> <span class="keyword">extends</span> <span class="title">Exception</span></span></span><br><span class="line"><span class="class">     </span>&#123;</span><br><span class="line">         <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">errorzyfMessage</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">         </span>&#123;</span><br><span class="line">             <span class="keyword">return</span> <span class="string">&#x27;Error line &#x27;</span> . <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getLine</span>().<span class="string">&#x27; in &#x27;</span> . <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getFile</span>()</span><br><span class="line">                 .<span class="string">&#x27;: &lt;b&gt;&#x27;</span> . <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getMessage</span>() . <span class="string">&#x27;&lt;/b&gt; Must in (0 - 60)&#x27;</span>;</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$age</span> = <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="variable">$age</span> = <span class="title function_ invoke__">intval</span>(<span class="variable">$age</span>);</span><br><span class="line">        <span class="keyword">if</span>(<span class="variable">$age</span> &gt; <span class="number">60</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title function_ invoke__">zyfException</span>(<span class="variable">$age</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">catch</span> (zyfException <span class="variable">$e</span>) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="variable">$e</span>-&gt;<span class="title function_ invoke__">errorzyfMessage</span>();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line">　　<span class="number">2</span>：异常嵌套</span><br><span class="line"></span><br><span class="line">　　异常嵌套是比较常见的写法，在自定义的异常处理中，<span class="keyword">try</span> 块中可以定义多个异常捕获，然后分层传递异常，理解和冒泡差不多，看下面的实现：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line">     <span class="variable">$age</span> = <span class="number">10</span>;</span><br><span class="line">     <span class="keyword">try</span> &#123;</span><br><span class="line">         <span class="variable">$age</span> = <span class="title function_ invoke__">intval</span>(<span class="variable">$age</span>);</span><br><span class="line">         <span class="keyword">if</span>(<span class="variable">$age</span> &gt; <span class="number">60</span>) &#123;</span><br><span class="line">             <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title function_ invoke__">zyfException</span>(<span class="variable">$age</span>);</span><br><span class="line">         &#125;</span><br><span class="line"> </span><br><span class="line">         <span class="keyword">if</span> (<span class="variable">$age</span> &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Exception</span>(<span class="variable">$age</span> . <span class="string">&#x27; must &gt; 0&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">catch</span> (zyfException <span class="variable">$e</span>) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="variable">$e</span>-&gt;<span class="title function_ invoke__">errorzyfMessage</span>();</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">catch</span>(<span class="built_in">Exception</span> <span class="variable">$e</span>) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="variable">$e</span>-&gt;<span class="title function_ invoke__">getMessage</span>();</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line">　　当然也可以在<span class="keyword">catch</span>中再抛出异常给上层：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line">     <span class="variable">$age</span> = <span class="number">100</span>;</span><br><span class="line">     <span class="keyword">try</span> &#123;</span><br><span class="line">         <span class="keyword">try</span> &#123;</span><br><span class="line">             <span class="variable">$age</span> = <span class="title function_ invoke__">intval</span>(<span class="variable">$age</span>);</span><br><span class="line">             <span class="keyword">if</span>(<span class="variable">$age</span> &gt; <span class="number">60</span>) &#123;</span><br><span class="line">                 <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Exception</span>(<span class="variable">$age</span>);</span><br><span class="line">             &#125;</span><br><span class="line"> </span><br><span class="line">        &#125; <span class="keyword">catch</span> (<span class="built_in">Exception</span> <span class="variable">$e</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title function_ invoke__">zyfException</span>(<span class="variable">$age</span>);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">catch</span> (zyfException <span class="variable">$e</span>) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="variable">$e</span>-&gt;<span class="title function_ invoke__">errorzyfMessage</span>();</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## 六、PHP7中的异常处理</span></span><br><span class="line">　　现在写PHP必须考虑版本情况，上面的写法在PHP7中大部分都能实现，但是也会有不同点，在PHP7更新中有一条：更多的<span class="built_in">Error</span>变为可捕获的<span class="built_in">Exception</span>，现在的PHP7实现了一个全局的throwable接口，原来老的<span class="built_in">Exception</span>和其中一部分<span class="built_in">Error</span>实现了这个接口(<span class="class"><span class="keyword">interface</span>)，<span class="title">PHP7</span>中更多的<span class="title">Error</span>变为可捕获的<span class="title">Exception</span>返回给捕捉器，这样其实和前面提到的扩展<span class="title">try</span>-<span class="title">catch</span>影响范围一样，但是如果不捕获则还是按照<span class="title">Error</span>对待，看下面两个：</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"> &lt;?<span class="title">php</span></span></span><br><span class="line"><span class="class">     <span class="title">try</span> </span>&#123;</span><br><span class="line">         <span class="title function_ invoke__">test</span>();</span><br><span class="line"> </span><br><span class="line">     &#125; <span class="keyword">catch</span>(<span class="built_in">Throwable</span> <span class="variable">$e</span>) &#123;</span><br><span class="line">         <span class="keyword">echo</span> <span class="variable">$e</span>-&gt;<span class="title function_ invoke__">getMessage</span>() . <span class="string">&#x27; zyf&#x27;</span>;</span><br><span class="line">     &#125;</span><br><span class="line"> </span><br><span class="line">     <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="title function_ invoke__">test</span>();</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">catch</span>(<span class="built_in">Error</span> <span class="variable">$e</span>) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="variable">$e</span>-&gt;<span class="title function_ invoke__">getMessage</span>() . <span class="string">&#x27; zyf&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line"> 因为PHP7实现了throwable接口，那么就可以使用第一个这种方式来捕获异常。又因为部分<span class="built_in">Error</span>实现了接口，并且更多的<span class="built_in">Error</span>变为可捕获的<span class="built_in">Exception</span>，那么就可以使用第二种方式来捕获异常。下面是在网上找的PHP7的异常层次树：</span><br><span class="line"><span class="built_in">Throwable</span></span><br><span class="line">　　<span class="built_in">Exception</span> 异常</span><br><span class="line">　　　　...</span><br><span class="line">　　<span class="built_in">Error</span> 错误</span><br><span class="line">　　　　<span class="built_in">ArithmeticError</span> 算数错误</span><br><span class="line">　　　　　　<span class="built_in">DivisionByZeroError</span> 除数为<span class="number">0</span>的错误</span><br><span class="line">　　　　<span class="built_in">AssertionError</span> 声明错误</span><br><span class="line">　　　　<span class="built_in">ParseError</span> 解析错误</span><br><span class="line">　　　　<span class="built_in">TypeError</span> 类型错误</span><br></pre></td></tr></table></figure>
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/posts/430d67de.html" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2017-11-07 01:56:27
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                        <b>#</b> 后端
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/php/" title="php">
+                        <b>#</b> php
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/php/" title="php">
+                        <b>#</b> php
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/posts/490cdff9.html" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#PHP%E9%94%99%E8%AF%AF%E4%B8%8E%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="toc-text">PHP错误与异常处理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95"><span class="toc-text">目录</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%BC%82%E5%B8%B8%E4%B8%8E%E9%94%99%E8%AF%AF%E7%9A%84%E6%A6%82%E8%BF%B0"><span class="toc-text">一、异常与错误的概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81ERROR%E7%9A%84%E7%BA%A7%E5%88%AB"><span class="toc-text">二、ERROR的级别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81PHP%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E4%B8%AD%E7%9A%84%E9%BB%91%E7%A7%91%E6%8A%80"><span class="toc-text">三、PHP异常处理中的黑科技</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="gitee" target="_blank" rel="noopener" href="https://gitee.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E9%94%99%E8%AF%AF%E4%B8%8E%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86 + '&url=' + http%3A%2F%2Fyoursite.com%2Fposts%2F4fe082bb.html + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://yoursite.com/posts/4fe082bb.html" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

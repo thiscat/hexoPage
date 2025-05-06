@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="cat" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      Redis、Memcached、MongoDB的特点和区别 
+      
+      
+      |
+    
+     thisofcat
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <link rel="icon" href="/images/logo.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/logo.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">cat</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Redis、Memcached、MongoDB的特点和区别</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2023-02-05 16:00:00
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                    <b>#</b> 后端
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/NoSQL/" title="NoSQL">
+                    <b>#</b> NoSQL
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/NoSQL/" title="NoSQL">
+                    <b>#</b> NoSQL
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>&lt;Excerpt in index | 首页摘要&gt;</p>
+<span id="more"></span>
+<p>&lt;The rest of contents | 余下全文&gt;</p>
+<h1 id="一、Redis、Memcached、MongoDB的特点"><a href="#一、Redis、Memcached、MongoDB的特点" class="headerlink" title="一、Redis、Memcached、MongoDB的特点"></a>一、Redis、Memcached、MongoDB的特点</h1><h2 id="1-Redis"><a href="#1-Redis" class="headerlink" title="1. Redis"></a>1. Redis</h2><h3 id="1-1-优点"><a href="#1-1-优点" class="headerlink" title="1.1 优点"></a>1.1 优点</h3><ol>
+<li>支持多种数据结构，如 string（字符串）、 list(双向链表)、dict(hash表)、set(集合）、zset(排序set)</li>
+<li>支持持久化操作，可以进行aof及rdb数据持久化到磁盘，从而进行数据备份或数据恢复等操作，较好的防止数据丢失的手段</li>
+<li>支持通过Replication进行数据复制，通过master-slave机制，可以实时进行数据的同步复制，支持多级复制和增量复制，master-slave机制是Redis进行HA的重要手段</li>
+<li>单线程请求，所有命令串行执行，并发情况下不需要考虑数据一致性问题</li>
+<li>支持pub&#x2F;sub消息订阅机制，可以用来进行消息订阅与通知</li>
+<li>支持简单的事务需求，但业界使用场景很少，并不成熟</li>
+</ol>
+<h3 id="1-2-缺点"><a href="#1-2-缺点" class="headerlink" title="1.2 缺点"></a>1.2 缺点</h3><ol>
+<li>Redis只能使用单线程，性能受限于CPU性能，故单实例CPU最高才可能达到5-6wQPS每秒（取决于数据结构，数据大小以及服务器硬件性能，日常环境中QPS高峰大约在1-2w左右）</li>
+<li>支持简单的事务需求，但业界使用场景很少，并不成熟，既是优点也是缺点</li>
+<li>Redis在string类型上会消耗较多内存，可以使用dict（hash表）压缩存储以降低内存耗用</li>
+</ol>
+<h3 id="1-3-应用场景："><a href="#1-3-应用场景：" class="headerlink" title="1.3 应用场景："></a>1.3 应用场景：</h3><ol>
+<li>配合关系型数据库做高速缓存</li>
+<li>缓存高频次数据，降低数据库io</li>
+<li>分布式架构，做session共享</li>
+</ol>
+<h2 id="Memcached"><a href="#Memcached" class="headerlink" title="Memcached"></a>Memcached</h2><h3 id="1-1-优点-1"><a href="#1-1-优点-1" class="headerlink" title="1.1 优点"></a>1.1 优点</h3><ol>
+<li>可以利用多核优势，单实例吞吐量极高，可以达到几十万QPS（取决于key、value的字节大小以及服务器硬件性能，日常环境中QPS高峰大约在4-6w左右），适用于最大程度扛量</li>
+<li>支持直接配置为session handle</li>
+</ol>
+<h3 id="1-2-缺点-1"><a href="#1-2-缺点-1" class="headerlink" title="1.2 缺点"></a>1.2 缺点</h3><ol>
+<li>只支持简单的key&#x2F;value数据结构，不像Redis可以支持丰富的数据类型</li>
+<li>无法进行持久化，数据不能备份，只能用于缓存使用，且重启后数据全部丢失</li>
+<li>无法进行数据同步，不能将MC中的数据迁移到其他MC实例中</li>
+<li>内存分配采用Slab Allocation机制管理内存，value大小分布差异较大时会造成内存利用率降低，并引发低利用率时依然出现踢出等问题。需要用户注重value设计</li>
+</ol>
+<h2 id="MongoDB"><a href="#MongoDB" class="headerlink" title="MongoDB"></a>MongoDB</h2><h3 id="1-1-优点-2"><a href="#1-1-优点-2" class="headerlink" title="1.1 优点"></a>1.1 优点</h3><ol>
+<li>更高的写负载，拥有更高的写入速度</li>
+<li>处理很大规模的单表，当数据表很大的时候，可以容易的分割表</li>
+<li>高可用性，设置M-S不仅方便而且很快，还可以快速、安全及自动化的实现节点（数据中心）故障转移</li>
+<li>快速的查询，MongoDB支持二维空间索引，比如管道，因此可以快速及精确的从指定位置获取数据。MongoDB在启动后会将数据库中的数据以文件映射的方式加载到内存中。如果内存资源相当丰富的话，这将极大地提高数据库的查询速度。</li>
+<li>非结构化数据的爆发增长，增加列在有些情况下可能锁定整个数据库，或者增加负载从而导致性能下降，由于MongoDB的弱数据结构模式，添加1个新字段不会对旧表格有任何影响，整个过程会非常快速。</li>
+</ol>
+<h3 id="1-2-缺点-2"><a href="#1-2-缺点-2" class="headerlink" title="1.2 缺点"></a>1.2 缺点</h3><ol>
+<li>不支持事务</li>
+<li>占用空间过大</li>
+<li>没有成熟的维护工具</li>
+</ol>
+<h3 id="1-3-适合场景"><a href="#1-3-适合场景" class="headerlink" title="1.3 适合场景"></a>1.3 适合场景</h3><ol>
+<li>事件记录、内容管理或者博客平台，比如评论系统</li>
+</ol>
+<h1 id="二、Redis、Memcached、MongoDB的区别"><a href="#二、Redis、Memcached、MongoDB的区别" class="headerlink" title="二、Redis、Memcached、MongoDB的区别"></a>二、Redis、Memcached、MongoDB的区别</h1><h2 id="1-性能"><a href="#1-性能" class="headerlink" title="1. 性能"></a>1. 性能</h2><ol>
+<li>三者的性能都比较高，总的来讲：Memcache和Redis差不多，要高于MongoDB。</li>
+</ol>
+<h2 id="2-便利性"><a href="#2-便利性" class="headerlink" title="2. 便利性"></a>2. 便利性</h2><ol>
+<li>memcache数据结构单一。  </li>
+<li>redis丰富一些，数据操作方面，redis更好一些，较少的网络IO次数。  </li>
+<li>mongodb支持丰富的数据表达，索引，最类似关系型数据库，支持的查询语言非常丰富。</li>
+</ol>
+<h2 id="3-存储空间"><a href="#3-存储空间" class="headerlink" title="3. 存储空间"></a>3. 存储空间</h2><ol>
+<li>MemCached可以修改最大内存，采用LRU算法。  </li>
+<li>Redis增加了VM的特性，突破了物理内存的限制。  </li>
+<li>MongoDB 适合大数据量的存储，依赖操作系统 VM 做内存管理，内存占用大</li>
+</ol>
+<h2 id="4-可用性"><a href="#4-可用性" class="headerlink" title="4. 可用性"></a>4. 可用性</h2><ol>
+<li><p>redis依赖客户端来实现分布式读写；主从复制时，每次从节点重新连接主节点都要依赖整个快照,无增量复制，因性能和效率问题，所以单点问题比较复杂。<br>不支持自动sharding,需要依赖程序设定一致hash 机制。一种替代方案是，不用redis本身的复制机制，采用自己做主动复制（多份存储），或者改成增量复制的方式（需要自己实现），一致性问题和性能的权衡。  </p>
+</li>
+<li><p>Memcache本身没有数据冗余机制，也没必要；对于故障预防，采用依赖成熟的hash或者环状的算法，解决单点故障引起的抖动问题。  </p>
+</li>
+<li><p>mongoDB支持master-slave,replicaset（内部采用paxos选举算法，自动故障恢复）,auto sharding机制，对客户端屏蔽了故障转移和切分机制。</p>
+</li>
+</ol>
+<h2 id="5-可靠性"><a href="#5-可靠性" class="headerlink" title="5. 可靠性"></a>5. 可靠性</h2><ol>
+<li>redis支持（快照、AOF）：依赖快照进行持久化，aof增强了可靠性的同时，对性能有所影响。  </li>
+<li>memcache不支持，通常用在做缓存,提升性能。  </li>
+<li>MongoDB从1.8版本开始采用binlog方式支持持久化的可靠性。</li>
+</ol>
+<h2 id="6-一致性"><a href="#6-一致性" class="headerlink" title="6. 一致性"></a>6. 一致性</h2><ol>
+<li>Memcache 在并发场景下，用cas保证一致性。  </li>
+<li>redis事务支持比较弱，只能保证事务中的每个操作连续执行。  </li>
+<li>mongoDB不支持事务。</li>
+</ol>
+<h2 id="7-数据分析"><a href="#7-数据分析" class="headerlink" title="7. 数据分析"></a>7. 数据分析</h2><ol>
+<li>mongoDB内置了数据分析的功能(mapreduce),其他两者不支持。</li>
+</ol>
+<h2 id="8-应用场景"><a href="#8-应用场景" class="headerlink" title="8. 应用场景"></a>8. 应用场景</h2><ol>
+<li>redis：数据量较小的更性能操作和运算上。  </li>
+<li>memcache：用于在动态系统中减少数据库负载，提升性能;做缓存，提高性能（适合读多写少，对于数据量比较大，可以采用sharding）。</li>
+<li>Mongodb：主要解决海量数据的访问效率问题</li>
+</ol>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/posts/28c1bc23.html" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2023-02-05 16:00:00
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                        <b>#</b> 后端
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/NoSQL/" title="NoSQL">
+                        <b>#</b> NoSQL
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/NoSQL/" title="NoSQL">
+                        <b>#</b> NoSQL
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/posts/e56e688.html" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81Redis%E3%80%81Memcached%E3%80%81MongoDB%E7%9A%84%E7%89%B9%E7%82%B9"><span class="toc-text">一、Redis、Memcached、MongoDB的特点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Redis"><span class="toc-text">1. Redis</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E4%BC%98%E7%82%B9"><span class="toc-text">1.1 优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E7%BC%BA%E7%82%B9"><span class="toc-text">1.2 缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%EF%BC%9A"><span class="toc-text">1.3 应用场景：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Memcached"><span class="toc-text">Memcached</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E4%BC%98%E7%82%B9-1"><span class="toc-text">1.1 优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E7%BC%BA%E7%82%B9-1"><span class="toc-text">1.2 缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MongoDB"><span class="toc-text">MongoDB</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E4%BC%98%E7%82%B9-2"><span class="toc-text">1.1 优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E7%BC%BA%E7%82%B9-2"><span class="toc-text">1.2 缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E9%80%82%E5%90%88%E5%9C%BA%E6%99%AF"><span class="toc-text">1.3 适合场景</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Redis%E3%80%81Memcached%E3%80%81MongoDB%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">二、Redis、Memcached、MongoDB的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%80%A7%E8%83%BD"><span class="toc-text">1. 性能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%BE%BF%E5%88%A9%E6%80%A7"><span class="toc-text">2. 便利性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%AD%98%E5%82%A8%E7%A9%BA%E9%97%B4"><span class="toc-text">3. 存储空间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%8F%AF%E7%94%A8%E6%80%A7"><span class="toc-text">4. 可用性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="toc-text">5. 可靠性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E4%B8%80%E8%87%B4%E6%80%A7"><span class="toc-text">6. 一致性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90"><span class="toc-text">7. 数据分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">8. 应用场景</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="gitee" target="_blank" rel="noopener" href="https://gitee.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Redis%E3%80%81Memcached%E3%80%81MongoDB%E7%9A%84%E7%89%B9%E7%82%B9%E5%92%8C%E5%8C%BA%E5%88%AB + '&url=' + http%3A%2F%2Fyoursite.com%2Fposts%2F4f683a18.html + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://yoursite.com/posts/4f683a18.html" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

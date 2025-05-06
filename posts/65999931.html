@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="cat" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      DFA(TireTree) 实现敏感词匹配 
+      
+      
+      |
+    
+     thisofcat
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <link rel="icon" href="/images/logo.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/logo.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">cat</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">DFA(TireTree) 实现敏感词匹配</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2021-03-16 07:16:00
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/%E7%AE%97%E6%B3%95/" title="算法">
+                    <b>#</b> 算法
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E7%AE%97%E6%B3%95/php/" title="php">
+                    <b>#</b> php
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E7%AE%97%E6%B3%95/" title="算法">
+                    <b>#</b> 算法
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>&lt;Excerpt in index | 首页摘要&gt;</p>
+<span id="more"></span>
+<p>&lt;The rest of contents | 余下全文&gt;</p>
+<h1 id="基于DFA算法实现敏感词匹配"><a href="#基于DFA算法实现敏感词匹配" class="headerlink" title="基于DFA算法实现敏感词匹配"></a>基于DFA算法实现敏感词匹配</h1><p>一、封转类</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// redis封装类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SensitiveByRedis</span> <span class="keyword">extends</span> <span class="title">Sensitive</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="variable">$redis</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="variable">$extClass</span>; <span class="comment">// 外部类，用于调用外部类的方法</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"><span class="variable">$redis</span> = <span class="literal">null</span>, <span class="variable">$key</span> = <span class="string">&#x27;&#x27;</span>, <span class="variable">$extClass</span> = <span class="literal">null</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;redis = <span class="variable">$redis</span> ? <span class="variable">$redis</span> : <span class="title function_ invoke__">redis</span>(<span class="string">&quot;REDIS_COMMON&quot;</span>);</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;_key = <span class="variable">$key</span> ? <span class="string">&#x27;:&#x27;</span> . <span class="variable">$key</span> : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;extClass = <span class="variable">$extClass</span> ? <span class="variable">$extClass</span> : <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">parent</span>::<span class="title function_ invoke__">__construct</span>();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 设置读取的敏感词库</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> null $sensitiveWords</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> array|void</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getSensitiveWords</span>(<span class="params"><span class="variable">$sensitiveWords</span> = <span class="literal">null</span></span>)</span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">	    <span class="variable">$redisKey</span> = <span class="string">&#x27;SensitiveWords&#x27;</span> . <span class="variable language_">$this</span>-&gt;_key;</span><br><span class="line">		<span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;redis-&gt;<span class="title function_ invoke__">exists</span>(<span class="variable">$redisKey</span>))&#123;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;trieTreeMap = <span class="title function_ invoke__">json_decode</span>(<span class="variable">$this</span>-&gt;redis-&gt;<span class="title function_ invoke__">get</span>(<span class="variable">$redisKey</span>),<span class="literal">true</span>);</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">		    <span class="comment">// 如果外部有声明指定方法，则使用声明方法返回的数据作为敏感词库</span></span><br><span class="line">            <span class="comment">// 由于目前只有sys_filterDao调用，所以不从敏感词文件中读取</span></span><br><span class="line">            <span class="variable">$sensitiveWordsList</span> = <span class="literal">null</span>;</span><br><span class="line">            <span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;extClass &amp;&amp; <span class="title function_ invoke__">method_exists</span>(<span class="variable">$this</span>-&gt;extClass, <span class="string">&#x27;filterRead&#x27;</span>)) &#123;</span><br><span class="line">                <span class="variable">$sensitiveWordsList</span> = <span class="variable language_">$this</span>-&gt;extClass-&gt;<span class="title function_ invoke__">filterRead</span>();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="variable language_">$this</span>-&gt;redis-&gt;<span class="title function_ invoke__">setex</span>(<span class="variable">$redisKey</span>, CACHE_TIME, <span class="title function_ invoke__">json_encode</span>(<span class="built_in">parent</span>::<span class="title function_ invoke__">getSensitiveWords</span>(<span class="variable">$sensitiveWordsList</span>)));</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 设置读取的干扰词库</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> array|void</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getDisturbWords</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">	    <span class="variable">$redisKey</span> = <span class="string">&#x27;DisturbWords&#x27;</span> . <span class="variable language_">$this</span>-&gt;_key;</span><br><span class="line">		<span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;redis-&gt;<span class="title function_ invoke__">exists</span>(<span class="variable">$redisKey</span>))&#123;</span><br><span class="line">			<span class="variable language_">$this</span>-&gt;disturbWords = <span class="variable language_">$this</span>-&gt;redis-&gt;<span class="title function_ invoke__">hGetAll</span>(<span class="string">&#x27;DisturbWords&#x27;</span>);</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			<span class="variable language_">$this</span>-&gt;redis-&gt;<span class="title function_ invoke__">hSet</span>(<span class="variable">$redisKey</span>,<span class="built_in">parent</span>::<span class="title function_ invoke__">getDisturbWords</span>());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>二、实现类</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Class Sensitive</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span>:</span></span><br><span class="line"><span class="comment"> * 敏感词过滤类</span></span><br><span class="line"><span class="comment"> * 采用DFA算法</span></span><br><span class="line"><span class="comment"> * 装载后数据结构如下： 大字典会导致处理时间很慢，建议写个类似SensitiveByRedis的类来继承本类</span></span><br><span class="line"><span class="comment"> *   $words = [</span></span><br><span class="line"><span class="comment"> *       &#x27;小&#x27; =&gt; [</span></span><br><span class="line"><span class="comment"> *           &#x27;日&#x27; =&gt; [</span></span><br><span class="line"><span class="comment"> *               &#x27;本&#x27; =&gt; false,</span></span><br><span class="line"><span class="comment"> *           ],</span></span><br><span class="line"><span class="comment"> *       ],</span></span><br><span class="line"><span class="comment"> *       &#x27;日&#x27; =&gt; [</span></span><br><span class="line"><span class="comment"> *          &#x27;本&#x27; =&gt; [</span></span><br><span class="line"><span class="comment"> *              &#x27;鬼&#x27; =&gt; [</span></span><br><span class="line"><span class="comment"> *                   &#x27;子&#x27; =&gt; false,</span></span><br><span class="line"><span class="comment"> *               ],</span></span><br><span class="line"><span class="comment"> *               &#x27;人&#x27; =&gt; false,</span></span><br><span class="line"><span class="comment"> *           ],</span></span><br><span class="line"><span class="comment"> *       ],</span></span><br><span class="line"><span class="comment"> *   ];</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * eg:</span></span><br><span class="line"><span class="comment"> *	$str = &#x27;我爱习  .进  . 平总书记&#x27;;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *  搜索$str包含的关键词</span></span><br><span class="line"><span class="comment"> * 	$SensitiveClass-&gt;search($str);</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *敏感词有默认的前后缀</span></span><br><span class="line"><span class="comment"> *  高亮敏感词，可定制类型</span></span><br><span class="line"><span class="comment"> * 	$SensitiveClass-&gt;filter($str,null);</span></span><br><span class="line"><span class="comment"> *  result： &#x27;我爱&lt;em&gt;习  .进  . 平&lt;/em&gt;总书记&#x27;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *  统一格式的敏感词</span></span><br><span class="line"><span class="comment"> * 	$SensitiveClass-&gt;filter($str,&#x27;&#x27;,&#x27;&lt;em&gt;此处为敏感词&#x27;,&#x27;&lt;/em&gt;&#x27;);</span></span><br><span class="line"><span class="comment"> *  result：&#x27;我爱&lt;em&gt;此处为敏感词&lt;/em&gt;总书记&#x27;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *  替换敏感词</span></span><br><span class="line"><span class="comment"> * 	$SensitiveClass-&gt;filter($str,&#x27;[*]&#x27;,&#x27;&#x27;,&#x27;&#x27;);</span></span><br><span class="line"><span class="comment"> *	result：&#x27;我爱[*][*][*][*][*][*][*][*][*][*]总书记&#x27;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">Class Sensitive</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$redis</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 替换码</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@var</span> string</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> <span class="variable">$replaceCode</span> = <span class="string">&#x27;*&#x27;</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 敏感词库集合</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@var</span> array</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">protected</span> <span class="variable">$sensitiveWords</span> = <span class="keyword">array</span>();</span><br><span class="line">	<span class="keyword">public</span> <span class="variable">$trieTreeMap</span> = <span class="keyword">array</span>();</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 干扰因子集合</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@var</span> array</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="variable">$disturbWords</span> = <span class="keyword">array</span>();</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 构造函数，加载敏感词库及干扰词库</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getSensitiveWords</span>();</span><br><span class="line">		<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getDisturbWords</span>();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 设置读取的敏感词库</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getSensitiveWords</span>(<span class="params"><span class="variable">$sensitiveWords</span> = <span class="literal">null</span></span>)</span>&#123;</span><br><span class="line">	    <span class="keyword">if</span> (<span class="variable">$sensitiveWords</span>) &#123;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;sensitiveWords = <span class="variable">$sensitiveWords</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;sensitiveWords = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">readFile</span>(</span><br><span class="line">                <span class="keyword">array</span>(</span><br><span class="line">                    ROOT_PATH . <span class="string">&quot;includes/class/SensitiveWords.dic&quot;</span></span><br><span class="line">                )</span><br><span class="line">            );</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//生成TrieTree</span></span><br><span class="line">		<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">formatTrieTree</span>(<span class="variable">$this</span>-&gt;sensitiveWords);</span><br><span class="line">		<span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;trieTreeMap;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 设置读取的干扰词库</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getDisturbWords</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		<span class="variable language_">$this</span>-&gt;disturbWords = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">readFile</span>(</span><br><span class="line">			<span class="keyword">array</span>(</span><br><span class="line">				ROOT_PATH . <span class="string">&quot;includes/class/SensitiveDistrubs.dic&quot;</span></span><br><span class="line">			)</span><br><span class="line">		);</span><br><span class="line">		<span class="comment">//为了避免有些编辑器在干扰词的词库中加空格会被删除，这里单独对空格进行处理</span></span><br><span class="line">		<span class="variable language_">$this</span>-&gt;disturbWords[] = <span class="string">&#x27; &#x27;</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;disturbWords;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 读取词库</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> array $paths</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">readFile</span>(<span class="params"><span class="variable">$paths</span></span>)</span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (!<span class="title function_ invoke__">is_array</span>(<span class="variable">$paths</span>)) <span class="keyword">return</span> <span class="keyword">array</span>();</span><br><span class="line">		<span class="variable">$data</span> = <span class="keyword">array</span>();</span><br><span class="line">		<span class="keyword">foreach</span> (<span class="variable">$paths</span> <span class="keyword">as</span> <span class="variable">$path</span>)&#123;</span><br><span class="line">			<span class="keyword">if</span> (<span class="title function_ invoke__">is_file</span>(<span class="variable">$path</span>))&#123;</span><br><span class="line">				<span class="variable">$t</span> = <span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$path</span>);</span><br><span class="line">				<span class="variable">$t</span> = <span class="title function_ invoke__">str_replace</span>(<span class="keyword">array</span>(<span class="string">&quot;\r\n&quot;</span>, <span class="string">&quot;\r&quot;</span>, <span class="string">&quot;\n&quot;</span>), <span class="string">&quot;,&quot;</span>, <span class="variable">$t</span>);</span><br><span class="line">				<span class="variable">$list</span> = <span class="title function_ invoke__">explode</span>(<span class="string">&quot;,&quot;</span>,<span class="variable">$t</span>);</span><br><span class="line">				<span class="keyword">if</span> (<span class="title function_ invoke__">is_array</span>(<span class="variable">$list</span>))&#123;</span><br><span class="line">					<span class="variable">$data</span>=<span class="title function_ invoke__">array_merge</span>(<span class="variable">$data</span>,<span class="variable">$list</span>);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="variable">$data</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 转化成字典树</span></span><br><span class="line"><span class="comment">     * [&#x27;敏&#x27; =&gt; [&#x27;感&#x27; =&gt; [&#x27;词&#x27; =&gt; false]]]</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> array $wordsList</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">formatTrieTree</span>(<span class="params"><span class="keyword">array</span> <span class="variable">$wordsList</span></span>)</span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="keyword">foreach</span> (<span class="variable">$wordsList</span> <span class="keyword">as</span> <span class="variable">$words</span>) &#123;</span><br><span class="line">			<span class="variable">$nowWords</span> = &amp;<span class="variable language_">$this</span>-&gt;trieTreeMap;</span><br><span class="line">			<span class="variable">$len</span> = <span class="title function_ invoke__">mb_strlen</span>(<span class="variable">$words</span>, <span class="string">&#x27;utf-8&#x27;</span>);</span><br><span class="line">			<span class="keyword">for</span> (<span class="variable">$i</span> = <span class="number">0</span>; <span class="variable">$i</span> &lt; <span class="variable">$len</span>; <span class="variable">$i</span>++) &#123;</span><br><span class="line">				<span class="variable">$word</span> = <span class="title function_ invoke__">mb_substr</span>(<span class="variable">$words</span>, <span class="variable">$i</span>, <span class="number">1</span>, <span class="string">&#x27;utf-8&#x27;</span>);</span><br><span class="line">				<span class="keyword">if</span> (!<span class="keyword">isset</span>(<span class="variable">$nowWords</span>[<span class="variable">$word</span>])) &#123;</span><br><span class="line">					<span class="variable">$nowWords</span>[<span class="variable">$word</span>] = <span class="literal">false</span>;</span><br><span class="line">				&#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// 注释有误的话，自行修改</span></span><br><span class="line">                <span class="comment">// 指针回到数组第一位</span></span><br><span class="line">                <span class="comment">// 第一次执行指向&quot;敏&quot;, 即[&#x27;敏&#x27; =&gt; false]的false，</span></span><br><span class="line">                <span class="comment">// 第二次执行执行感，即[&#x27;敏&#x27; =&gt; [&#x27;感&#x27; =&gt; false]的false,以此类推</span></span><br><span class="line">				<span class="variable">$nowWords</span> = &amp;<span class="variable">$nowWords</span>[<span class="variable">$word</span>];</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 查找对应敏感词</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> $txt</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> array</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">search</span>(<span class="params"><span class="variable">$txt</span>, <span class="variable">$hasReplace</span>=<span class="literal">false</span>, &amp;<span class="variable">$replaceCodeList</span> = <span class="keyword">array</span>(<span class="params"></span>), <span class="variable">$prefix</span> = <span class="string">&#x27;&#x27;</span>, <span class="variable">$postfix</span> = <span class="string">&#x27;&#x27;</span></span>)</span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="variable">$wordsList</span> = <span class="keyword">array</span>();</span><br><span class="line">		<span class="variable">$txtLength</span> = <span class="title function_ invoke__">mb_strlen</span>(<span class="variable">$txt</span>, <span class="string">&#x27;utf-8&#x27;</span>);</span><br><span class="line">		<span class="keyword">for</span> (<span class="variable">$i</span> = <span class="number">0</span>; <span class="variable">$i</span> &lt; <span class="variable">$txtLength</span>; <span class="variable">$i</span>++) &#123;</span><br><span class="line">			<span class="variable">$wordLength</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">checkWord</span>(<span class="variable">$txt</span>, <span class="variable">$i</span>, <span class="variable">$txtLength</span>);</span><br><span class="line">			<span class="keyword">if</span> (<span class="variable">$wordLength</span> &gt; <span class="number">0</span>) &#123;</span><br><span class="line">			    <span class="comment">// 提取匹配的字符串</span></span><br><span class="line">				<span class="variable">$words</span> = <span class="title function_ invoke__">mb_substr</span>(<span class="variable">$txt</span>, <span class="variable">$i</span>, <span class="variable">$wordLength</span>, <span class="string">&#x27;utf-8&#x27;</span>);</span><br><span class="line">				<span class="variable">$wordsList</span>[] = <span class="variable">$words</span>;</span><br><span class="line">				<span class="keyword">if</span> (<span class="variable">$hasReplace</span>)&#123;</span><br><span class="line">					<span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;replaceCode === <span class="literal">NULL</span>)&#123;</span><br><span class="line">						<span class="variable">$replaceCodeList</span>[] = <span class="variable">$prefix</span>.<span class="variable">$words</span>.<span class="variable">$postfix</span>;</span><br><span class="line">					&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">						<span class="variable">$replaceCodeList</span>[] = <span class="variable">$prefix</span>.<span class="title function_ invoke__">str_repeat</span>(<span class="variable">$this</span>-&gt;replaceCode, <span class="title function_ invoke__">mb_strlen</span>(<span class="variable">$words</span>, <span class="string">&#x27;utf-8&#x27;</span>)).<span class="variable">$postfix</span>;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="variable">$i</span> += <span class="variable">$wordLength</span> - <span class="number">1</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="variable">$wordsList</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 过滤敏感词</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> $txt</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> mixed</span></span><br><span class="line"><span class="comment">	 * $replaceCode  NULL:不替换, &#x27;&#x27;:直接过滤掉， &#x27;[*]&#x27;:用[*]替换</span></span><br><span class="line"><span class="comment">	 * $prefix 前缀  用于高亮或提示</span></span><br><span class="line"><span class="comment">	 * $postfix 后缀 用于高亮或提示</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">filter</span>(<span class="params"><span class="variable">$txt</span>,<span class="variable">$replaceCode</span> = <span class="string">&#x27;*&#x27;</span>,<span class="variable">$prefix</span> = <span class="string">&#x27;&lt;highlight&gt;&#x27;</span>,<span class="variable">$postfix</span>=<span class="string">&#x27;&lt;/highlight&gt;&#x27;</span></span>)</span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="variable language_">$this</span>-&gt;replaceCode = <span class="variable">$replaceCode</span>;</span><br><span class="line">		<span class="variable">$replaceCodeList</span> = <span class="keyword">array</span>();</span><br><span class="line">		<span class="variable">$wordsList</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">search</span>(<span class="variable">$txt</span>, <span class="literal">true</span>, <span class="variable">$replaceCodeList</span>,<span class="variable">$prefix</span>,<span class="variable">$postfix</span>);</span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">empty</span>(<span class="variable">$wordsList</span>)) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="variable">$txt</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="title function_ invoke__">str_replace</span>(<span class="variable">$wordsList</span>, <span class="variable">$replaceCodeList</span>, <span class="variable">$txt</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 敏感词检测</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> $txt</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> $beginIndex</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> $length</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> int</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">checkWord</span>(<span class="params"><span class="variable">$txt</span>, <span class="variable">$beginIndex</span>, <span class="variable">$length</span></span>)</span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="variable">$flag</span> = <span class="literal">false</span>; <span class="comment">// 是否在最后一位</span></span><br><span class="line">		<span class="variable">$wordLength</span> = <span class="number">0</span>; <span class="comment">// 匹配次数</span></span><br><span class="line">		<span class="variable">$trieTree</span> = &amp;<span class="variable language_">$this</span>-&gt;trieTreeMap;</span><br><span class="line">		<span class="keyword">for</span> (<span class="variable">$i</span> = <span class="variable">$beginIndex</span>; <span class="variable">$i</span> &lt; <span class="variable">$length</span>; <span class="variable">$i</span>++) &#123;</span><br><span class="line">			<span class="variable">$word</span> = <span class="title function_ invoke__">mb_substr</span>(<span class="variable">$txt</span>, <span class="variable">$i</span>, <span class="number">1</span>, <span class="string">&#x27;utf-8&#x27;</span>);</span><br><span class="line">			<span class="comment">// 跳过干扰词</span></span><br><span class="line">			<span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">checkDisturb</span>(<span class="variable">$word</span>)) &#123;</span><br><span class="line">				<span class="variable">$wordLength</span>++;</span><br><span class="line">				<span class="keyword">continue</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> (!<span class="keyword">isset</span>(<span class="variable">$trieTree</span>[<span class="variable">$word</span>])) &#123;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="variable">$wordLength</span>++;</span><br><span class="line">			<span class="comment">// 判断是否全部遍历完树对应子集</span></span><br><span class="line">			<span class="keyword">if</span> (<span class="variable">$trieTree</span>[<span class="variable">$word</span>] !== <span class="literal">false</span>) &#123;</span><br><span class="line">				<span class="variable">$trieTree</span> = &amp;<span class="variable">$trieTree</span>[<span class="variable">$word</span>];</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="variable">$flag</span> = <span class="literal">true</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="variable">$flag</span>) &#123;</span><br><span class="line">            <span class="variable">$wordLength</span> = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="variable">$wordLength</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 干扰因子检测</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> $word</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> bool</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">checkDisturb</span>(<span class="params"><span class="variable">$word</span></span>)</span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="title function_ invoke__">in_array</span>(<span class="variable">$word</span>, <span class="variable">$this</span>-&gt;disturbWords);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/posts/fb0999de.html" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2021-03-16 07:16:00
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E7%AE%97%E6%B3%95/" title="算法">
+                        <b>#</b> 算法
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E7%AE%97%E6%B3%95/php/" title="php">
+                        <b>#</b> php
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E7%AE%97%E6%B3%95/" title="算法">
+                        <b>#</b> 算法
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/posts/cc7ec99f.html" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8EDFA%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0%E6%95%8F%E6%84%9F%E8%AF%8D%E5%8C%B9%E9%85%8D"><span class="toc-text">基于DFA算法实现敏感词匹配</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="gitee" target="_blank" rel="noopener" href="https://gitee.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + DFA(TireTree)%20%E5%AE%9E%E7%8E%B0%E6%95%8F%E6%84%9F%E8%AF%8D%E5%8C%B9%E9%85%8D + '&url=' + http%3A%2F%2Fyoursite.com%2Fposts%2F65999931.html + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://yoursite.com/posts/65999931.html" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

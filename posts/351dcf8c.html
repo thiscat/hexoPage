@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="cat" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      正则表达式速查 
+      
+      
+      |
+    
+     thisofcat
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <link rel="icon" href="/images/logo.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/logo.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">cat</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">正则表达式速查</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2019-09-30 16:00:00
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                    <b>#</b> 后端
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="正则表达式">
+                    <b>#</b> 正则表达式
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="正则表达式">
+                    <b>#</b> 正则表达式
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>&lt;Excerpt in index | 首页摘要&gt;</p>
+<span id="more"></span>
+<p>&lt;The rest of contents | 余下全文&gt;</p>
+<h1 id="一、速查表"><a href="#一、速查表" class="headerlink" title="一、速查表"></a>一、速查表</h1><figure class="highlight dust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br></pre></td><td class="code"><pre><span class="line"><span class="language-xml">正则表达式中的特殊字符</span></span><br><span class="line"><span class="language-xml">字符	含义</span></span><br><span class="line"><span class="language-xml">\	</span></span><br><span class="line"><span class="language-xml">依照下列规则匹配：</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">在非特殊字符之前的反斜杠表示下一个字符是特殊字符，不能按照字面理解。例如，前面没有 &quot;\&quot; 的 &quot;b&quot; 通常匹配小写字母 &quot;b&quot;，即字符会被作为字面理解，无论它出现在哪里。但如果前面加了 &quot;\&quot;，它将不再匹配任何字符，而是表示一个字符边界。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">在特殊字符之前的反斜杠表示下一个字符不是特殊字符，应该按照字面理解。详情请参阅下文中的 &quot;转义（Escaping）&quot; 部分。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">如果你想将字符串传递给 RegExp 构造函数，不要忘记在字符串字面量中反斜杠是转义字符。所以为了在模式中添加一个反斜杠，你需要在字符串字面量中转义它。/[a-z]\s/i 和 new RegExp(&quot;[a-z]\\s&quot;, &quot;i&quot;) 创建了相同的正则表达式：一个用于搜索后面紧跟着空白字符（\s 可看后文）并且在 a-z 范围内的任意字符的表达式。为了通过字符串字面量给 RegExp 构造函数创建包含反斜杠的表达式，你需要在字符串级别和正则表达式级别都对它进行转义。例如 /[a-z]:\\/i 和 new RegExp(&quot;[a-z]:\\\\&quot;,&quot;i&quot;) 会创建相同的表达式，即匹配类似 &quot;C:\&quot; 字符串。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">^	</span></span><br><span class="line"><span class="language-xml">匹配输入的开始。如果多行标志被设置为 true，那么也匹配换行符后紧跟的位置。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">例如，/^A/ 并不会匹配 &quot;an A&quot; 中的 &#x27;A&#x27;，但是会匹配 &quot;An E&quot; 中的 &#x27;A&#x27;。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">当 &#x27;^&#x27; 作为第一个字符出现在一个字符集合模式时，它将会有不同的含义。反向字符集合 一节有详细介绍和示例。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">$	</span></span><br><span class="line"><span class="language-xml">匹配输入的结束。如果多行标志被设置为 true，那么也匹配换行符前的位置。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">例如，/t$/ 并不会匹配 &quot;eater&quot; 中的 &#x27;t&#x27;，但是会匹配 &quot;eat&quot; 中的 &#x27;t&#x27;。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">*	</span></span><br><span class="line"><span class="language-xml">匹配前一个表达式 0 次或多次。等价于 </span><span class="template-variable">&#123;0,&#125;</span><span class="language-xml">。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">例如，/bo*/ 会匹配 &quot;A ghost boooooed&quot; 中的 &#x27;booooo&#x27; 和 &quot;A bird warbled&quot; 中的 &#x27;b&#x27;，但是在 &quot;A goat grunted&quot; 中不会匹配任何内容。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">+	</span></span><br><span class="line"><span class="language-xml">匹配前面一个表达式 1 次或者多次。等价于 </span><span class="template-variable">&#123;1,&#125;</span><span class="language-xml">。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">例如，/a+/ 会匹配 &quot;candy&quot; 中的 &#x27;a&#x27; 和 &quot;caaaaaaandy&quot; 中所有的 &#x27;a&#x27;，但是在 &quot;cndy&quot; 中不会匹配任何内容。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">?	</span></span><br><span class="line"><span class="language-xml">匹配前面一个表达式 0 次或者 1 次。等价于 </span><span class="template-variable">&#123;0,1&#125;</span><span class="language-xml">。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">例如，/e?le?/ 匹配 &quot;angel&quot; 中的 &#x27;el&#x27;、&quot;angle&quot; 中的 &#x27;le&#x27; 以及 &quot;oslo&#x27; 中的 &#x27;l&#x27;。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">如果紧跟在任何量词 *、 +、? 或 </span><span class="template-variable">&#123;&#125;</span><span class="language-xml"> 的后面，将会使量词变为非贪婪（匹配尽量少的字符），和缺省使用的贪婪模式（匹配尽可能多的字符）正好相反。例如，对 &quot;123abc&quot; 使用 /\d+/ 将会匹配 &quot;123&quot;，而使用 /\d+?/ 则只会匹配到 &quot;1&quot;。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">还用于先行断言中，如本表的 x(?=y) 和 x(?!y) 条目所述。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">.	</span></span><br><span class="line"><span class="language-xml">（小数点）默认匹配除换行符之外的任何单个字符。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">例如，/.n/ 将会匹配 &quot;nay, an apple is on the tree&quot; 中的 &#x27;an&#x27; 和 &#x27;on&#x27;，但是不会匹配 &#x27;nay&#x27;。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">如果 s (&quot;dotAll&quot;) 标志位被设为 true，它也会匹配换行符。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">(x)	</span></span><br><span class="line"><span class="language-xml">像下面的例子展示的那样，它会匹配 &#x27;x&#x27; 并且记住匹配项。其中括号被称为捕获括号。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">模式 /(foo) (bar) \1 \2/ 中的 &#x27;(foo)&#x27; 和 &#x27;(bar)&#x27; 匹配并记住字符串 &quot;foo bar foo bar&quot; 中前两个单词。模式中的 \1 和 \2 表示第一个和第二个被捕获括号匹配的子字符串，即 foo 和 bar，匹配了原字符串中的后两个单词。注意 \1、\2、...、\n 是用在正则表达式的匹配环节，详情可以参阅后文的 \n 条目。而在正则表达式的替换环节，则要使用像 $1、$2、...、$n 这样的语法，例如，&#x27;bar foo&#x27;.replace(/(...) (...)/, &#x27;$2 $1&#x27;)。$&amp; 表示整个用于匹配的原字符串。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">(?:x)	</span></span><br><span class="line"><span class="language-xml">匹配 &#x27;x&#x27; 但是不记住匹配项。这种括号叫作非捕获括号，使得你能够定义与正则表达式运算符一起使用的子表达式。看看这个例子 /(?:foo)</span><span class="template-variable">&#123;1,2&#125;</span><span class="language-xml">/。如果表达式是 /foo</span><span class="template-variable">&#123;1,2&#125;</span><span class="language-xml">/，</span><span class="template-variable">&#123;1,2&#125;</span><span class="language-xml"> 将只应用于 &#x27;foo&#x27; 的最后一个字符 &#x27;o&#x27;。如果使用非捕获括号，则 </span><span class="template-variable">&#123;1,2&#125;</span><span class="language-xml"> 会应用于整个 &#x27;foo&#x27; 单词。更多信息，可以参阅下文的 Using parentheses 条目.</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">x(?=y)	</span></span><br><span class="line"><span class="language-xml">匹配&#x27;x&#x27;仅仅当&#x27;x&#x27;后面跟着&#x27;y&#x27;.这种叫做先行断言。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">例如，/Jack(?=Sprat)/会匹配到&#x27;Jack&#x27;仅当它后面跟着&#x27;Sprat&#x27;。/Jack(?=Sprat|Frost)/匹配‘Jack’仅当它后面跟着&#x27;Sprat&#x27;或者是‘Frost’。但是‘Sprat’和‘Frost’都不是匹配结果的一部分。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">(?&lt;=y)x	</span></span><br><span class="line"><span class="language-xml">匹配&#x27;x&#x27;仅当&#x27;x&#x27;前面是&#x27;y&#x27;.这种叫做后行断言。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">例如，/(?&lt;=Jack)Sprat/会匹配到&#x27; Sprat &#x27;仅仅当它前面是&#x27; Jack &#x27;。/(?&lt;=Jack|Tom)Sprat/匹配‘ Sprat ’仅仅当它前面是&#x27;Jack&#x27;或者是‘Tom’。但是‘Jack’和‘Tom’都不是匹配结果的一部分。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">x(?!y)	</span></span><br><span class="line"><span class="language-xml">仅仅当&#x27;x&#x27;后面不跟着&#x27;y&#x27;时匹配&#x27;x&#x27;，这被称为正向否定查找。</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">例如，仅仅当这个数字后面没有跟小数点的时候，/\d+(?!\.)/ 匹配一个数字。正则表达式/\d+(?!\.)/.exec(&quot;3.141&quot;)匹配‘141’而不是‘3.141’</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">(?<span class="meta">&lt;!y)x	</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">仅仅当<span class="string">&#x27;x&#x27;</span>前面不是<span class="string">&#x27;y&#x27;</span>时匹配<span class="string">&#x27;x&#x27;</span>，这被称为反向否定查找。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">例如, 仅仅当这个数字前面没有负号的时候，/(?&lt;!-)\d+/ 匹配一个数字。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">/(?&lt;!-)\d+/.exec(&#x27;3&#x27;) 匹配到 <span class="string">&quot;3&quot;</span>.</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">/(?&lt;!-)\d+/.exec(&#x27;-3&#x27;) 因为这个数字前有负号，所以没有匹配到。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">x|y	</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">匹配‘x’或者‘y’。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">例如，/green|red/匹配“green <span class="keyword">apple</span>”中的‘green’和“red <span class="keyword">apple</span>”中的‘red’</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span><span class="template-variable">&#123;n&#125;</span><span class="language-xml"><span class="meta">	n 是一个正整数，匹配了前面一个字符刚好出现了 n 次。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">比如， /a</span></span><span class="template-variable">&#123;2&#125;</span><span class="language-xml"><span class="meta">/ 不会匹配“candy”中的<span class="string">&#x27;a&#x27;</span>,但是会匹配“caandy”中所有的 a，以及“caaandy”中的前两个<span class="string">&#x27;a&#x27;</span>。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span><span class="template-variable">&#123;n,&#125;</span><span class="language-xml"><span class="meta">	</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">n是一个正整数，匹配前一个字符至少出现了n次。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">例如, /a</span></span><span class="template-variable">&#123;2,&#125;</span><span class="language-xml"><span class="meta">/ 匹配 <span class="string">&quot;aa&quot;</span>, <span class="string">&quot;aaaa&quot;</span> 和 <span class="string">&quot;aaaaa&quot;</span> 但是不匹配 <span class="string">&quot;a&quot;</span>。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span><span class="template-variable">&#123;n,m&#125;</span><span class="language-xml"><span class="meta">	</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">n 和 m 都是整数。匹配前面的字符至少n次，最多m次。如果 n 或者 m 的值是0， 这个值被忽略。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">例如，/a</span></span><span class="template-variable">&#123;1, 3&#125;</span><span class="language-xml"><span class="meta">/ 并不匹配“cndy”中的任意字符，匹配“candy”中的a，匹配“caandy”中的前两个a，也匹配“caaaaaaandy”中的前三个a。注意，当匹配”caaaaaaandy“时，匹配的值是“aaa”，即使原始的字符串中有更多的a。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">[xyz]	一个字符集合。匹配方括号中的任意字符，包括转义序列。你可以使用破折号（-）来指定一个字符范围。对于点（.）和星号（*）这样的特殊符号在一个字符集中没有特殊的意义。他们不必进行转义，不过转义也是起作用的。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">例如，[abcd] 和[a-d]是一样的。他们都匹配<span class="string">&quot;brisket&quot;</span>中的‘b’,也都匹配“city”中的‘c’。/[a-z.]+/ 和/[\w.]+/与字符串“test.i.ng”匹配。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">[^xyz]	</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">一个反向字符集。也就是说， 它匹配任何没有包含在方括号中的字符。你可以使用破折号（-）来指定一个字符范围。任何普通字符在这里都是起作用的。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">例如，[^abc] 和 [^a-c] 是一样的。他们匹配<span class="string">&quot;brisket&quot;</span>中的‘r’，也匹配“chop”中的‘h’。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">[\b]	</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">匹配一个退格(U+0008)。（不要和\b混淆了。）</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">\b	</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">匹配一个词的边界。一个词的边界就是一个词不被另外一个“字”字符跟随的位置或者前面跟其他“字”字符的位置，例如在字母和空格之间。注意，匹配中不包括匹配的字边界。换句话说，一个匹配的词的边界的内容的长度是0。（不要和[\b]混淆了）</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">使用<span class="string">&quot;moon&quot;</span>举例：</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">/\bm/匹配“moon”中的‘m’；</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">/oo\b/并不匹配<span class="string">&quot;moon&quot;</span>中的<span class="string">&#x27;oo&#x27;</span>，因为<span class="string">&#x27;oo&#x27;</span>被一个“字”字符<span class="string">&#x27;n&#x27;</span>紧跟着。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">/oon\b/匹配<span class="string">&quot;moon&quot;</span>中的<span class="string">&#x27;oon&#x27;</span>，因为<span class="string">&#x27;oon&#x27;</span>是这个字符串的结束部分。这样他没有被一个“字”字符紧跟着。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">/\w\b\w/将不能匹配任何字符串，因为在一个单词中间的字符永远也不可能同时满足没有“字”字符跟随和有“字”字符跟随两种情况。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">注意: <span class="keyword">JavaScript</span>的正则表达式引擎将特定的字符集定义为“字”字符。不在该集合中的任何字符都被认为是一个断词。这组字符相当有限：它只包括大写和小写的罗马字母，十进制数字和下划线字符。不幸的是，重要的字符，例如“é”或“ü”，被视为断词。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">\B	</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">匹配一个非单词边界。匹配如下几种情况：</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">字符串第一个字符为非“字”字符</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">字符串最后一个字符为非“字”字符</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">两个单词字符之间</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">两个非单词字符之间</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">空字符串</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">例如，/\B../匹配<span class="string">&quot;noonday&quot;</span>中的<span class="string">&#x27;oo&#x27;</span>, 而/y\B../匹配<span class="string">&quot;possibly yesterday&quot;</span>中的’yes‘</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">\cX	</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">当X是处于A到Z之间的字符的时候，匹配字符串中的一个控制符。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">例如，/\cM/ 匹配字符串中的 <span class="keyword">control-M</span> (U+000D)。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">\d	</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">匹配一个数字。等价于[0-9]。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">例如， /\d/ 或者 /[0-9]/ 匹配<span class="string">&quot;B2 is the suite number.&quot;</span>中的<span class="string">&#x27;2&#x27;</span>。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">\D	</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">匹配一个非数字字符。等价于[^0-9]。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">例如， /\D/ 或者 /[^0-9]/ 匹配<span class="string">&quot;B2 is the suite number.&quot;</span>中的<span class="string">&#x27;B&#x27;</span> 。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">\f	匹配一个换页符 (U+000C)。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">\n	匹配一个换行符 (U+000A)。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">\r	匹配一个回车符 (U+000D)。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">\s	</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">匹配一个空白字符，包括空格、制表符、换页符和换行符。等价于[ \f\n\r\t\v\u00a0\u1680\u180e\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">例如, /\s\w*/ 匹配<span class="string">&quot;foo bar.&quot;</span>中的<span class="string">&#x27; bar&#x27;</span>。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">经测试，\s不匹配<span class="string">&quot;\u180e&quot;</span>，在当前版本Chrome(<span class="keyword">v8</span>0.0.3987.122)和Firefox(76.0.1)控制台输入/\s/.test(&quot;\<span class="keyword">u18</span>0e&quot;)均返回false。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">\S	</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">匹配一个非空白字符。等价于 [^ \f\n\r\t\v\u00a0\u1680\u180e\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">例如，/\S\w*/ 匹配<span class="string">&quot;foo bar.&quot;</span>中的<span class="string">&#x27;foo&#x27;</span>。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">\t	匹配一个水平制表符 (U+0009)。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">\v	匹配一个垂直制表符 (U+000B)。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">\w	</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">匹配一个单字字符（字母、数字或者下划线）。等价于 [A-Za-z0-9_]。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">例如, /\w/ 匹配 <span class="string">&quot;apple,&quot;</span> 中的 <span class="string">&#x27;a&#x27;</span>，<span class="string">&quot;$5.28,&quot;</span>中的 <span class="string">&#x27;5&#x27;</span> 和 <span class="string">&quot;3D.&quot;</span> 中的 <span class="string">&#x27;3&#x27;</span>。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">\W	</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">匹配一个非单字字符。等价于 [^A-Za-z0-9_]。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">例如, /\W/ 或者 /[^A-Za-z0-9_]/ 匹配 <span class="string">&quot;50%.&quot;</span> 中的 <span class="string">&#x27;%&#x27;</span>。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">\n	</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">在正则表达式中，它返回最后的第n个子捕获匹配的子字符串(捕获的数目以左括号计数)。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">比如 /apple(,)\sorange\1/ 匹配<span class="string">&quot;apple, orange, cherry, peach.&quot;</span>中的<span class="string">&#x27;apple, orange,&#x27;</span> 。</span></span></span><br><span class="line"><span class="meta"><span class="language-xml"></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">\0	匹配 <span class="keyword">NULL</span>（U+0000）字符， 不要在这后面跟其它小数，因为 \0&lt;digits&gt;</span> 是一个八进制转义序列。</span></span><br><span class="line"><span class="language-xml">\xhh	匹配一个两位十六进制数（\x00-\xFF）表示的字符。</span></span><br><span class="line"><span class="language-xml">\uhhhh	匹配一个四位十六进制数表示的 UTF-16 代码单元。</span></span><br><span class="line"><span class="language-xml">\u</span><span class="template-variable">&#123;hhhh&#125;</span><span class="language-xml">或\u</span><span class="template-variable">&#123;hhhhh&#125;</span><span class="language-xml"></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">（仅当设置了u标志时）匹配一个十六进制数表示的 Unicode 字符。</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="二、修饰符"><a href="#二、修饰符" class="headerlink" title="二、修饰符"></a>二、修饰符</h1><p>i 不区分(ignore)大小写；</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">例如: /<span class="keyword">abc</span>/i 可以匹配 <span class="keyword">abc</span>、aBC、Abc</span><br></pre></td></tr></table></figure>
+
+<p>g 全局(global)匹配<br>如果不带g，正则过程中字符串从左到右匹配，找到第一个符合条件的即匹配成功，返回<br>如果带g，则字符串从左到右，找到每个符合条件的都记录下来，知道字符串结尾位置<br>例如:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str = <span class="string">&#x27;aaaaaaaa&#x27;</span>;</span><br><span class="line"><span class="keyword">var</span> reg1 = <span class="regexp">/a/</span>;  str.<span class="title function_">match</span>(reg1);  <span class="comment">// 结果为：[&quot;a&quot;, index: 0, input: &quot;aaaaaaaa&quot;]</span></span><br><span class="line"><span class="keyword">var</span> reg2 = <span class="regexp">/a/g</span>; str.<span class="title function_">match</span>(reg2);  <span class="comment">// 结果为：[&quot;a&quot;, &quot;a&quot;, &quot;a&quot;, &quot;a&quot;, &quot;a&quot;, &quot;a&quot;, &quot;a&quot;, &quot;a&quot;]</span></span><br></pre></td></tr></table></figure>
+
+<p>m 多(more)行匹配<br>若存在换行\n并且有开始^或结束$符的情况下，和g一起使用实现全局匹配,<br>因为存在换行时默认会把换行符作为一个字符任务匹配字符串是个单行，<br>g只匹配第一行，添加m之后实现多行，每个换行符之后就是开始</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str = <span class="string">&quot;abcggab\nabcoab&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> preg1 = <span class="regexp">/^abc/gm</span>;  str.<span class="title function_">match</span>(preg1);  <span class="comment">// 结果为：[&quot;abc&quot;, &quot;abc&quot;]</span></span><br><span class="line"><span class="keyword">var</span> preg2 = <span class="regexp">/ab$/gm</span>;   str.<span class="title function_">match</span>(preg2);  <span class="comment">// 结果为：[&quot;ab&quot;, &quot;ab&quot;]</span></span><br></pre></td></tr></table></figure>
+
+<p>s 特殊字符圆点 . 中包含换行符<br>默认的圆点 . 是 匹配除换行符 \n 之外的任何单字符，加上s之后, . 中包含换行符</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$str</span> = <span class="string">&quot;abggab\nacbs&quot;</span>;</span><br><span class="line"><span class="variable">$preg</span> = <span class="string">&quot;/b./s&quot;</span>;</span><br><span class="line"><span class="title function_ invoke__">preg_match_all</span>(<span class="variable">$preg</span>, <span class="variable">$str</span>,<span class="variable">$matchs</span>);</span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="variable">$matchs</span>);<span class="comment">//Array ( [0] =&gt; Array ( [0] =&gt; bg [1] =&gt; b [2] =&gt; bs ) )</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="built_in">str</span> = <span class="string">&quot;abggab\nacbs&quot;</span>;</span><br><span class="line">reg = re.<span class="built_in">compile</span>(<span class="string">r&#x27;b.&#x27;</span>, re.S)</span><br><span class="line"><span class="built_in">print</span>(re.findall(reg, <span class="built_in">str</span>))</span><br></pre></td></tr></table></figure>
+
+<p>U 只匹配最近的一个字符串;不重复匹配;</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$mode</span>=<span class="string">&quot;/a(.*?)c/&quot;</span>;</span><br><span class="line"><span class="variable">$preg</span>=<span class="string">&quot;/a.*c/U&quot;</span>;<span class="comment">//这两个正则返回相同的值</span></span><br><span class="line"><span class="variable">$str</span>=<span class="string">&quot;abcabbbcabbbbbc&quot;</span> ;</span><br><span class="line"><span class="title function_ invoke__">preg_match</span>(<span class="variable">$mode</span>,<span class="variable">$str</span>,<span class="variable">$content</span>);   <span class="keyword">echo</span> <span class="variable">$content</span>[<span class="number">0</span>];<span class="comment">//abc</span></span><br><span class="line"><span class="title function_ invoke__">preg_match</span>(<span class="variable">$preg</span>,<span class="variable">$str</span>,<span class="variable">$content</span>);   <span class="keyword">echo</span> <span class="variable">$content</span>[<span class="number">0</span>];<span class="comment">//abc</span></span><br></pre></td></tr></table></figure>
+
+<p>修正符:x 将模式中的空白忽略;<br>修正符:A 强制从目标字符串开头匹配;<br>例:</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$mode=<span class="string">&quot;/abc/A&quot;</span><span class="comment">;</span></span><br><span class="line">可以与$str=<span class="string">&quot;abcsdfi&quot;</span>匹配,</span><br><span class="line">不可以与$str2=<span class="string">&quot;sdsdabc&quot;</span>匹配<span class="comment">;</span></span><br><span class="line">因为$str2不是以abc开头<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+<p>修正符:D 如果使用$限制结尾字符,则不允许结尾有换行;<br>例:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">模式为:<span class="variable">$mode</span><span class="operator">=</span><span class="string">&quot;/abc$/&quot;</span>;</span><br><span class="line">可以与最后有换行的<span class="variable">$str</span><span class="operator">=</span><span class="string">&quot;adshabc<span class="subst">\n</span>&quot;</span>匹配;</span><br><span class="line">元子符<span class="variable">$会忽略最后的换行</span>\n;</span><br><span class="line">如果模式为:<span class="variable">$mode</span><span class="operator">=</span><span class="string">&quot;/abc/D&quot;</span>,</span><br><span class="line">则不能与<span class="variable">$str</span><span class="operator">=</span><span class="string">&quot;adshabc<span class="subst">\n</span>&quot;</span>匹配</span><br></pre></td></tr></table></figure>
+<p>修正符D限制其不可有换行;必需以abc结尾;<br>修正符:e 配合函数preg_replace()使用, 可以把匹配来的字符串当作正则表达式执行;</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/posts/2f57a694.html" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2019-09-30 16:00:00
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                        <b>#</b> 后端
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="正则表达式">
+                        <b>#</b> 正则表达式
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="正则表达式">
+                        <b>#</b> 正则表达式
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/posts/eeec638f.html" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E9%80%9F%E6%9F%A5%E8%A1%A8"><span class="toc-text">一、速查表</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%BF%AE%E9%A5%B0%E7%AC%A6"><span class="toc-text">二、修饰符</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="gitee" target="_blank" rel="noopener" href="https://gitee.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E9%80%9F%E6%9F%A5 + '&url=' + http%3A%2F%2Fyoursite.com%2Fposts%2F351dcf8c.html + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://yoursite.com/posts/351dcf8c.html" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>
