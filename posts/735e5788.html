@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="cat" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      排序算法 
+      
+      
+      |
+    
+     个人资料站
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <link rel="icon" href="/images/logo.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/logo.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">cat</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">排序算法</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2017-11-07 01:56:27
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                    <b>#</b> 后端
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/php/" title="php">
+                    <b>#</b> php
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/php/" title="php">
+                    <b>#</b> php
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>&lt;Excerpt in index | 首页摘要&gt;</p>
+<span id="more"></span>
+<p>&lt;The rest of contents | 余下全文&gt;</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">sortClass</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Array Order</span></span><br><span class="line"><span class="comment">     * 二维数组排序函数</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span>   array $array 要排序的数组</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span>   string $field 要排序的字段名</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span>   string $sortOrder 排序方式（默认升序）</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span>   string $sortOrder 排序类型（默认数组类型）</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>  array</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">arraySort</span>(<span class="params"><span class="variable">$Array</span>, <span class="variable">$Field</span>, <span class="variable">$sortOrder</span> = SORT_ASC, <span class="variable">$sortFlags</span> = SORT_NUMERIC</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="variable">$Array</span> <span class="keyword">as</span> <span class="variable">$vo</span>) &#123;</span><br><span class="line">            <span class="variable">$t</span>[] = <span class="variable">$vo</span>[<span class="variable">$Field</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="title function_ invoke__">array_multisort</span>(<span class="variable">$t</span>, <span class="variable">$sortOrder</span>, <span class="variable">$sortFlags</span>, <span class="variable">$Array</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$Array</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 二维数组排序函数,保留键值</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> array $array 要排序的数组</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> string $key 用来排序的键名</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> string $type 默认为升序排序</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> array</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">array_sort</span>(<span class="params"><span class="variable">$array</span>, <span class="variable">$key</span>, <span class="variable">$type</span> = <span class="string">&#x27;asc&#x27;</span></span>) </span>&#123;</span><br><span class="line">        <span class="variable">$keysValue</span> = <span class="variable">$newArray</span> = <span class="keyword">array</span>();</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="variable">$array</span> <span class="keyword">as</span> <span class="variable">$k</span> =&gt; <span class="variable">$v</span>) &#123;</span><br><span class="line">            <span class="variable">$keysValue</span>[<span class="variable">$k</span>] = <span class="variable">$v</span>[<span class="variable">$key</span>];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$type</span> == <span class="string">&#x27;asc&#x27;</span>) &#123;</span><br><span class="line">            <span class="title function_ invoke__">asort</span>(<span class="variable">$keysValue</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="title function_ invoke__">arsort</span>(<span class="variable">$keysValue</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="title function_ invoke__">reset</span>(<span class="variable">$keysValue</span>);</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="variable">$keysValue</span> <span class="keyword">as</span> <span class="variable">$k</span> =&gt; <span class="variable">$v</span>) &#123;</span><br><span class="line">            <span class="variable">$newArray</span>[<span class="variable">$k</span>] = <span class="variable">$array</span>[<span class="variable">$k</span>];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$newArray</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 数组中抽取出键为$field，单独成为一个数组作为多维数组的排序</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> array $array 需要排序的数组</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> string $field 指定排序的键值</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getSortArr</span>(<span class="params">&amp;<span class="variable">$array</span>,<span class="variable">$field</span></span>)</span>&#123;</span><br><span class="line">        <span class="variable">$fieldArr</span> = <span class="keyword">array</span>();</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="variable">$array</span> <span class="keyword">as</span> <span class="variable">$key</span>=&gt;<span class="variable">$value</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="title function_ invoke__">array_key_exists</span>(<span class="variable">$field</span>, <span class="variable">$value</span>))&#123;</span><br><span class="line">                <span class="variable">$fieldArr</span>[] = <span class="variable">$value</span>[<span class="variable">$field</span>];</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getSortArr</span>(<span class="variable">$value</span>,<span class="variable">$field</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">actionTest</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable">$array</span> = <span class="variable">$field</span> = <span class="keyword">array</span>();<span class="comment">//需要排序的数组</span></span><br><span class="line">        <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getSortArr</span>(<span class="variable">$array</span>, <span class="variable">$field</span>);<span class="comment">//数组中抽取出键为$field，单独成为一个数组</span></span><br><span class="line">        <span class="title function_ invoke__">array_multisort</span>(<span class="variable">$fieldArr</span>, SORT_ASC, <span class="variable">$array</span>);<span class="comment">//进行排序</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;&quot;</span>;</span><br><span class="line">        <span class="title function_ invoke__">var_dump</span>(<span class="variable">$array</span>);</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 冒泡排序</span></span><br><span class="line"><span class="comment">     * 比较相邻的元素。如果第一个比第二个大，就交换他们两个。</span></span><br><span class="line"><span class="comment">     * 对每一对相邻元素作同样的工作，从开始第一对到结尾的最后一对。在这一点，最后的元素应该会是最大的数。</span></span><br><span class="line"><span class="comment">     * 针对所有的元素重复以上的步骤，除了最后一个。</span></span><br><span class="line"><span class="comment">     * 持续每次对越来越少的元素重复上面的步骤，直到没有任何一对数字需要比较。</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $arr</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">bubble</span>(<span class="params"><span class="variable">$arr</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable">$len</span> = <span class="title function_ invoke__">count</span>(<span class="variable">$arr</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="variable">$i</span> = <span class="number">0</span>; <span class="variable">$i</span> &lt; <span class="variable">$len</span> - <span class="number">1</span>; <span class="variable">$i</span>++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="variable">$j</span> = <span class="number">0</span>; <span class="variable">$j</span> &lt; <span class="variable">$len</span> - <span class="number">1</span> - <span class="variable">$i</span>; <span class="variable">$j</span>++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="variable">$arr</span>[<span class="variable">$j</span>] &gt; <span class="variable">$arr</span>[<span class="variable">$j</span> + <span class="number">1</span>]) &#123;</span><br><span class="line">                    <span class="variable">$temp</span> = <span class="variable">$arr</span>[<span class="variable">$j</span>];</span><br><span class="line">                    <span class="variable">$arr</span>[<span class="variable">$j</span>] = <span class="variable">$arr</span>[<span class="variable">$j</span> + <span class="number">1</span>];</span><br><span class="line">                    <span class="variable">$arr</span>[<span class="variable">$j</span> + <span class="number">1</span>] = <span class="variable">$temp</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$arr</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 快速排序</span></span><br><span class="line"><span class="comment">     * 从数列中挑出一个元素，称为 “基准”（pivot），</span></span><br><span class="line"><span class="comment">     * 重新排序数列，所有元素比基准值小的摆放在基准前面，所有元素比基准值大的摆在基准的后面（相同的数可以到任一边）。</span></span><br><span class="line"><span class="comment">     * 在这个分区退出之后，该基准就处于数列的中间位置。这个称为分区（partition）操作。</span></span><br><span class="line"><span class="comment">     * 递归地（recursive）把小于基准值元素的子数列和大于基准值元素的子数列排序。</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $arr</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">quick</span>(<span class="params"><span class="variable">$arr</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable">$len</span> = <span class="title function_ invoke__">count</span>(<span class="variable">$arr</span>);</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$len</span> &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="variable">$arr</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="variable">$baseNum</span> = <span class="variable">$arr</span>[<span class="number">0</span>];</span><br><span class="line">        <span class="variable">$leftArray</span> = <span class="variable">$rightArray</span> = [];</span><br><span class="line">        <span class="keyword">for</span> (<span class="variable">$i</span> = <span class="number">1</span>; <span class="variable">$i</span> &lt; <span class="variable">$len</span>; <span class="variable">$i</span>++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="variable">$baseNum</span> &gt; <span class="variable">$arr</span>[<span class="variable">$i</span>]) &#123;</span><br><span class="line">                <span class="variable">$leftArray</span>[] = <span class="variable">$arr</span>[<span class="variable">$i</span>];</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="variable">$rightArray</span>[] = <span class="variable">$arr</span>[<span class="variable">$i</span>];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="variable">$leftArray</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">quick</span>(<span class="variable">$leftArray</span>);</span><br><span class="line">        <span class="variable">$rightArray</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">quick</span>(<span class="variable">$rightArray</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="title function_ invoke__">array_merge</span>(<span class="variable">$leftArray</span>, <span class="keyword">array</span>(<span class="variable">$baseNum</span>), <span class="variable">$rightArray</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 选择排序</span></span><br><span class="line"><span class="comment">     * 首先在未排序序列中找到最小元素，存放到排序序列的起始位置，</span></span><br><span class="line"><span class="comment">     * 然后，再从剩余未排序元素中继续寻找最小元素，</span></span><br><span class="line"><span class="comment">     * 然后放到排序序列末尾。以此类推，直到所有元素均排序完毕。</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $arr</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">select</span>(<span class="params"><span class="variable">$arr</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 外层控制次数 内层控制次数</span></span><br><span class="line">        <span class="variable">$len</span> = <span class="title function_ invoke__">count</span>(<span class="variable">$arr</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="variable">$i</span> = <span class="number">0</span>; <span class="variable">$i</span> &lt; <span class="variable">$len</span> - <span class="number">1</span>; <span class="variable">$i</span>++) &#123;</span><br><span class="line">            <span class="comment">// 设置最小值的位置</span></span><br><span class="line">            <span class="variable">$p</span> = <span class="variable">$i</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="variable">$j</span> = <span class="variable">$i</span> + <span class="number">1</span>; <span class="variable">$j</span> &lt; <span class="variable">$len</span>; <span class="variable">$j</span>++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="variable">$arr</span>[<span class="variable">$p</span>] &gt; <span class="variable">$arr</span>[<span class="variable">$j</span>]) &#123;</span><br><span class="line">                    <span class="comment">// 发现更小的值, 修改最小的值的位置</span></span><br><span class="line">                    <span class="variable">$p</span> = <span class="variable">$j</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (<span class="variable">$p</span> != <span class="variable">$i</span>) &#123;</span><br><span class="line">                <span class="variable">$temp</span> = <span class="variable">$arr</span>[<span class="variable">$p</span>];</span><br><span class="line">                <span class="variable">$arr</span>[<span class="variable">$p</span>] = <span class="variable">$arr</span>[<span class="variable">$i</span>];</span><br><span class="line">                <span class="variable">$arr</span>[<span class="variable">$i</span>] = <span class="variable">$temp</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$arr</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 插入排序</span></span><br><span class="line"><span class="comment">     * 从第一个元素开始，该元素可以认为已经被排序</span></span><br><span class="line"><span class="comment">     * 取出下一个元素，在已经排序的元素序列中从后向前扫描</span></span><br><span class="line"><span class="comment">     * 如果该元素（已排序）大于新元素，将该元素移到下一位置</span></span><br><span class="line"><span class="comment">     * 重复步骤3，直到找到已排序的元素小于或者等于新元素的位置</span></span><br><span class="line"><span class="comment">     * 将新元素插入到该位置中</span></span><br><span class="line"><span class="comment">     * 重复步骤2</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $arr</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">insert</span>(<span class="params"><span class="variable">$arr</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable">$len</span> = <span class="title function_ invoke__">count</span>(<span class="variable">$arr</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="variable">$i</span> = <span class="number">1</span>; <span class="variable">$i</span> &lt; <span class="variable">$len</span>; <span class="variable">$i</span>++) &#123;</span><br><span class="line">            <span class="variable">$temp</span> = <span class="variable">$arr</span>[<span class="variable">$i</span>];</span><br><span class="line">            <span class="keyword">for</span> (<span class="variable">$j</span> = <span class="variable">$i</span> - <span class="number">1</span>; <span class="variable">$j</span> &gt;= <span class="number">0</span>; <span class="variable">$j</span>--) &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="variable">$temp</span> &lt; <span class="variable">$arr</span>[<span class="variable">$j</span>]) &#123;</span><br><span class="line">                    <span class="variable">$arr</span>[<span class="variable">$j</span> + <span class="number">1</span>] = <span class="variable">$arr</span>[<span class="variable">$j</span>];</span><br><span class="line">                    <span class="variable">$arr</span>[<span class="variable">$j</span>] = <span class="variable">$temp</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$arr</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 二分查找 要求线性表必须采用顺序存储结构，而且表中元素按关键字有序排列。</span></span><br><span class="line"><span class="comment">     * 先取数组中间的值floor((low+top)/2),</span></span><br><span class="line"><span class="comment">     * 然后通过与所需查找的数字进行比较，若比中间值大，则将首值替换为中间位置下一个位置，继续第一步的操作；</span></span><br><span class="line"><span class="comment">     * 若比中间值小，则将尾值替换为中间位置上一个位置，继续第一步操作</span></span><br><span class="line"><span class="comment">     * 重复第二步操作直至找出目标数字</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $arr</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $low</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $top</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> $target</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> int</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">binary</span>(<span class="params">&amp;<span class="variable">$arr</span>, <span class="variable">$low</span>, <span class="variable">$top</span>, <span class="variable">$target</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="variable">$low</span> &lt;= <span class="variable">$top</span>) &#123;</span><br><span class="line">            <span class="variable">$mid</span> = <span class="title function_ invoke__">intval</span>((<span class="variable">$low</span> + <span class="variable">$top</span>) / <span class="number">2</span>);</span><br><span class="line">            <span class="keyword">if</span> (<span class="variable">$arr</span>[<span class="variable">$mid</span>] == <span class="variable">$target</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="variable">$mid</span>;</span><br><span class="line">            &#125; <span class="keyword">elseif</span> (<span class="variable">$arr</span>[<span class="variable">$mid</span>] &lt; <span class="variable">$target</span>) &#123;</span><br><span class="line">                <span class="variable">$low</span> = <span class="variable">$mid</span> + <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="variable">$top</span> = <span class="variable">$mid</span> - <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/posts/c64f7adf.html" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2017-11-07 01:56:27
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                        <b>#</b> 后端
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/php/" title="php">
+                        <b>#</b> php
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/php/" title="php">
+                        <b>#</b> php
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/posts/c0debf31.html" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="gitee" target="_blank" rel="noopener" href="https://gitee.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">闽ICP备2023002086号-1</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95 + '&url=' + http%3A%2F%2F102312.xyz%2Fposts%2F735e5788.html + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://102312.xyz/posts/735e5788.html" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>
