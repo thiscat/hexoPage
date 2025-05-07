@@ -21,15 +21,29 @@
       <link href="/posts/d51ea391.html"/>
       <url>/posts/d51ea391.html</url>
       
-        <content type="html"><![CDATA[<p>&lt;Excerpt in index | 首页摘要&gt;</p><span id="more"></span><p>&lt;The rest of contents | 余下全文&gt;</p><h1 id="一、核心解决方案"><a href="#一、核心解决方案" class="headerlink" title="一、核心解决方案"></a>一、核心解决方案</h1><h2 id="1-集中式会话存储（推荐方案）"><a href="#1-集中式会话存储（推荐方案）" class="headerlink" title="1. 集中式会话存储（推荐方案）"></a>1. 集中式会话存储（推荐方案）</h2><p>   将会话数据存储在共享的中央存储系统中，所有节点通过统一接口访问。</p><p>方案对比：</p><table><thead><tr><th>存储类型</th><th>优点</th><th>缺点</th><th>适用场景</th></tr></thead><tbody><tr><td>Redis集群</td><td>高性能、高可用、自动分片</td><td>需要额外维护基础设施</td><td>中大型高并发系统</td></tr><tr><td>Memcached</td><td>简单快速</td><td>无持久化、无集群原生支持</td><td>中小型临时会话系统</td></tr><tr><td>MySQL</td><td>强一致性、事务支持</td><td>性能瓶颈、扩展复杂</td><td>数据敏感型系统</td></tr></tbody></table><p>Redis集群配置示例：11</p>]]></content>
+        <content type="html"><![CDATA[<p>&lt;Excerpt in index | 首页摘要&gt;</p><span id="more"></span><p>&lt;The rest of contents | 余下全文&gt;</p><h1 id="一、核心解决方案"><a href="#一、核心解决方案" class="headerlink" title="一、核心解决方案"></a>一、核心解决方案</h1><h2 id="1-集中式会话存储（推荐方案）"><a href="#1-集中式会话存储（推荐方案）" class="headerlink" title="1. 集中式会话存储（推荐方案）"></a>1. 集中式会话存储（推荐方案）</h2><p>   将会话数据存储在共享的中央存储系统中，所有节点通过统一接口访问。</p><p>方案对比：</p><table><thead><tr><th>存储类型</th><th>优点</th><th>缺点</th><th>适用场景</th></tr></thead><tbody><tr><td>Redis集群</td><td>高性能、高可用、自动分片</td><td>需要额外维护基础设施</td><td>中大型高并发系统</td></tr><tr><td>Memcached</td><td>简单快速</td><td>无持久化、无集群原生支持</td><td>中小型临时会话系统</td></tr><tr><td>MySQL</td><td>强一致性、事务支持</td><td>性能瓶颈、扩展复杂</td><td>数据敏感型系统</td></tr></tbody></table><p>Redis集群配置示例：</p><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// php.ini 配置</span></span><br><span class="line">session.save_handler = redis</span><br><span class="line">session.save_path = <span class="string">&quot;tcp://redis1:6379,tcp://redis2:6379?auth=your_password&amp;timeout=2&amp;cluster=1&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 动态配置（代码中）</span></span><br><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&#x27;session.save_handler&#x27;</span>, <span class="string">&#x27;redis&#x27;</span>);</span><br><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&#x27;session.save_path&#x27;</span>, <span class="string">&#x27;tcp://redis-cluster:6379?auth=your_password&#x27;</span>);</span><br></pre></td></tr></table></figure><h2 id="2-使用Memcached的会话复制（适用于小型系统）"><a href="#2-使用Memcached的会话复制（适用于小型系统）" class="headerlink" title="2. 使用Memcached的会话复制（适用于小型系统）"></a>2. 使用Memcached的会话复制（适用于小型系统）</h2><p>每个节点同步会话数据到其他节点，通过广播机制保持一致性。<br>实现方式：</p><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用Memcached的会话复制（示例）</span></span><br><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&#x27;session.save_handler&#x27;</span>, <span class="string">&#x27;memcached&#x27;</span>);</span><br><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&#x27;session.save_path&#x27;</span>, <span class="string">&#x27;server1:11211,server2:11211&#x27;</span>);</span><br></pre></td></tr></table></figure><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">缺点：</span><br><span class="line">网络延迟导致同步不一致</span><br><span class="line">扩展性差（节点数增加时性能下降）</span><br></pre></td></tr></table></figure><h2 id="3-JWT方案"><a href="#3-JWT方案" class="headerlink" title="3. JWT方案"></a>3. JWT方案</h2><p>将会话数据加密存储在客户端，服务端无需存储状态。</p><p>JWT实现代码：</p><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Firebase</span>\<span class="title">JWT</span>\<span class="title">JWT</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成令牌</span></span><br><span class="line"><span class="variable">$payload</span> = [</span><br><span class="line"><span class="string">&#x27;user_id&#x27;</span> =&gt; <span class="number">123</span>,</span><br><span class="line"><span class="string">&#x27;exp&#x27;</span> =&gt; <span class="title function_ invoke__">time</span>() + <span class="number">3600</span>,</span><br><span class="line"><span class="string">&#x27;data&#x27;</span> =&gt; [<span class="string">&#x27;role&#x27;</span> =&gt; <span class="string">&#x27;admin&#x27;</span>]</span><br><span class="line">];</span><br><span class="line"><span class="variable">$token</span> = JWT::<span class="title function_ invoke__">encode</span>(<span class="variable">$payload</span>, <span class="string">&#x27;your_secret_key&#x27;</span>, <span class="string">&#x27;HS256&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 验证令牌</span></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line"><span class="variable">$decoded</span> = JWT::<span class="title function_ invoke__">decode</span>(<span class="variable">$token</span>, <span class="string">&#x27;your_secret_key&#x27;</span>, [<span class="string">&#x27;HS256&#x27;</span>]);</span><br><span class="line">&#125; <span class="keyword">catch</span> (<span class="built_in">Exception</span> <span class="variable">$e</span>) &#123;</span><br><span class="line"><span class="comment">// 处理验证失败</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">注意事项：</span><br><span class="line">需配合HTTPS防止令牌泄露</span><br><span class="line">令牌大小需控制在4KB以内</span><br></pre></td></tr></table></figure><h1 id="二、高级优化策略"><a href="#二、高级优化策略" class="headerlink" title="二、高级优化策略"></a>二、高级优化策略</h1><h2 id="1-读写一致性保障"><a href="#1-读写一致性保障" class="headerlink" title="1. 读写一致性保障"></a>1. 读写一致性保障</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用Redis事务保证原子性操作</span></span><br><span class="line"><span class="variable">$redis</span>-&gt;<span class="title function_ invoke__">multi</span>()</span><br><span class="line">-&gt;<span class="title function_ invoke__">hSet</span>(<span class="string">&#x27;session:&#x27;</span>.<span class="variable">$sessionId</span>, <span class="string">&#x27;last_activity&#x27;</span>, <span class="title function_ invoke__">time</span>())</span><br><span class="line">-&gt;<span class="title function_ invoke__">expire</span>(<span class="string">&#x27;session:&#x27;</span>.<span class="variable">$sessionId</span>, <span class="number">3600</span>)</span><br><span class="line">-&gt;<span class="title function_ invoke__">exec</span>();</span><br></pre></td></tr></table></figure><h2 id="2-故障转移机制"><a href="#2-故障转移机制" class="headerlink" title="2. 故障转移机制"></a>2. 故障转移机制</h2><p>哨兵模式配置：</p><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">session.save_path = <span class="string">&quot;tcp://sentinel1:26379?sentinel=mymaster&amp;auth=password&quot;</span></span><br></pre></td></tr></table></figure><p>自动重试策略：</p><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span> = <span class="keyword">new</span> <span class="title class_">RedisCluster</span>(<span class="literal">null</span>, [<span class="string">&#x27;redis-node1:6379&#x27;</span>, <span class="string">&#x27;redis-node2:6379&#x27;</span>], <span class="number">1.5</span>, <span class="number">1.5</span>, <span class="literal">true</span>, <span class="string">&#x27;password&#x27;</span>);</span><br><span class="line"><span class="variable">$redis</span>-&gt;<span class="title function_ invoke__">setOption</span>(<span class="title class_">RedisCluster</span>::<span class="variable constant_">OPT_SLAVE_FAILOVER</span>, <span class="title class_">RedisCluster</span>::<span class="variable constant_">FAILOVER_DISTRIBUTE</span>);</span><br></pre></td></tr></table></figure><h2 id="3-性能优化"><a href="#3-性能优化" class="headerlink" title="3. 性能优化"></a>3. 性能优化</h2><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Nginx配置会话亲和性（粘性会话）</span></span><br><span class="line"><span class="section">upstream</span> backend &#123;</span><br><span class="line"><span class="comment"># ip_hash: 每个请求按照访问ip（即Nginx的前置服务器或者客户端IP）的hash结果分配，这样每个访客会固定访问一个后端服务器，可以解决session一致问题。</span></span><br><span class="line">    ip_hash;</span><br><span class="line">    <span class="attribute">server</span> <span class="number">10.0.0.1:80</span>;</span><br><span class="line">    <span class="attribute">server</span> <span class="number">10.0.0.2:80</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h1 id="三、安全防护方案"><a href="#三、安全防护方案" class="headerlink" title="三、安全防护方案"></a>三、安全防护方案</h1><h2 id="1-会话安全加固"><a href="#1-会话安全加固" class="headerlink" title="1. 会话安全加固"></a>1. 会话安全加固</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 强制使用安全Cookie</span></span><br><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&#x27;session.cookie_secure&#x27;</span>, <span class="number">1</span>);</span><br><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&#x27;session.cookie_httponly&#x27;</span>, <span class="number">1</span>);</span><br><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&#x27;session.cookie_samesite&#x27;</span>, <span class="string">&#x27;Strict&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定期更换Session ID</span></span><br><span class="line"><span class="title function_ invoke__">session_regenerate_id</span>(<span class="literal">true</span>);</span><br></pre></td></tr></table></figure><h2 id="2-数据加密"><a href="#2-数据加密" class="headerlink" title="2. 数据加密"></a>2. 数据加密</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用OpenSSL加密会话数据</span></span><br><span class="line"><span class="variable">$iv</span> = <span class="title function_ invoke__">openssl_random_pseudo_bytes</span>(<span class="number">16</span>);</span><br><span class="line"><span class="variable">$encrypted</span> = <span class="title function_ invoke__">openssl_encrypt</span>(<span class="variable">$data</span>, <span class="string">&#x27;AES-256-CBC&#x27;</span>, <span class="variable">$key</span>, <span class="number">0</span>, <span class="variable">$iv</span>);</span><br><span class="line"><span class="variable">$redis</span>-&gt;<span class="title function_ invoke__">set</span>(<span class="variable">$sessionId</span>, <span class="title function_ invoke__">base64_encode</span>(<span class="variable">$iv</span>.<span class="variable">$encrypted</span>));</span><br></pre></td></tr></table></figure><h1 id="四、监控与维护"><a href="#四、监控与维护" class="headerlink" title="四、监控与维护"></a>四、监控与维护</h1><h2 id="1-关键监控指标"><a href="#1-关键监控指标" class="headerlink" title="1. 关键监控指标"></a>1. 关键监控指标</h2><table><thead><tr><th>指标</th><th>告警阈值</th><th>监控工具</th></tr></thead><tbody><tr><td>会话存储延迟</td><td>&gt;100ms</td><td>Prometheus+Grafana</td></tr><tr><td>Redis内存使用率</td><td>&gt;80%</td><td>Redis-cli INFO</td></tr><tr><td>会话丢失率</td><td>&gt;0.1%</td><td>ELK日志分析</td></tr></tbody></table><h2 id="2-灾备方案"><a href="#2-灾备方案" class="headerlink" title="2. 灾备方案"></a>2. 灾备方案</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Redis集群数据备份</span></span><br><span class="line">redis-cli --cluster backup redis-node1:6379 --backup-dir /backups</span><br></pre></td></tr></table></figure><h2 id="五、方案选型建议"><a href="#五、方案选型建议" class="headerlink" title="五、方案选型建议"></a>五、方案选型建议</h2><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">中小型系统：Redis主从 + 哨兵</span><br><span class="line">大型分布式系统：Redis Cluster + 自动分片</span><br><span class="line">无状态服务：<span class="keyword">JWT </span>+ 客户端存储</span><br><span class="line">传统架构：数据库存储 + 读写分离</span><br></pre></td></tr></table></figure>]]></content>
       
       
       <categories>
           
+          <category> 后端 </category>
+          
           <category> php </category>
+          
+          <category> 分布式 </category>
+          
+          <category> 测试 </category>
           
       </categories>
       
+      
+        <tags>
+            
+            <tag> 面试 </tag>
+            
+            <tag> 分布式 </tag>
+            
+        </tags>
       
     </entry>
     
@@ -99,6 +113,8 @@
       
       <categories>
           
+          <category> 后端 </category>
+          
           <category> linux </category>
           
       </categories>
@@ -124,6 +140,8 @@
       
       <categories>
           
+          <category> 后端 </category>
+          
           <category> linux </category>
           
       </categories>
@@ -148,6 +166,8 @@
       
       
       <categories>
+          
+          <category> 后端 </category>
           
           <category> php </category>
           
@@ -394,6 +414,8 @@
       
       <categories>
           
+          <category> 后端 </category>
+          
           <category> elasticsearch </category>
           
       </categories>
@@ -445,6 +467,8 @@
       
       
       <categories>
+          
+          <category> 后端 </category>
           
           <category> elasticsearch </category>
           
@@ -633,6 +657,8 @@
       
       <categories>
           
+          <category> 后端 </category>
+          
           <category> linux </category>
           
       </categories>
@@ -657,6 +683,8 @@
       
       
       <categories>
+          
+          <category> 后端 </category>
           
           <category> linux </category>
           
@@ -1397,6 +1425,8 @@
       
       
       <categories>
+          
+          <category> 后端 </category>
           
           <category> php </category>
           
