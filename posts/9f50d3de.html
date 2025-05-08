@@ -11,7 +11,7 @@
   
   <title>
     
-      redis config 
+      php底层原理 
       
       
       |
@@ -155,11 +155,11 @@
   <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
   <div class="container post-details" id="post-details">
     <div class="post-content">
-      <div class="post-title">redis config</div>
+      <div class="post-title">php底层原理</div>
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime" title="更新时间"></i>
-          2017-11-07 09:56:27
+          2025-05-08 16:53:59
         </span>
         
               <span class="post-categories">
@@ -177,6 +177,12 @@
                   </a>
                 </span>
                 
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/php/%E9%9D%A2%E8%AF%95/" title="面试">
+                    <b>#</b> 面试
+                  </a>
+                </span>
+                
               </span>
           
               <span class="post-tags">
@@ -188,6 +194,12 @@
                   </a>
                 </span>
                 
+                <span class="span--tag">
+                  <a href="/tags/%E9%9D%A2%E8%AF%95/" title="面试">
+                    <b>#</b> 面试
+                  </a>
+                </span>
+                
               </span>
           
       </div>
@@ -195,17 +207,79 @@
         <p>&lt;Excerpt in index | 首页摘要&gt;</p>
 <span id="more"></span>
 <p>&lt;The rest of contents | 余下全文&gt;</p>
-<h1 id="redis以守护进程的方式运行"><a href="#redis以守护进程的方式运行" class="headerlink" title="redis以守护进程的方式运行"></a>redis以守护进程的方式运行</h1><h1 id="no表示不以守护进程的方式运行-会占用一个终端"><a href="#no表示不以守护进程的方式运行-会占用一个终端" class="headerlink" title="no表示不以守护进程的方式运行(会占用一个终端)"></a>no表示不以守护进程的方式运行(会占用一个终端)</h1><p>daemonize yes</p>
-<h1 id="修改目录"><a href="#修改目录" class="headerlink" title="修改目录"></a>修改目录</h1><p>dir &#x2F;data&#x2F;redis&#x2F;</p>
-<h1 id><a href="#" class="headerlink" title></a></h1><p>appendonly yes</p>
-<h1 id="Save-the-DB-on-disk"><a href="#Save-the-DB-on-disk" class="headerlink" title="Save the DB on disk:"></a>Save the DB on disk:</h1><h1 id="关闭"><a href="#关闭" class="headerlink" title="关闭"></a>关闭</h1><p>#save 900 1<br>#save 300 10<br>#save 60 10000</p>
+<h1 id="一、四层体系架构"><a href="#一、四层体系架构" class="headerlink" title="一、四层体系架构"></a>一、四层体系架构</h1><p>PHP采用分层设计，由下至上分为四层，形成高效可扩展的运行框架：</p>
+<h2 id="1-Zend引擎"><a href="#1-Zend引擎" class="headerlink" title="1.Zend引擎"></a>1.Zend引擎</h2><figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">PHP</span>的核心，用纯<span class="built_in">C</span>实现，负责词法<span class="operator">/</span>语法解析、编译生成<span class="variable">opcode</span>、内存管理及提供基础<span class="variable">API</span></span><br><span class="line">实现了哈希表、对象模型等核心数据结构，支撑<span class="variable">PHP</span>的弱类型特性</span><br><span class="line">最新版本（如<span class="variable">PHP</span> <span class="number">8.3</span>）引入<span class="variable">JIT</span>编译技术，显著提升执行效率</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-Extensions组件层"><a href="#2-Extensions组件层" class="headerlink" title="2.Extensions组件层"></a>2.Extensions组件层</h2><figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">通过模块化扩展提供标准库功能（如数组操作、文件处理等）</span><br><span class="line">开发者可编写<span class="built_in">C</span>扩展实现性能敏感功能（如加密算法、协议解析）</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-SAPI层（服务器抽象接口）"><a href="#2-SAPI层（服务器抽象接口）" class="headerlink" title="2.SAPI层（服务器抽象接口）"></a>2.SAPI层（服务器抽象接口）</h2><figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">隔离<span class="variable">Web</span>服务器与<span class="variable">PHP</span>核心，支持多种运行模式：</span><br><span class="line"><span class="variable">FPM</span>（<span class="variable">FastCGI</span> <span class="variable">Process</span> <span class="variable">Manager</span>）：主流生产环境方案，支持进程池管理</span><br><span class="line"><span class="variable">CLI</span>：命令行脚本执行</span><br><span class="line"><span class="variable">Embedded</span>：嵌入<span class="built_in">C</span><span class="operator">/</span><span class="built_in">C</span><span class="operator">++</span>应用</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-应用层"><a href="#3-应用层" class="headerlink" title="3.应用层"></a>3.应用层</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">开发者编写的业务代码，通过SAPI与下层交互</span><br></pre></td></tr></table></figure>
+
+<h1 id="二、执行流程与Opcode机制"><a href="#二、执行流程与Opcode机制" class="headerlink" title="二、执行流程与Opcode机制"></a>二、执行流程与Opcode机制</h1><p>PHP代码的执行经历三个阶段，体现解释型语言特性：</p>
+<h2 id="1-编译阶段"><a href="#1-编译阶段" class="headerlink" title="1.编译阶段"></a>1.编译阶段</h2><ul>
+<li>词法分析：将源码转换为Token流（如$a&#x3D;1分解为变量、运算符、常量）</li>
+<li>语法分析：构建抽象语法树（AST）</li>
+<li>生成Opcode：将AST编译为中间指令集，如：</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ZEND_ASSIGN_SPEC_CV_CONST_HANDLER  <span class="comment">// $a=1</span></span><br><span class="line">ZEND_ADD_SPEC_CV_CV_HANDLER        <span class="comment">// $c=$a+$b</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-执行阶段"><a href="#2-执行阶段" class="headerlink" title="2.执行阶段"></a>2.执行阶段</h2><ul>
+<li>Zend虚拟机逐条执行Opcode，调用对应的C函数</li>
+<li>PHP 8引入的JIT会将热点代码编译为机器码直接执行，性能提升可达30% <a href="/posts/75f8cdd8">php特性JIT</a> <a href="php%E7%89%B9%E6%80%A7JIT.md"></a></li>
+</ul>
+<h2 id="3-缓存优化"><a href="#3-缓存优化" class="headerlink" title="3.缓存优化"></a>3.缓存优化</h2><ul>
+<li>Opcache扩展将编译结果缓存在共享内存，避免重复解析（默认开启于PHP 5.5+）</li>
+<li>典型配置：<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">opcache.enable</span>=<span class="number">1</span></span><br><span class="line"><span class="attr">opcache.memory_consumption</span>=<span class="number">128</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="三、核心数据结构设计"><a href="#三、核心数据结构设计" class="headerlink" title="三、核心数据结构设计"></a>三、核心数据结构设计</h1><p>PHP的高效运行依赖两大底层结构：</p>
+<h2 id="1-HashTable（哈希表）"><a href="#1-HashTable（哈希表）" class="headerlink" title="1. HashTable（哈希表）"></a>1. HashTable（哈希表）</h2><ul>
+<li>实现PHP数组、类属性表等核心功能</li>
+<li>采用”链地址法”解决哈希冲突，结构包含：<ul>
+<li>散列桶数组：快速定位元素（时间复杂度O(1)）</li>
+<li>双向链表：支持顺序遍历（foreach操作）</li>
+</ul>
+</li>
+<li>动态扩容策略：当元素数超过当前容量75%时，容量翻倍重建哈希表</li>
+</ul>
+<h2 id="2-zval变量容器"><a href="#2-zval变量容器" class="headerlink" title="2.zval变量容器"></a>2.zval变量容器</h2><ul>
+<li>存储变量值的结构体：<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> _<span class="title">zval_struct</span> &#123;</span></span><br><span class="line">zend_value value;    <span class="comment">// 实际值（联合体）</span></span><br><span class="line">  <span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    zend_uchar type;     <span class="comment">// 当前类型</span></span><br><span class="line">    zend_uchar type_flags;</span><br><span class="line">    <span class="type">uint32_t</span> refcount;   <span class="comment">// 引用计数</span></span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+<li>支持自动类型转换：当进行$a&#x3D;1; $a&#x3D;”text”时，zval类型标记从IS_LONG变为IS_STRING</li>
+<li>引用计数机制实现写时复制（Copy-On-Write），减少内存消耗</li>
+</ul>
+<h1 id="四、内存管理与进程模型"><a href="#四、内存管理与进程模型" class="headerlink" title="四、内存管理与进程模型"></a>四、内存管理与进程模型</h1><h2 id="1-内存分配"><a href="#1-内存分配" class="headerlink" title="1.内存分配"></a>1.内存分配</h2><ul>
+<li>采用基于池（Pool）的分配策略，减少频繁调用malloc的性能损耗</li>
+<li>垃圾回收（GC）机制：<ul>
+<li>引用计数为主，周期回收算法为辅</li>
+<li>当refcount&#x3D;0或检测到循环引用时自动释放内存</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-并发处理模型"><a href="#2-并发处理模型" class="headerlink" title="2.并发处理模型"></a>2.并发处理模型</h2><ul>
+<li>传统多进程模型：每个请求独立进程，避免内存泄漏影响全局（PHP-FPM默认模式）</li>
+<li>多线程支持：通过ZTS（Zend Thread Safety）模式启用，需谨慎处理全局变量</li>
+<li>协程方案：Swoole等扩展实现异步非阻塞IO，适用于高并发场景</li>
+</ul>
+<h1 id="五、性能优化实践"><a href="#五、性能优化实践" class="headerlink" title="五、性能优化实践"></a>五、性能优化实践</h1><p>1.Opcode缓存：确保Opcache启用并合理配置内存大小<br>2.JIT调优：针对计算密集型场景启用JIT（如opcache.jit&#x3D;1235）<br>3.数据结构选择：</p>
+<ul>
+<li>关联数组改用SplFixedArray（索引数组）可提升30%访问速度，相比较数组优势：<ul>
+<li>元素类型检查： SplFixedArray 允许指定元素的类型，有助于确保数据的一致性和可靠性。</li>
+<li>类型安全： 元素访问是类型安全的，强制执行声明的类型。这可以防止意外数据类型转换，提高代码的可维护性和安全性。</li>
+<li>跨进程共享： SplFixedArray 对象可以跨进程共享，在需要在多个进程之间传递或访问数据时非常有用。</li>
+<li>数据量大且已知： 对于具有大量预定义大小的数据集，SplFixedArray 可以更有效地管理内存。</li>
+</ul>
+</li>
+<li>大数组优先使用生成器（Generator）减少内存占用<br>4.扩展开发：</li>
+<li>使用Zephir语言编写高性能扩展（如Phalcon框架）</li>
+<li>通过FFI调用C库函数（PHP 7.4+特性）</li>
+</ul>
 
       </div>
       
         <div class="prev-or-next">
           <div class="post-foot-next">
             
-              <a href="/posts/13dbaea.html" target="_self">
+              <a href="/posts/589cfa0.html" target="_self">
                 <i class="iconfont icon-chevronleft"></i>
                 <span>上一页</span>
               </a>
@@ -214,7 +288,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime" title="更新时间"></i>
-              2017-11-07 09:56:27
+              2025-05-08 16:53:59
             </span>
             
                   <span class="post-categories">
@@ -232,6 +306,12 @@
                       </a>
                     </span>
                     
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/php/%E9%9D%A2%E8%AF%95/" title="面试">
+                        <b>#</b> 面试
+                      </a>
+                    </span>
+                    
                   </span>
               
                   <span class="post-tags">
@@ -243,12 +323,18 @@
                       </a>
                     </span>
                     
+                    <span class="span--tag">
+                      <a href="/tags/%E9%9D%A2%E8%AF%95/" title="面试">
+                        <b>#</b> 面试
+                      </a>
+                    </span>
+                    
                   </span>
               
           </div>
           <div class="post-foot-prev">
             
-              <a href="/posts/3610db45.html" target="_self">
+              <a href="/posts/75f8cdd8.html" target="_self">
                 <span>下一页</span>
                 <i class="iconfont icon-chevronright"></i>
               </a>
@@ -265,7 +351,7 @@
     <div class="title">目录</div>
     <div class="catalog-content">
       
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#redis%E4%BB%A5%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B%E7%9A%84%E6%96%B9%E5%BC%8F%E8%BF%90%E8%A1%8C"><span class="toc-text">redis以守护进程的方式运行</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#no%E8%A1%A8%E7%A4%BA%E4%B8%8D%E4%BB%A5%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B%E7%9A%84%E6%96%B9%E5%BC%8F%E8%BF%90%E8%A1%8C-%E4%BC%9A%E5%8D%A0%E7%94%A8%E4%B8%80%E4%B8%AA%E7%BB%88%E7%AB%AF"><span class="toc-text">no表示不以守护进程的方式运行(会占用一个终端)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E7%9B%AE%E5%BD%95"><span class="toc-text">修改目录</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-text"></span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Save-the-DB-on-disk"><span class="toc-text">Save the DB on disk:</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B3%E9%97%AD"><span class="toc-text">关闭</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%9B%9B%E5%B1%82%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84"><span class="toc-text">一、四层体系架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Zend%E5%BC%95%E6%93%8E"><span class="toc-text">1.Zend引擎</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Extensions%E7%BB%84%E4%BB%B6%E5%B1%82"><span class="toc-text">2.Extensions组件层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-SAPI%E5%B1%82%EF%BC%88%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8A%BD%E8%B1%A1%E6%8E%A5%E5%8F%A3%EF%BC%89"><span class="toc-text">2.SAPI层（服务器抽象接口）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%BA%94%E7%94%A8%E5%B1%82"><span class="toc-text">3.应用层</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B%E4%B8%8EOpcode%E6%9C%BA%E5%88%B6"><span class="toc-text">二、执行流程与Opcode机制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%BC%96%E8%AF%91%E9%98%B6%E6%AE%B5"><span class="toc-text">1.编译阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%89%A7%E8%A1%8C%E9%98%B6%E6%AE%B5"><span class="toc-text">2.执行阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%BC%93%E5%AD%98%E4%BC%98%E5%8C%96"><span class="toc-text">3.缓存优化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="toc-text">三、核心数据结构设计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-HashTable%EF%BC%88%E5%93%88%E5%B8%8C%E8%A1%A8%EF%BC%89"><span class="toc-text">1. HashTable（哈希表）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-zval%E5%8F%98%E9%87%8F%E5%AE%B9%E5%99%A8"><span class="toc-text">2.zval变量容器</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E4%B8%8E%E8%BF%9B%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="toc-text">四、内存管理与进程模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D"><span class="toc-text">1.内存分配</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%B9%B6%E5%8F%91%E5%A4%84%E7%90%86%E6%A8%A1%E5%9E%8B"><span class="toc-text">2.并发处理模型</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%AE%9E%E8%B7%B5"><span class="toc-text">五、性能优化实践</span></a></li></ol>
       
     </div>
   </div>
@@ -545,12 +631,12 @@
       </a>
       <div class="share-content hidden">
         
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + redis%20config + '&url=' + http%3A%2F%2F102312.xyz%2Fposts%2F32c151bb.html + '" target="_blank" title="Twitter">
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + php%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86 + '&url=' + http%3A%2F%2F102312.xyz%2Fposts%2F9f50d3de.html + '" target="_blank" title="Twitter">
             <i class="iconfont icon-twitter"></i>
           </a>
         
         
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://102312.xyz/posts/32c151bb.html" target="_blank" title="Facebook">
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://102312.xyz/posts/9f50d3de.html" target="_blank" title="Facebook">
             <i class="iconfont icon-facebooksquare"></i>
           </a>
         
