@@ -11,7 +11,7 @@
   
   <title>
     
-      MYSQL GROUP BY 详解 
+      mysql GROUP BY 详解 
       
       
       |
@@ -155,7 +155,7 @@
   <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
   <div class="container post-details" id="post-details">
     <div class="post-content">
-      <div class="post-title">MYSQL GROUP BY 详解</div>
+      <div class="post-title">mysql GROUP BY 详解</div>
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime" title="更新时间"></i>
@@ -172,13 +172,13 @@
                 </span>
                 
                 <span class="span--category">
-                  <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/" title="MYSQL">
-                    <b>#</b> MYSQL
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/mysql/" title="mysql">
+                    <b>#</b> mysql
                   </a>
                 </span>
                 
                 <span class="span--category">
-                  <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/%E7%B4%A2%E5%BC%95/" title="索引">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/mysql/%E7%B4%A2%E5%BC%95/" title="索引">
                     <b>#</b> 索引
                   </a>
                 </span>
@@ -189,8 +189,8 @@
                 <i class="iconfont icon-tags" title="标签"></i>
                 
                 <span class="span--tag">
-                  <a href="/tags/MYSQL/" title="MYSQL">
-                    <b>#</b> MYSQL
+                  <a href="/tags/mysql/" title="mysql">
+                    <b>#</b> mysql
                   </a>
                 </span>
                 
@@ -219,7 +219,7 @@
 </ol>
 </li>
 </ol>
-<h2 id="MYSQL-对-GROUP-BY-的优化"><a href="#MYSQL-对-GROUP-BY-的优化" class="headerlink" title="MYSQL 对 GROUP BY 的优化"></a>MYSQL 对 GROUP BY 的优化</h2><p>所有的group by中的列，必须在同一个索引里面<br>MySQL会使用两种方式来做group by的优化：</p>
+<h2 id="mysql-对-GROUP-BY-的优化"><a href="#mysql-对-GROUP-BY-的优化" class="headerlink" title="mysql 对 GROUP BY 的优化"></a>mysql 对 GROUP BY 的优化</h2><p>所有的group by中的列，必须在同一个索引里面<br>MySQL会使用两种方式来做group by的优化：</p>
 <ol>
 <li>松索引扫描(Loose Index Scan)</li>
 <li>紧索引扫描(Tight Index Scan)</li>
@@ -270,13 +270,13 @@
                     </span>
                     
                     <span class="span--category">
-                      <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/" title="MYSQL">
-                        <b>#</b> MYSQL
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/mysql/" title="mysql">
+                        <b>#</b> mysql
                       </a>
                     </span>
                     
                     <span class="span--category">
-                      <a href="/categories/%E5%90%8E%E7%AB%AF/MYSQL/%E7%B4%A2%E5%BC%95/" title="索引">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/mysql/%E7%B4%A2%E5%BC%95/" title="索引">
                         <b>#</b> 索引
                       </a>
                     </span>
@@ -287,8 +287,8 @@
                     <i class="iconfont icon-tags" title="标签"></i>
                     
                     <span class="span--tag">
-                      <a href="/tags/MYSQL/" title="MYSQL">
-                        <b>#</b> MYSQL
+                      <a href="/tags/mysql/" title="mysql">
+                        <b>#</b> mysql
                       </a>
                     </span>
                     
@@ -320,7 +320,7 @@
     <div class="title">目录</div>
     <div class="catalog-content">
       
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#GROUP-BY-%E6%98%AF%E5%90%A6%E8%83%BD%E8%B5%B0%E7%B4%A2%E5%BC%95%E5%8F%8A%E5%8E%9F%E7%90%86"><span class="toc-text">GROUP BY 是否能走索引及原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#MYSQL-%E5%AF%B9-GROUP-BY-%E7%9A%84%E4%BC%98%E5%8C%96"><span class="toc-text">MYSQL 对 GROUP BY 的优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9D%BE%E7%B4%A2%E5%BC%95%E6%89%AB%E6%8F%8F"><span class="toc-text">松索引扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B4%A7%E7%B4%A2%E5%BC%95%E6%89%AB%E6%8F%8F"><span class="toc-text">紧索引扫描</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#GROUP-BY-%E6%98%AF%E5%90%A6%E8%83%BD%E8%B5%B0%E7%B4%A2%E5%BC%95%E5%8F%8A%E5%8E%9F%E7%90%86"><span class="toc-text">GROUP BY 是否能走索引及原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#mysql-%E5%AF%B9-GROUP-BY-%E7%9A%84%E4%BC%98%E5%8C%96"><span class="toc-text">mysql 对 GROUP BY 的优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9D%BE%E7%B4%A2%E5%BC%95%E6%89%AB%E6%8F%8F"><span class="toc-text">松索引扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B4%A7%E7%B4%A2%E5%BC%95%E6%89%AB%E6%8F%8F"><span class="toc-text">紧索引扫描</span></a></li></ol></li></ol></li></ol>
       
     </div>
   </div>
@@ -600,7 +600,7 @@
       </a>
       <div class="share-content hidden">
         
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + MYSQL%20GROUP%20BY%20%E8%AF%A6%E8%A7%A3 + '&url=' + https%3A%2F%2Finspiring-starlight-8a2c35.netlify.app%2Fposts%2F5532bb23.html + '" target="_blank" title="Twitter">
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + mysql%20GROUP%20BY%20%E8%AF%A6%E8%A7%A3 + '&url=' + https%3A%2F%2Finspiring-starlight-8a2c35.netlify.app%2Fposts%2F5532bb23.html + '" target="_blank" title="Twitter">
             <i class="iconfont icon-twitter"></i>
           </a>
         

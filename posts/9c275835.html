@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="cat" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      redis底层原理 
+      
+      
+      |
+    
+     个人资料站
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <link rel="icon" href="/images/logo.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/logo.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">cat</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">redis底层原理</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2025-05-09 14:39:16
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                    <b>#</b> 后端
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/redis/" title="redis">
+                    <b>#</b> redis
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/redis/" title="redis">
+                    <b>#</b> redis
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/redis%E9%9D%A2%E8%AF%95/" title="redis面试">
+                    <b>#</b> redis面试
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>&lt;Excerpt in index | 首页摘要&gt;</p>
+<span id="more"></span>
+<p>&lt;The rest of contents | 余下全文&gt;</p>
+<h1 id="一、Redis-内存管理"><a href="#一、Redis-内存管理" class="headerlink" title="一、Redis 内存管理"></a>一、Redis 内存管理</h1><p>Redis 采用两种内存分配机制：jemalloc（默认）和tcmalloc。两者都优于系统默认的 malloc，因可有效防止内存碎片化，提升多线程场景下的性能稳定性。  </p>
+<h2 id="1-内存分配策略"><a href="#1-内存分配策略" class="headerlink" title="1. 内存分配策略"></a>1. 内存分配策略</h2><p>Redis 使用多种数据结构存储数据，每种结构根据数据大小动态调整内存占用。</p>
+<ul>
+<li>压缩列表（ZipList）：在 LPUSH 和 RPUSH 操作中，小块内存分配频繁。Redis 动态调整列表容量，初始容量小，元素增多时指数级扩容（如 8→16→32 字节），减少内存浪费。</li>
+<li>哈希表（HashTable）：存储键值对时，小规模数据用紧凑内存布局。随数据增长，哈希表自动扩容，平衡内存使用与操作效率。</li>
+</ul>
+<p>Redis 支持手动内存清理。客户端可调用 DEL 命令删除指定键值对，或设置过期时间让 Redis 自动清理过期数据。</p>
+<h1 id="二、Redis-数据库持久化机制"><a href="#二、Redis-数据库持久化机制" class="headerlink" title="二、Redis 数据库持久化机制"></a>二、Redis 数据库持久化机制</h1><p>Redis 提供 RDB 和 AOF 两种持久化机制，各有优劣，可结合使用以保障数据可靠性与恢复效率。</p>
+<h2 id="1-内存快照（RDB）"><a href="#1-内存快照（RDB）" class="headerlink" title="1. 内存快照（RDB）"></a>1. 内存快照（RDB）</h2><p>RDB 通过保存内存快照实现持久化。Redis 提供两种触发方式：</p>
+<ul>
+<li>手动触发：SAVE 命令会阻塞当前Redis服务器，直到RDB过程完成，适合小数据量或对停顿不敏感场景。</li>
+<li>自动触发：根据配置的保存条件自动执行。如save 900 1，表示900秒内至少1次写操作后自动保存，适用于对数据完整性和恢复时间有不同要求的生产环境。</li>
+</ul>
+<p>RDB 文件结构简洁，数据以二进制形式存储，占用空间较小，便于快速存储和读取，是备份和灾难恢复的首选方案。</p>
+<h1 id="2-日志追加（AOF）"><a href="#2-日志追加（AOF）" class="headerlink" title="2. 日志追加（AOF）"></a>2. 日志追加（AOF）</h1><p>AOF 通过记录写操作命令实现持久化。Redis 提供多种持久化策略：</p>
+<ul>
+<li>每秒持久化（appendfsync everysec）：在生产环境中广泛应用，能在系统故障时，将数据丢失量控制在1秒内，平衡性能与数据安全性。</li>
+<li>每次写入都持久化（appendfsync always）：极端重视数据安全的场景使用，每次写操作都同步到磁盘，避免数据丢失。</li>
+<li>从不持久化（appendfsync no）：性能优先的场景使用，写操作仅在内存中执行，由操作系统决定数据刷新时机，数据安全性无法保证。</li>
+</ul>
+<p>AOF 日志文件采用文本格式，记录客户端执行的写操作，便于读取和分析，同时支持日志重写功能自动优化文件大小。但与 RDB 相比，相同数据量下 AOF 文件通常更大，恢复速度相对较慢。</p>
+<h1 id="三、Redis-网络通信模型"><a href="#三、Redis-网络通信模型" class="headerlink" title="三、Redis 网络通信模型"></a>三、Redis 网络通信模型</h1><p>Redis 采用单线程、多路 I&#x2F;O 复用与事件驱动技术处理网络请求。其工作原理如下：</p>
+<h2 id="1-单线程模型"><a href="#1-单线程模型" class="headerlink" title="1. 单线程模型"></a>1. 单线程模型</h2><p>Redis 的单线程模型基于文件事件处理器，处理各类网络事件。其主要特点如下：</p>
+<ul>
+<li>I&#x2F;O 多路复用：Redis 使用epoll（Linux）、kqueue（FreeBSD）、select等系统调用监控多个客户端连接，实现高效事件通知，使单线程能同时管理大量并发连接。</li>
+<li>事件驱动：文件事件处理器采用IO 多路复用技术，通过注册事件监听，实现高效事件驱动机制，提升 Redis 并发性能。</li>
+</ul>
+<h2 id="2-多线程模型"><a href="#2-多线程模型" class="headerlink" title="2. 多线程模型"></a>2. 多线程模型</h2><p>Redis 自4.0起引入多线程I&#x2F;O，优化写回网络数据的性能瓶颈。架构如下：</p>
+<ul>
+<li>主线程：负责读取客户端请求。</li>
+<li>子线程池：由io_threads_do_write配置项设置，线程数量通常与CPU核心数匹配，用于写回响应数据。</li>
+<li>共享缓冲区：主线程读取请求后，将响应数据暂存于共享缓冲区，供子线程池写回。</li>
+</ul>
+<p>Redis 网络通信模型的优化方向包括利用异步IO提升读写效率、采用数据压缩减少传输量、实施流量控制策略保障稳定性。未来，Redis 将持续探索新技术如用户态网络协议栈和智能网卡，以进一步提升网络通信性能。</p>
+<h1 id="四、Redis-数据结构实现"><a href="#四、Redis-数据结构实现" class="headerlink" title="四、Redis 数据结构实现"></a>四、Redis 数据结构实现</h1><p>Redis每种数据结构都针对不同使用场景优化，下面介绍其底层实现原理：</p>
+<h2 id="1-字符串（String）"><a href="#1-字符串（String）" class="headerlink" title="1. 字符串（String）"></a>1. 字符串（String）</h2><ul>
+<li>Redis字符串基于简单动态字符串（SDS）实现，结构包含长度、分配长度及内容指针，支持二进制安全数据，自动处理缓冲区溢出。</li>
+<li>SDS 提供多种操作函数，如sdsnew、sdscat等，支持数据操作，如追加、截取等。字符串应用场景广泛，如缓存、计数器等。</li>
+</ul>
+<h2 id="2-哈希表（Hash）"><a href="#2-哈希表（Hash）" class="headerlink" title="2. 哈希表（Hash）"></a>2. 哈希表（Hash）</h2><ul>
+<li>Redis哈希表底层为数组指针，初始容量8，存储大量键值对时动态扩容。</li>
+<li>哈希表采用拉链法解决冲突，支持渐进式rehash，避免集中性能开销。适用于存储对象属性（如用户信息）。</li>
+</ul>
+<h2 id="3-列表（List）"><a href="#3-列表（List）" class="headerlink" title="3. 列表（List）"></a>3. 列表（List）</h2><ul>
+<li>Redis列表由压缩列表或双向链表实现。压缩列表内存效率高，适合短列表；双向链表支持双向操作，平均时间复杂度 O(n)。</li>
+<li>列表适用于消息队列和任务队列。</li>
+</ul>
+<h2 id="4-集合（Set）"><a href="#4-集合（Set）" class="headerlink" title="4. 集合（Set）"></a>4. 集合（Set）</h2><ul>
+<li>Redis集合基于哈希表实现，通过计算哈希值判重，支持无序集合操作，平均时间复杂度 O(1)。</li>
+<li>扩展实现为整数集合，存储整数时高效利用空间，适用于存储唯一值集合（如关注列表）。</li>
+</ul>
+<h2 id="5-有序集合（Sorted-Set）"><a href="#5-有序集合（Sorted-Set）" class="headerlink" title="5. 有序集合（Sorted Set）"></a>5. 有序集合（Sorted Set）</h2><ul>
+<li>Redis有序集合在哈希表和跳跃表双重结构支持下，基于哈希表快速定位元素，结合跳跃表高效维护元素有序性。</li>
+<li>有序集合支持范围查询，时间复杂度 O(log n)，适用于排行榜场景。</li>
+</ul>
+<h1 id="五、Redis-复制机制"><a href="#五、Redis-复制机制" class="headerlink" title="五、Redis 复制机制"></a>五、Redis 复制机制</h1><p>Redis 复制机制基于主从架构，主节点处理读写操作并实时同步数据至从节点，从节点只读响应，其原理如下：</p>
+<h2 id="1-初始化复制"><a href="#1-初始化复制" class="headerlink" title="1. 初始化复制"></a>1. 初始化复制</h2><ul>
+<li>从节点连接主节点，发送 SYNC 命令，触发全量复制：主节点生成 RDB 快照至磁盘，读取快照并发送至从节点，从节点清空旧数据并加载快照。</li>
+<li>采用 PSYNC 命令实现部分复制：从节点记录复制偏移量及主节点 ID，网络中断后向主节点发送 PSYNC 命令请求增量更新数据。</li>
+</ul>
+<h2 id="2-数据同步"><a href="#2-数据同步" class="headerlink" title="2. 数据同步"></a>2. 数据同步</h2><ul>
+<li>主节点接收写操作命令后，先写入自身数据库，再通过输出缓冲区发送给从节点，确保主从数据一致。</li>
+<li>主节点维护复制 backlog 缓冲区，存储最近部分数据，从节点重连时可从此缓冲区获取部分缺失数据。</li>
+</ul>
+<h2 id="3-复制拓扑"><a href="#3-复制拓扑" class="headerlink" title="3. 复制拓扑"></a>3. 复制拓扑</h2><ul>
+<li>Redis 支持多级复制链和多主复制结构：在多级复制链中，从节点可作为其他从节点的主节点；多主复制结构允许多个主节点并行工作，适合不同业务需求。</li>
+<li>主节点维护复制偏移量和从节点列表，监控从节点状态并动态更新。从节点定期向主节点发送 PING 命令，超时未响应则主节点标记为断线，网络恢复后自动重连。</li>
+</ul>
+<h1 id="五、Redis-集群架构"><a href="#五、Redis-集群架构" class="headerlink" title="五、Redis 集群架构"></a>五、Redis 集群架构</h1><p>Redis Cluster 是 Redis 的分布式解决方案，其核心组件和机制如下：</p>
+<h2 id="1-哈希槽"><a href="#1-哈希槽" class="headerlink" title="1.哈希槽"></a>1.哈希槽</h2><ul>
+<li>Redis Cluster 将键映射到 16384 个哈希槽，节点负责部分槽，键通过 CRC16 算法计算归属槽，实现数据分布式存储。</li>
+<li>哈希槽提升数据定位效率，确保数据均匀分布，便于扩展和收缩。</li>
+</ul>
+<h2 id="2-节点通信"><a href="#2-节点通信" class="headerlink" title="2. 节点通信"></a>2. 节点通信</h2><ul>
+<li>节点间采用二进制协议通信，主从节点各司其职：主节点处理客户端请求，执行数据读写操作；从节点异步复制主节点数据，提升集群读取能力和故障转移能力。</li>
+<li>节点定期交换 PING-PONG 命令，监测链路状态，更新集群配置信息，维护集群拓扑结构。</li>
+</ul>
+<h2 id="3-数据迁移"><a href="#3-数据迁移" class="headerlink" title="3. 数据迁移"></a>3. 数据迁移</h2><ul>
+<li>Redis Cluster 支持在线数据迁移，需指定源和目标节点及槽号。迁移流程：命令通知→哈希指针更新→数据迁移→哈希指针清除。</li>
+<li>数据迁移确保键的可访问性，自动重试保障可靠性，优化策略提升效率，使集群动态调整数据分布应对负载变化。</li>
+</ul>
+<h2 id="六、Redis-内存回收策略"><a href="#六、Redis-内存回收策略" class="headerlink" title="六、Redis 内存回收策略"></a>六、Redis 内存回收策略</h2><p>Redis 提供多种内存回收策略，应对不同内存使用压力场景：</p>
+<h2 id="1-最近最少使用（LRU）"><a href="#1-最近最少使用（LRU）" class="headerlink" title="1. 最近最少使用（LRU）"></a>1. 最近最少使用（LRU）</h2><ul>
+<li>LRU 算法原理：Redis 维护双向链表记录键访问顺序。访问键时移至链表头部，内存不足时释放链表尾部键。</li>
+<li>LRU 算法应用场景：适用于大多数场景，默认配置之一，自动淘汰最久未使用的键，保障缓存更新。</li>
+</ul>
+<h2 id="2-最久未使用（LFU）"><a href="#2-最久未使用（LFU）" class="headerlink" title="2. 最久未使用（LFU）"></a>2. 最久未使用（LFU）</h2><ul>
+<li>LFU 算法原理：Redis 为每个键设计计数器，衰减策略结合访问频率和时间。访问键时计数器递增，定期衰减，平衡新旧键权重。</li>
+<li>LFU 算法应用场景：适用于高频访问键需保留的场景，如社交媒体热点，配置命令maxmemory-policy lfup。</li>
+</ul>
+<h2 id="3-随机淘汰"><a href="#3-随机淘汰" class="headerlink" title="3. 随机淘汰"></a>3. 随机淘汰</h2><ul>
+<li>随机淘汰策略原理：内存超出限制时随机选择并释放键。</li>
+<li>随机淘汰策略应用场景：适用于无明确访问模式场景，配置命令maxmemory-policy noeviction。</li>
+</ul>
+<h2 id="七、Redis-事务机制"><a href="#七、Redis-事务机制" class="headerlink" title="七、Redis 事务机制"></a>七、Redis 事务机制</h2><p>Redis 事务通过MULTI、EXEC、DISCARD和WATCH命令实现，提供基本事务支持：</p>
+<h2 id="1-事务启动与执行"><a href="#1-事务启动与执行" class="headerlink" title="1. 事务启动与执行"></a>1. 事务启动与执行</h2><ul>
+<li><p>命令序列：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">MULTI      <span class="comment"># 标识事务块开始</span></span><br><span class="line">SET key1 value1</span><br><span class="line">SET key2 value2</span><br><span class="line">EXEC      <span class="comment"># 执行事务</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Redis 事务启动后客户端请求入队，遇错误也执行，无隔离级别与回滚机制，部分失败需客户端处理。</p>
+</li>
+</ul>
+<h2 id="2-乐观锁实现"><a href="#2-乐观锁实现" class="headerlink" title="2. 乐观锁实现"></a>2. 乐观锁实现</h2><p>Redis 的WATCH命令实现乐观锁：监控键变更，事务执行前检测变更，若事务执行期间键被修改，则事务取消。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">WATCH key</span><br><span class="line">... <span class="comment"># 读取和修改键的逻辑</span></span><br><span class="line">MULTI</span><br><span class="line">SET key new_value</span><br><span class="line">EXEC      <span class="comment"># 检测键变更并执行事务</span></span><br></pre></td></tr></table></figure>
+
+<p>Redis 乐观锁适用于键修改不频繁场景，确保数据一致性，减少事务冲突。</p>
+<h1 id="八、Redis-消息发布订阅"><a href="#八、Redis-消息发布订阅" class="headerlink" title="八、Redis 消息发布订阅"></a>八、Redis 消息发布订阅</h1><p>Redis 的发布&#x2F;订阅系统是基于主题的消息传递系统，适用于实时消息通知场景：</p>
+<h2 id="1-消息发布订阅原理"><a href="#1-消息发布订阅原理" class="headerlink" title="1. 消息发布订阅原理"></a>1. 消息发布订阅原理</h2><ul>
+<li><p>Redis 客户端执行SUBSCRIBE命令订阅频道，消息发布时 Redis 将消息发送给所有订阅客户端。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SUBSCRIBE channel1 channel2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>客户端执行PSUBSCRIBE命令订阅模式匹配的频道，支持通配符匹配多个频道。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PSUBSCRIBE news.*</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="2-消息传递流程"><a href="#2-消息传递流程" class="headerlink" title="2. 消息传递流程"></a>2. 消息传递流程</h2><ul>
+<li><p>发布者客户端调用PUBLISH命令向指定频道发送消息，Redis 遍历匹配订阅者并传递消息。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PUBLISH channel1 message</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Redis 的发布&#x2F;订阅系统支持模式匹配和多频道订阅，具备简单轻量、高实时性、松耦合、持久化可选、扩展性强的特点，适用于聊天室、实时通知等功能。</p>
+</li>
+</ul>
+<h1 id="九、Redis-底层数据结构"><a href="#九、Redis-底层数据结构" class="headerlink" title="九、Redis 底层数据结构"></a>九、Redis 底层数据结构</h1><p>Redis 的底层数据结构包括压缩列表、双向链表、字典、跳表和整数集合。每种结构针对不同场景优化：</p>
+<h2 id="1-压缩列表（ZipList）"><a href="#1-压缩列表（ZipList）" class="headerlink" title="1. 压缩列表（ZipList）"></a>1. 压缩列表（ZipList）</h2><ul>
+<li>Redis 的压缩列表是一种内存高效存储方式，用于按插入顺序存储键值对集合。它通过减少指针使用，在有限内存空间内存储更多元素，提升存储效率和数据访问速度。</li>
+<li>压缩列表采用链表形式，每个节点存数据和下一节点偏移量。节点紧密排列无间隔，元素定位需顺序遍历，时间复杂度 O(n)。适用于存储按插入顺序存取的小型键值对集合。</li>
+</ul>
+<h2 id="2-双向链表（LinkedList）"><a href="#2-双向链表（LinkedList）" class="headerlink" title="2. 双向链表（LinkedList）"></a>2. 双向链表（LinkedList）</h2><ul>
+<li>Redis 的双向链表是一种线性数据结构，用于存储有序元素集合，支持双向遍历和快速插入删除操作。它由节点组成，每个节点包含指向前驱和后继节点的指针，可通过指针双向遍历，插入删除时间复杂度 O(1)。</li>
+<li>双向链表内存占用较高，适用于需频繁插入删除元素且顺序访问的场景，如消息队列和任务队列。</li>
+</ul>
+<h2 id="2-字典（Dictionary）"><a href="#2-字典（Dictionary）" class="headerlink" title="2. 字典（Dictionary）"></a>2. 字典（Dictionary）</h2><ul>
+<li>Redis 的字典是一种哈希表结构，用于存储键值对集合，支持平均时间复杂度 O(1) 的数据存取。它通过哈希函数将键映射至数组索引，处理哈希冲突采用链地址法。</li>
+<li>字典动态扩容，负载因子达上限自动扩展，适用于存储大量键值对场景，如缓存和配置管理。</li>
+</ul>
+<h2 id="3-跳表（SkipList）"><a href="#3-跳表（SkipList）" class="headerlink" title="3. 跳表（SkipList）"></a>3. 跳表（SkipList）</h2><ul>
+<li>Redis 的跳表是一种基于数组和链表的数据结构，用于存储有序元素集合，支持高效查找、插入和删除操作。它由多层链表构成，底层链表存储所有元素，上层链表加速查找。</li>
+<li>跳表查找时间复杂度 O(log n)，插入删除 O(log n)，内存占用较高但操作效率稳定，适用于存储有序集合场景，如排行榜。</li>
+</ul>
+<h2 id="4-整数集合（IntSet）"><a href="#4-整数集合（IntSet）" class="headerlink" title="4. 整数集合（IntSet）"></a>4. 整数集合（IntSet）</h2><ul>
+<li>Redis 的整数集合是一种存储整数集合的紧凑数组结构，按升序排列，支持高效存储和快速查找。初始类型为 int16_t，随元素增大自动升级至 int32_t 或 int64_t。</li>
+<li>整数集合适用于存储整数集合场景，如标签系统和权限管理。</li>
+</ul>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/posts/c35b050e.html" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2025-05-09 14:39:16
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                        <b>#</b> 后端
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/redis/" title="redis">
+                        <b>#</b> redis
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/redis/" title="redis">
+                        <b>#</b> redis
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/redis%E9%9D%A2%E8%AF%95/" title="redis面试">
+                        <b>#</b> redis面试
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/posts/eeedb29e.html" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81Redis-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="toc-text">一、Redis 内存管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5"><span class="toc-text">1. 内存分配策略</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Redis-%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6"><span class="toc-text">二、Redis 数据库持久化机制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%86%85%E5%AD%98%E5%BF%AB%E7%85%A7%EF%BC%88RDB%EF%BC%89"><span class="toc-text">1. 内存快照（RDB）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E6%97%A5%E5%BF%97%E8%BF%BD%E5%8A%A0%EF%BC%88AOF%EF%BC%89"><span class="toc-text">2. 日志追加（AOF）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81Redis-%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E6%A8%A1%E5%9E%8B"><span class="toc-text">三、Redis 网络通信模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="toc-text">1. 单线程模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="toc-text">2. 多线程模型</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81Redis-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%AE%9E%E7%8E%B0"><span class="toc-text">四、Redis 数据结构实现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%AD%97%E7%AC%A6%E4%B8%B2%EF%BC%88String%EF%BC%89"><span class="toc-text">1. 字符串（String）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%93%88%E5%B8%8C%E8%A1%A8%EF%BC%88Hash%EF%BC%89"><span class="toc-text">2. 哈希表（Hash）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%88%97%E8%A1%A8%EF%BC%88List%EF%BC%89"><span class="toc-text">3. 列表（List）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E9%9B%86%E5%90%88%EF%BC%88Set%EF%BC%89"><span class="toc-text">4. 集合（Set）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%EF%BC%88Sorted-Set%EF%BC%89"><span class="toc-text">5. 有序集合（Sorted Set）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81Redis-%E5%A4%8D%E5%88%B6%E6%9C%BA%E5%88%B6"><span class="toc-text">五、Redis 复制机制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%88%9D%E5%A7%8B%E5%8C%96%E5%A4%8D%E5%88%B6"><span class="toc-text">1. 初始化复制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5"><span class="toc-text">2. 数据同步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%A4%8D%E5%88%B6%E6%8B%93%E6%89%91"><span class="toc-text">3. 复制拓扑</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81Redis-%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84"><span class="toc-text">五、Redis 集群架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%93%88%E5%B8%8C%E6%A7%BD"><span class="toc-text">1.哈希槽</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%8A%82%E7%82%B9%E9%80%9A%E4%BF%A1"><span class="toc-text">2. 节点通信</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB"><span class="toc-text">3. 数据迁移</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81Redis-%E5%86%85%E5%AD%98%E5%9B%9E%E6%94%B6%E7%AD%96%E7%95%A5"><span class="toc-text">六、Redis 内存回收策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%9C%80%E8%BF%91%E6%9C%80%E5%B0%91%E4%BD%BF%E7%94%A8%EF%BC%88LRU%EF%BC%89"><span class="toc-text">1. 最近最少使用（LRU）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%9C%80%E4%B9%85%E6%9C%AA%E4%BD%BF%E7%94%A8%EF%BC%88LFU%EF%BC%89"><span class="toc-text">2. 最久未使用（LFU）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E9%9A%8F%E6%9C%BA%E6%B7%98%E6%B1%B0"><span class="toc-text">3. 随机淘汰</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81Redis-%E4%BA%8B%E5%8A%A1%E6%9C%BA%E5%88%B6"><span class="toc-text">七、Redis 事务机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BA%8B%E5%8A%A1%E5%90%AF%E5%8A%A8%E4%B8%8E%E6%89%A7%E8%A1%8C"><span class="toc-text">1. 事务启动与执行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%B9%90%E8%A7%82%E9%94%81%E5%AE%9E%E7%8E%B0"><span class="toc-text">2. 乐观锁实现</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AB%E3%80%81Redis-%E6%B6%88%E6%81%AF%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85"><span class="toc-text">八、Redis 消息发布订阅</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%B6%88%E6%81%AF%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85%E5%8E%9F%E7%90%86"><span class="toc-text">1. 消息发布订阅原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%B6%88%E6%81%AF%E4%BC%A0%E9%80%92%E6%B5%81%E7%A8%8B"><span class="toc-text">2. 消息传递流程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B9%9D%E3%80%81Redis-%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-text">九、Redis 底层数据结构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%8E%8B%E7%BC%A9%E5%88%97%E8%A1%A8%EF%BC%88ZipList%EF%BC%89"><span class="toc-text">1. 压缩列表（ZipList）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8%EF%BC%88LinkedList%EF%BC%89"><span class="toc-text">2. 双向链表（LinkedList）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%AD%97%E5%85%B8%EF%BC%88Dictionary%EF%BC%89"><span class="toc-text">2. 字典（Dictionary）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E8%B7%B3%E8%A1%A8%EF%BC%88SkipList%EF%BC%89"><span class="toc-text">3. 跳表（SkipList）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%95%B4%E6%95%B0%E9%9B%86%E5%90%88%EF%BC%88IntSet%EF%BC%89"><span class="toc-text">4. 整数集合（IntSet）</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="gitee" target="_blank" rel="noopener" href="https://gitee.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">闽ICP备2023002086号-1</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + redis%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86 + '&url=' + https%3A%2F%2Finspiring-starlight-8a2c35.netlify.app%2Fposts%2F9c275835.html + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://inspiring-starlight-8a2c35.netlify.app/posts/9c275835.html" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

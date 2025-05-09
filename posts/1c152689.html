@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="cat" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      redis 缓存穿透、缓存雪崩和缓存击穿详解 
+      
+      
+      |
+    
+     个人资料站
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <link rel="icon" href="/images/logo.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/logo.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">cat</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">redis 缓存穿透、缓存雪崩和缓存击穿详解</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2025-05-09 14:39:16
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                    <b>#</b> 后端
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/redis/" title="redis">
+                    <b>#</b> redis
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/redis/" title="redis">
+                    <b>#</b> redis
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/redis%E9%9D%A2%E8%AF%95/" title="redis面试">
+                    <b>#</b> redis面试
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>&lt;Excerpt in index | 首页摘要&gt;</p>
+<span id="more"></span>
+<p>&lt;The rest of contents | 余下全文&gt;</p>
+<h1 id="一、缓存穿透"><a href="#一、缓存穿透" class="headerlink" title="一、缓存穿透"></a>一、缓存穿透</h1><h2 id="1-1-定义"><a href="#1-1-定义" class="headerlink" title="1.1 定义"></a>1.1 定义</h2><p>缓存穿透是指客户端请求的数据既不在缓存中，也不在数据库中。每次请求都会直接访问数据库，导致数据库压力增大。<br>这种情况通常发生在恶意攻击或数据不存在时。</p>
+<h2 id="1-2-原因"><a href="#1-2-原因" class="headerlink" title="1.2 原因"></a>1.2 原因</h2><ul>
+<li>数据不存在：请求的数据从未被创建或已被删除。</li>
+<li>恶意攻击：客户端故意请求不存在的数据，导致大量请求直接访问数据库。</li>
+</ul>
+<h2 id="1-3-影响"><a href="#1-3-影响" class="headerlink" title="1.3 影响"></a>1.3 影响</h2><ul>
+<li>数据库压力增大：大量请求直接访问数据库，可能导致数据库过载。</li>
+<li>系统性能下降：响应时间增加，用户体验变差。</li>
+</ul>
+<h2 id="1-4-解决方法"><a href="#1-4-解决方法" class="headerlink" title="1.4 解决方法"></a>1.4 解决方法</h2><h3 id="1-4-1-布隆过滤器（Bloom-Filter）"><a href="#1-4-1-布隆过滤器（Bloom-Filter）" class="headerlink" title="1.4.1 布隆过滤器（Bloom Filter）"></a>1.4.1 布隆过滤器（Bloom Filter）</h3><p>使用布隆过滤器判断数据是否存在，避免查询不存在的数据。需要安装RedisBloom模块<br>示例流程：</p>
+<ol>
+<li>将所有存在的数据键存储在布隆过滤器中。</li>
+<li>客户端请求数据时，先通过布隆过滤器判断数据是否存在。</li>
+<li>如果布隆过滤器返回不存在，则直接返回空结果，不查询数据库。</li>
+</ol>
+<h3 id="1-4-2-缓存空值"><a href="#1-4-2-缓存空值" class="headerlink" title="1.4.2 缓存空值"></a>1.4.2 缓存空值</h3><p>将不存在的数据也缓存一段时间，避免重复查询。  </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">get_data_with_empty_cache</span>(<span class="params"><span class="variable">$key</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$data</span> = redis-&gt;<span class="title function_ invoke__">get</span>(<span class="variable">$key</span>);</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$data</span> === <span class="literal">false</span>) &#123;</span><br><span class="line">        <span class="variable">$data</span> = <span class="title function_ invoke__">db_get_data</span>(<span class="variable">$key</span>);</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$data</span> === <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 缓存空值，设置较短的过期时间</span></span><br><span class="line">            redis-&gt;<span class="title function_ invoke__">setex</span>(<span class="variable">$key</span>, <span class="number">60</span>, <span class="string">&quot;NULL&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        redis-&gt;<span class="title function_ invoke__">setex</span>(<span class="variable">$key</span>, <span class="number">300</span>, <span class="variable">$data</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$data</span> === <span class="string">&quot;NULL&quot;</span> ? <span class="literal">null</span> : <span class="variable">$data</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、缓存雪崩"><a href="#二、缓存雪崩" class="headerlink" title="二、缓存雪崩"></a>二、缓存雪崩</h2><h2 id="2-1-定义"><a href="#2-1-定义" class="headerlink" title="2.1 定义"></a>2.1 定义</h2><p>缓存雪崩是指大量缓存数据在同一时间过期，导致大量请求同时访问数据库，对数据库造成巨大压力。</p>
+<h2 id="2-2-原因"><a href="#2-2-原因" class="headerlink" title="2.2 原因"></a>2.2 原因</h2><ul>
+<li>缓存过期时间相同：多个缓存键设置相同的过期时间，导致同时失效。</li>
+<li>系统故障：Redis 服务重启或故障恢复后，所有缓存失效。</li>
+</ul>
+<h2 id="2-3-影响"><a href="#2-3-影响" class="headerlink" title="2.3 影响"></a>2.3 影响</h2><ul>
+<li>数据库压力骤增：大量请求同时访问数据库，可能导致数据库崩溃。</li>
+<li>系统响应延迟：用户请求响应时间增加。</li>
+</ul>
+<h2 id="2-4-解决方法"><a href="#2-4-解决方法" class="headerlink" title="2.4 解决方法"></a>2.4 解决方法</h2><h3 id="2-4-1-设置随机过期时间"><a href="#2-4-1-设置随机过期时间" class="headerlink" title="2.4.1 设置随机过期时间"></a>2.4.1 设置随机过期时间</h3><p>为缓存键设置不同的过期时间，避免同时失效。  </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">set_data_with_random_expiry</span>(<span class="params"><span class="variable">$key</span>, <span class="variable">$data</span>, <span class="variable">$base_expiry</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$random_expiry</span> = <span class="variable">$base_expiry</span> + <span class="title function_ invoke__">rand</span>(<span class="number">0</span>, <span class="number">100</span>); <span class="comment">// 随机增加 0-100 秒</span></span><br><span class="line">    redis-&gt;<span class="title function_ invoke__">setex</span>(<span class="variable">$key</span>, <span class="variable">$random_expiry</span>, <span class="variable">$data</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-4-2-缓存预热"><a href="#2-4-2-缓存预热" class="headerlink" title="2.4.2 缓存预热"></a>2.4.2 缓存预热</h2><p>在缓存失效前，提前刷新缓存。  </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">get_data_with_preheat</span>(<span class="params"><span class="variable">$key</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$data</span> = redis-&gt;<span class="title function_ invoke__">get</span>(<span class="variable">$key</span>);</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$data</span> === <span class="literal">false</span>) &#123;</span><br><span class="line">        <span class="variable">$data</span> = <span class="title function_ invoke__">db_get_data</span>(<span class="variable">$key</span>);</span><br><span class="line">        redis-&gt;<span class="title function_ invoke__">setex</span>(<span class="variable">$key</span>, <span class="number">300</span>, <span class="variable">$data</span>);</span><br><span class="line">    &#125; <span class="keyword">elseif</span> (<span class="title function_ invoke__">rand</span>(<span class="number">1</span>, <span class="number">100</span>) &lt;= <span class="number">10</span>) &#123; <span class="comment">// 10% 的概率提前刷新缓存</span></span><br><span class="line">        <span class="title function_ invoke__">go</span>(function () <span class="keyword">use</span> ($<span class="title">key</span>) &#123;</span><br><span class="line">            $<span class="title">data</span> = <span class="title">db_get_data</span>($<span class="title">key</span>);</span><br><span class="line">            redis-&gt;<span class="title function_ invoke__">setex</span>(<span class="variable">$key</span>, <span class="number">300</span>, <span class="variable">$data</span>);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$data</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="三、缓存击穿"><a href="#三、缓存击穿" class="headerlink" title="三、缓存击穿"></a>三、缓存击穿</h1><h2 id="3-1-定义"><a href="#3-1-定义" class="headerlink" title="3.1 定义"></a>3.1 定义</h2><p>缓存击穿是指热点数据的缓存过期后，多个客户端同时请求该数据，导致这些请求都击穿缓存，直接访问数据库。</p>
+<h2 id="3-2-原因"><a href="#3-2-原因" class="headerlink" title="3.2 原因"></a>3.2 原因</h2><ul>
+<li>热点数据过期：访问频率极高的数据缓存过期。</li>
+<li>高并发请求：多个客户端同时请求同一个热点数据。</li>
+</ul>
+<h2 id="3-3-影响"><a href="#3-3-影响" class="headerlink" title="3.3 影响"></a>3.3 影响</h2><ul>
+<li>数据库压力增大：大量请求直接访问数据库。</li>
+<li>响应延迟：用户请求响应时间增加。</li>
+</ul>
+<h2 id="3-4-解决方法"><a href="#3-4-解决方法" class="headerlink" title="3.4 解决方法"></a>3.4 解决方法</h2><h3 id="3-4-1-互斥锁（Mutex-Lock）"><a href="#3-4-1-互斥锁（Mutex-Lock）" class="headerlink" title="3.4.1 互斥锁（Mutex Lock）"></a>3.4.1 互斥锁（Mutex Lock）</h3><p>使用互斥锁确保只有一个客户端更新缓存，其他客户端等待。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">get_data_with_mutex</span>(<span class="params"><span class="variable">$key</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$lock_key</span> = <span class="variable">$key</span> . <span class="string">&quot;_lock&quot;</span>;</span><br><span class="line">    <span class="variable">$lock_acquired</span> = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">while</span> (!<span class="variable">$lock_acquired</span>) &#123;</span><br><span class="line">        <span class="variable">$lock_acquired</span> = (<span class="keyword">bool</span>)redis-&gt;<span class="title function_ invoke__">setnx</span>(<span class="variable">$lock_key</span>, <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$lock_acquired</span>) &#123;</span><br><span class="line">            redis-&gt;<span class="title function_ invoke__">expire</span>(<span class="variable">$lock_key</span>, <span class="number">30</span>); <span class="comment">// 设置锁的过期时间</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="title function_ invoke__">usleep</span>(<span class="number">100</span>); <span class="comment">// 短暂等待后重试</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$data</span> = redis-&gt;<span class="title function_ invoke__">get</span>(<span class="variable">$key</span>);</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$data</span> === <span class="literal">false</span>) &#123;</span><br><span class="line">        <span class="variable">$data</span> = <span class="title function_ invoke__">db_get_data</span>(<span class="variable">$key</span>);</span><br><span class="line">        redis-&gt;<span class="title function_ invoke__">setex</span>(<span class="variable">$key</span>, <span class="number">300</span>, <span class="variable">$data</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    redis-&gt;<span class="title function_ invoke__">del</span>(<span class="variable">$lock_key</span>); <span class="comment">// 释放锁</span></span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$data</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-4-2-冗余缓存"><a href="#3-4-2-冗余缓存" class="headerlink" title="3.4.2 冗余缓存"></a>3.4.2 冗余缓存</h3><p>设置两个缓存键，一个用于数据存储，一个用于过期检测。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">get_data_with_redundant_cache</span>(<span class="params"><span class="variable">$key</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$check_key</span> = <span class="variable">$key</span> . <span class="string">&quot;_check&quot;</span>;</span><br><span class="line">    <span class="variable">$data</span> = redis-&gt;<span class="title function_ invoke__">get</span>(<span class="variable">$key</span>);</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$data</span> === <span class="literal">false</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (redis-&gt;<span class="title function_ invoke__">ttl</span>(<span class="variable">$check_key</span>) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="variable">$data</span> = <span class="title function_ invoke__">db_get_data</span>(<span class="variable">$key</span>);</span><br><span class="line">            redis-&gt;<span class="title function_ invoke__">setex</span>(<span class="variable">$key</span>, <span class="number">300</span>, <span class="variable">$data</span>);</span><br><span class="line">            redis-&gt;<span class="title function_ invoke__">setex</span>(<span class="variable">$check_key</span>, <span class="number">290</span>, <span class="number">1</span>); <span class="comment">// 设置较短的过期时间</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>; <span class="comment">// 返回空结果</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$data</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="四、三种问题的区别"><a href="#四、三种问题的区别" class="headerlink" title="四、三种问题的区别"></a>四、三种问题的区别</h3><table>
+<thead>
+<tr>
+<th>问题</th>
+<th>定义</th>
+<th>原因</th>
+<th>解决方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>缓存穿透</td>
+<td>请求的数据既不在缓存中，也不在数据库中</td>
+<td>数据不存在或恶意攻击</td>
+<td>布隆过滤器、缓存空值</td>
+</tr>
+<tr>
+<td>缓存雪崩</td>
+<td>大量缓存数据在同一时间过期</td>
+<td>缓存过期时间相同或系统故障</td>
+<td>设置随机过期时间、缓存预热</td>
+</tr>
+<tr>
+<td>缓存击穿</td>
+<td>热点数据的缓存过期后，多个客户端同时请求该数据</td>
+<td>热点数据过期且高并发请求</td>
+<td>互斥锁、冗余缓存</td>
+</tr>
+</tbody></table>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/posts/1e80ad29.html" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2025-05-09 14:39:16
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                        <b>#</b> 后端
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/redis/" title="redis">
+                        <b>#</b> redis
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/redis/" title="redis">
+                        <b>#</b> redis
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/redis%E9%9D%A2%E8%AF%95/" title="redis面试">
+                        <b>#</b> redis面试
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/posts/c35b050e.html" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F"><span class="toc-text">一、缓存穿透</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-%E5%AE%9A%E4%B9%89"><span class="toc-text">1.1 定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-%E5%8E%9F%E5%9B%A0"><span class="toc-text">1.2 原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-%E5%BD%B1%E5%93%8D"><span class="toc-text">1.3 影响</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="toc-text">1.4 解决方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-1-%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%EF%BC%88Bloom-Filter%EF%BC%89"><span class="toc-text">1.4.1 布隆过滤器（Bloom Filter）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-2-%E7%BC%93%E5%AD%98%E7%A9%BA%E5%80%BC"><span class="toc-text">1.4.2 缓存空值</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9"><span class="toc-text">二、缓存雪崩</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E5%AE%9A%E4%B9%89"><span class="toc-text">2.1 定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E5%8E%9F%E5%9B%A0"><span class="toc-text">2.2 原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-%E5%BD%B1%E5%93%8D"><span class="toc-text">2.3 影响</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="toc-text">2.4 解决方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-1-%E8%AE%BE%E7%BD%AE%E9%9A%8F%E6%9C%BA%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4"><span class="toc-text">2.4.1 设置随机过期时间</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-2-%E7%BC%93%E5%AD%98%E9%A2%84%E7%83%AD"><span class="toc-text">2.4.2 缓存预热</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF"><span class="toc-text">三、缓存击穿</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-%E5%AE%9A%E4%B9%89"><span class="toc-text">3.1 定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-%E5%8E%9F%E5%9B%A0"><span class="toc-text">3.2 原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-%E5%BD%B1%E5%93%8D"><span class="toc-text">3.3 影响</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="toc-text">3.4 解决方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-1-%E4%BA%92%E6%96%A5%E9%94%81%EF%BC%88Mutex-Lock%EF%BC%89"><span class="toc-text">3.4.1 互斥锁（Mutex Lock）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-2-%E5%86%97%E4%BD%99%E7%BC%93%E5%AD%98"><span class="toc-text">3.4.2 冗余缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E4%B8%89%E7%A7%8D%E9%97%AE%E9%A2%98%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">四、三种问题的区别</span></a></li></ol></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="gitee" target="_blank" rel="noopener" href="https://gitee.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">闽ICP备2023002086号-1</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + redis%20%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E3%80%81%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E5%92%8C%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E8%AF%A6%E8%A7%A3 + '&url=' + https%3A%2F%2Finspiring-starlight-8a2c35.netlify.app%2Fposts%2F1c152689.html + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://inspiring-starlight-8a2c35.netlify.app/posts/1c152689.html" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

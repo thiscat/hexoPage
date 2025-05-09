@@ -11,7 +11,7 @@
   
   <title>
     
-      tcp 
+      redis多实例 
       
       
       |
@@ -155,7 +155,7 @@
   <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
   <div class="container post-details" id="post-details">
     <div class="post-content">
-      <div class="post-title">tcp</div>
+      <div class="post-title">redis多实例</div>
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime" title="更新时间"></i>
@@ -172,8 +172,8 @@
                 </span>
                 
                 <span class="span--category">
-                  <a href="/categories/%E5%90%8E%E7%AB%AF/tcp/" title="tcp">
-                    <b>#</b> tcp
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/redis/" title="redis">
+                    <b>#</b> redis
                   </a>
                 </span>
                 
@@ -183,8 +183,8 @@
                 <i class="iconfont icon-tags" title="标签"></i>
                 
                 <span class="span--tag">
-                  <a href="/tags/tcp/" title="tcp">
-                    <b>#</b> tcp
+                  <a href="/tags/redis/" title="redis">
+                    <b>#</b> redis
                   </a>
                 </span>
                 
@@ -195,13 +195,17 @@
         <p>&lt;Excerpt in index | 首页摘要&gt;</p>
 <span id="more"></span>
 <p>&lt;The rest of contents | 余下全文&gt;</p>
-<h1 id="URI和URL"><a href="#URI和URL" class="headerlink" title="URI和URL"></a>URI和URL</h1><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">URI:统一资源标识符,是一个语法结构，一个规则，一个结果集 FTP://</span><br><span class="line"><span class="built_in">URL</span>:统一资源定位符,是URI的子集，子类。</span><br><span class="line"></span><br><span class="line">换句话说，一个 URI 实例和一个支持语法意义上的、依赖于方案的比较、规范化、解析和相对化计算的结构化字符串差不多。</span><br><span class="line">作为对照，<span class="built_in">URL</span> 类的实例代表了 <span class="built_in">URL</span> 的语法组成部分以及访问它描述的资源所需的信息。<span class="built_in">URL</span> 必须是绝对的，即它必须始终指定一个方案。</span><br></pre></td></tr></table></figure>
+<p>一、配置多实例<br>1.新增实例配置文件, 修改bind(如有需要)和port参数<br>2.运行新增的实例</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># windos</span><br><span class="line">runhiddenconsole.<span class="keyword">exe</span> redis-server redis.windows.<span class="keyword">conf</span></span><br><span class="line">runhiddenconsole.<span class="keyword">exe</span> redis-server redis.windows-<span class="keyword">new</span>.<span class="keyword">conf</span></span><br><span class="line">::runhiddenconsole.<span class="keyword">exe</span> redis-server redis.windows.<span class="keyword">conf</span> --service-start</span><br><span class="line">::runhiddenconsole.<span class="keyword">exe</span> redis-server redis.windows-<span class="keyword">new</span>.<span class="keyword">conf</span> --service-start</span><br><span class="line"></span><br><span class="line"># linux</span><br><span class="line">redis-server redis.<span class="keyword">conf</span></span><br><span class="line">redis-server redis-<span class="keyword">new</span>.<span class="keyword">conf</span></span><br></pre></td></tr></table></figure>
+
+<p>二、PHP中使用多实例</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">define</span>(<span class="string">&#x27;REDIS_CONFIG&#x27;</span>, <span class="string">&#x27;redis://127.0.0.2:6379/0&#x27;</span>); <span class="comment">// 默认-网站配置信息</span></span><br><span class="line"><span class="title function_ invoke__">define</span>(<span class="string">&#x27;REDIS_new&#x27;</span>, <span class="string">&#x27;redis://127.0.0.2:6370/0&#x27;</span>); <span class="comment">// 新实例</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">redis</span>(<span class="params"><span class="variable">$redisConfType</span> = <span class="string">&quot;REDIS_CONFIG&quot;</span></span>)</span>&#123;</span><br><span class="line"><span class="comment">//    static $redisList=[];//用于判断redis一个php生命周期内是否要重新连接</span></span><br><span class="line">    <span class="keyword">global</span> <span class="variable">$redisList</span>;</span><br><span class="line">    <span class="comment">//判断redis是否已连接</span></span><br><span class="line">    <span class="keyword">if</span>( <span class="keyword">empty</span>(<span class="variable">$redisList</span>[<span class="variable">$redisConfType</span>]) )&#123;</span><br><span class="line">        <span class="variable">$cfg</span> = <span class="title function_ invoke__">parse_url</span>( <span class="title function_ invoke__">constant</span>(<span class="variable">$redisConfType</span>) );</span><br><span class="line">        <span class="keyword">if</span>( <span class="keyword">empty</span>(<span class="variable">$cfg</span>[<span class="string">&#x27;path&#x27;</span>]) )&#123;</span><br><span class="line">            <span class="title function_ invoke__">trigger_error</span>(<span class="string">&#x27;Invalid redis db name&#x27;</span>,E_USER_ERROR);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="variable">$cfg</span>[<span class="string">&#x27;path&#x27;</span>] = <span class="title function_ invoke__">intval</span>( <span class="title function_ invoke__">str_replace</span>(<span class="string">&#x27;/&#x27;</span>, <span class="string">&#x27;&#x27;</span>, <span class="variable">$cfg</span>[<span class="string">&#x27;path&#x27;</span>]));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>( <span class="keyword">isset</span>(<span class="variable">$cfg</span>[<span class="string">&#x27;scheme&#x27;</span>]) &amp;&amp; <span class="variable">$cfg</span>[<span class="string">&#x27;scheme&#x27;</span>]==<span class="string">&#x27;redis&#x27;</span> )&#123;</span><br><span class="line">            <span class="keyword">try</span>&#123;</span><br><span class="line">                <span class="variable">$redisList</span>[<span class="variable">$redisConfType</span>] = <span class="keyword">new</span> <span class="title class_">Redis</span>();</span><br><span class="line">                <span class="variable">$ret</span> = <span class="variable">$redisList</span>[<span class="variable">$redisConfType</span>]-&gt;<span class="title function_ invoke__">pconnect</span>(<span class="variable">$cfg</span>[<span class="string">&#x27;host&#x27;</span>], <span class="variable">$cfg</span>[<span class="string">&#x27;port&#x27;</span>], <span class="number">0.3</span>);</span><br><span class="line">                <span class="variable">$redisList</span>[<span class="variable">$redisConfType</span>]-&gt;<span class="title function_ invoke__">select</span>(<span class="variable">$cfg</span>[<span class="string">&#x27;path&#x27;</span>]);</span><br><span class="line">            &#125;<span class="keyword">catch</span>(<span class="built_in">Exception</span> <span class="variable">$e</span>)&#123;</span><br><span class="line">                <span class="variable">$redisList</span>[<span class="variable">$redisConfType</span>] = <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$redisList</span>[<span class="variable">$redisConfType</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       </div>
       
         <div class="prev-or-next">
           <div class="post-foot-next">
             
-              <a href="/posts/280100fb.html" target="_self">
+              <a href="/posts/c4b3b3ae.html" target="_self">
                 <i class="iconfont icon-chevronleft"></i>
                 <span>上一页</span>
               </a>
@@ -223,8 +227,8 @@
                     </span>
                     
                     <span class="span--category">
-                      <a href="/categories/%E5%90%8E%E7%AB%AF/tcp/" title="tcp">
-                        <b>#</b> tcp
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/redis/" title="redis">
+                        <b>#</b> redis
                       </a>
                     </span>
                     
@@ -234,8 +238,8 @@
                     <i class="iconfont icon-tags" title="标签"></i>
                     
                     <span class="span--tag">
-                      <a href="/tags/tcp/" title="tcp">
-                        <b>#</b> tcp
+                      <a href="/tags/redis/" title="redis">
+                        <b>#</b> redis
                       </a>
                     </span>
                     
@@ -244,7 +248,7 @@
           </div>
           <div class="post-foot-prev">
             
-              <a href="/posts/bb0d3e20.html" target="_self">
+              <a href="/posts/430d67de.html" target="_self">
                 <span>下一页</span>
                 <i class="iconfont icon-chevronright"></i>
               </a>
@@ -254,23 +258,6 @@
       
     </div>
     
-  <div id="btn-catalog" class="btn-catalog">
-    <i class="iconfont icon-catalog"></i>
-  </div>
-  <div class="post-catalog hidden" id="catalog">
-    <div class="title">目录</div>
-    <div class="catalog-content">
-      
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#URI%E5%92%8CURL"><span class="toc-text">URI和URL</span></a></li></ol>
-      
-    </div>
-  </div>
-
-  
-<script src="/js/catalog.js"></script>
-
-
-
 
     
   </div>
@@ -541,7 +528,7 @@
       </a>
       <div class="share-content hidden">
         
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + tcp + '&url=' + https%3A%2F%2Finspiring-starlight-8a2c35.netlify.app%2Fposts%2Fbb0d3e20.html + '" target="_blank" title="Twitter">
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + redis%E5%A4%9A%E5%AE%9E%E4%BE%8B + '&url=' + https%3A%2F%2Finspiring-starlight-8a2c35.netlify.app%2Fposts%2Fbb0d3e20.html + '" target="_blank" title="Twitter">
             <i class="iconfont icon-twitter"></i>
           </a>
         
