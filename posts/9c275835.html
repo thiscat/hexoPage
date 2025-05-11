@@ -253,7 +253,7 @@
 <li>扩展实现为整数集合，存储整数时高效利用空间，适用于存储唯一值集合（如关注列表）。</li>
 </ul>
 <h2 id="5-有序集合（Sorted-Set）"><a href="#5-有序集合（Sorted-Set）" class="headerlink" title="5. 有序集合（Sorted Set）"></a>5. 有序集合（Sorted Set）</h2><ul>
-<li>Redis有序集合在哈希表和跳跃表双重结构支持下，基于哈希表快速定位元素，结合跳跃表高效维护元素有序性。</li>
+<li>Redis有序集合在哈希表和跳表双重结构支持下，基于哈希表快速定位元素，结合跳表高效维护元素有序性。</li>
 <li>有序集合支持范围查询，时间复杂度 O(log n)，适用于排行榜场景。</li>
 </ul>
 <h1 id="五、Redis-复制机制"><a href="#五、Redis-复制机制" class="headerlink" title="五、Redis 复制机制"></a>五、Redis 复制机制</h1><p>Redis 复制机制基于主从架构，主节点处理读写操作并实时同步数据至从节点，从节点只读响应，其原理如下：</p>

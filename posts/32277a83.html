@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="cat" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      php中Redis分布式锁优化 
+      
+      
+      |
+    
+     个人资料站
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <link rel="icon" href="/images/logo.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/logo.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">cat</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">php中Redis分布式锁优化</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2025-05-10 22:18:02
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="分类"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                    <b>#</b> 后端
+                  </a>
+                </span>
+                
+                <span class="span--category">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/php/" title="php">
+                    <b>#</b> php
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/php/" title="php">
+                    <b>#</b> php
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/php%E9%9D%A2%E8%AF%95/" title="php面试">
+                    <b>#</b> php面试
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>&lt;Excerpt in index | 首页摘要&gt;</p>
+<span id="more"></span>
+<p>&lt;The rest of contents | 余下全文&gt;</p>
+<h1 id="一、基础原理与问题分析"><a href="#一、基础原理与问题分析" class="headerlink" title="一、基础原理与问题分析"></a>一、基础原理与问题分析</h1><h2 id="1-Redis分布式锁核心问题"><a href="#1-Redis分布式锁核心问题" class="headerlink" title="1. Redis分布式锁核心问题"></a>1. Redis分布式锁核心问题</h2><p>在高并发场景下，PHP使用Redis实现分布式锁会遇到以下典型问题：</p>
+<ol>
+<li>锁竞争激烈：大量请求同时争抢同一个锁</li>
+<li>锁续期困难：PHP无后台线程难以实现自动续期</li>
+<li>锁释放风险：脚本异常退出导致死锁</li>
+<li>性能瓶颈：频繁的Redis通信成为系统瓶颈</li>
+</ol>
+<h2 id="2-关键指标评估"><a href="#2-关键指标评估" class="headerlink" title="2. 关键指标评估"></a>2. 关键指标评估</h2><table>
+<thead>
+<tr>
+<th>指标</th>
+<th>阈值</th>
+<th>监控方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>锁等待时间</td>
+<td>&lt; 100ms</td>
+<td>记录获取锁耗时</td>
+</tr>
+<tr>
+<td>锁持有时间</td>
+<td>&lt; 500ms</td>
+<td>记录业务处理时间</td>
+</tr>
+<tr>
+<td>锁竞争失败率</td>
+<td>&lt; 5%</td>
+<td>统计失败请求比例</td>
+</tr>
+<tr>
+<td>Redis QPS</td>
+<td>&lt; 50,000</td>
+<td>Redis监控info commands</td>
+</tr>
+</tbody></table>
+<h1 id="二、优化方案"><a href="#二、优化方案" class="headerlink" title="二、优化方案"></a>二、优化方案</h1><h2 id="1-lua优化redis分布式锁"><a href="#1-lua优化redis分布式锁" class="headerlink" title="1. lua优化redis分布式锁"></a>1. lua优化redis分布式锁</h2><p><a href="/posts/a73d9edf">lua优化redis分布式锁</a> <a href="../../redis/%E6%93%8D%E4%BD%9C/lua%E4%BC%98%E5%8C%96redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81.md"></a></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AdvancedRedisLock</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$redis</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$lockPrefix</span> = <span class="string">&#x27;lock:&#x27;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$tokenPrefix</span> = <span class="string">&#x27;token:&#x27;</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params">Redis <span class="variable">$redis</span></span>) </span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;redis = <span class="variable">$redis</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取分布式锁（带重试机制）</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> string $key       锁键名</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> int $ttl          锁过期时间(ms)</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> int $timeout      获取超时时间(ms)</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> int $retryDelay   重试间隔(ms)</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> array|bool       [lock_token, lock_ttl] 或 false</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">acquire</span>(<span class="params"><span class="variable">$key</span>, <span class="variable">$ttl</span> = <span class="number">3000</span>, <span class="variable">$timeout</span> = <span class="number">5000</span>, <span class="variable">$retryDelay</span> = <span class="number">100</span></span>) </span>&#123;</span><br><span class="line">        <span class="variable">$startTime</span> = <span class="title function_ invoke__">microtime</span>(<span class="literal">true</span>) * <span class="number">1000</span>;</span><br><span class="line">        <span class="variable">$lockKey</span> = <span class="variable language_">$this</span>-&gt;lockPrefix . <span class="variable">$key</span>;</span><br><span class="line">        <span class="variable">$token</span> = <span class="title function_ invoke__">uniqid</span>(<span class="string">&#x27;&#x27;</span>, <span class="literal">true</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 当多个客户端同时竞争同一把锁时，只有一个客户端能成功获取锁，其他客户端需要重试。</span></span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">            <span class="comment">// 使用Lua脚本保证原子性</span></span><br><span class="line">            <span class="variable">$lua</span> = <span class="string">&quot;</span></span><br><span class="line"><span class="string">                if redis.call(&#x27;SET&#x27;, KEYS[1], ARGV[1], &#x27;NX&#x27;, &#x27;PX&#x27;, ARGV[2]) then</span></span><br><span class="line"><span class="string">                    redis.call(&#x27;SET&#x27;, KEYS[2], 1, &#x27;PX&#x27;, ARGV[2])</span></span><br><span class="line"><span class="string">                    return &#123;ARGV[1], ARGV[2]&#125;</span></span><br><span class="line"><span class="string">                end</span></span><br><span class="line"><span class="string">                local token = redis.call(&#x27;GET&#x27;, KEYS[1])</span></span><br><span class="line"><span class="string">                if token == ARGV[1] then</span></span><br><span class="line"><span class="string">                    redis.call(&#x27;INCR&#x27;, KEYS[2])</span></span><br><span class="line"><span class="string">                    redis.call(&#x27;PEXPIRE&#x27;, KEYS[1], ARGV[2])</span></span><br><span class="line"><span class="string">                    redis.call(&#x27;PEXPIRE&#x27;, KEYS[2], ARGV[2])</span></span><br><span class="line"><span class="string">                    return &#123;token, redis.call(&#x27;PTTL&#x27;, KEYS[1])&#125;</span></span><br><span class="line"><span class="string">                end</span></span><br><span class="line"><span class="string">                return false</span></span><br><span class="line"><span class="string">            &quot;</span>;</span><br><span class="line">            </span><br><span class="line">            <span class="variable">$result</span> = <span class="variable language_">$this</span>-&gt;redis-&gt;<span class="keyword">eval</span>(</span><br><span class="line">                <span class="variable">$lua</span>,</span><br><span class="line">                [<span class="variable">$lockKey</span>, <span class="variable language_">$this</span>-&gt;tokenPrefix.<span class="variable">$key</span>, <span class="variable">$token</span>, <span class="variable">$ttl</span>],</span><br><span class="line">                <span class="number">2</span> <span class="comment">// 数组前2个为keys，剩余的为argv</span></span><br><span class="line">            );</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> (<span class="variable">$result</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> [</span><br><span class="line">                    <span class="string">&#x27;token&#x27;</span> =&gt; <span class="variable">$result</span>[<span class="number">0</span>],</span><br><span class="line">                    <span class="string">&#x27;ttl&#x27;</span> =&gt; <span class="variable">$result</span>[<span class="number">1</span>]</span><br><span class="line">                ];</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> (<span class="variable">$timeout</span> &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="title function_ invoke__">usleep</span>(<span class="variable">$retryDelay</span> * <span class="number">1000</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">while</span> ((<span class="title function_ invoke__">microtime</span>(<span class="literal">true</span>) * <span class="number">1000</span> - <span class="variable">$startTime</span>) &lt; <span class="variable">$timeout</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 释放分布式锁</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">release</span>(<span class="params"><span class="variable">$key</span>, <span class="variable">$token</span></span>) </span>&#123;</span><br><span class="line">        <span class="variable">$lua</span> = <span class="string">&quot;</span></span><br><span class="line"><span class="string">            if redis.call(&#x27;GET&#x27;, KEYS[1]) == ARGV[1] then</span></span><br><span class="line"><span class="string">                local counter = redis.call(&#x27;DECR&#x27;, KEYS[2])</span></span><br><span class="line"><span class="string">                if counter &lt;= 0 then</span></span><br><span class="line"><span class="string">                    redis.call(&#x27;DEL&#x27;, KEYS[2])</span></span><br><span class="line"><span class="string">                    return redis.call(&#x27;DEL&#x27;, KEYS[1])</span></span><br><span class="line"><span class="string">                end</span></span><br><span class="line"><span class="string">                return 1</span></span><br><span class="line"><span class="string">            end</span></span><br><span class="line"><span class="string">            return 0</span></span><br><span class="line"><span class="string">        &quot;</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;redis-&gt;<span class="keyword">eval</span>(</span><br><span class="line">            <span class="variable">$lua</span>,</span><br><span class="line">            [<span class="variable language_">$this</span>-&gt;lockPrefix.<span class="variable">$key</span>, <span class="variable language_">$this</span>-&gt;tokenPrefix.<span class="variable">$key</span>, <span class="variable">$token</span>],</span><br><span class="line">            <span class="number">2</span></span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 尝试续期</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">renew</span>(<span class="params"><span class="variable">$key</span>, <span class="variable">$token</span>, <span class="variable">$ttl</span></span>) </span>&#123;</span><br><span class="line">        <span class="variable">$lua</span> = <span class="string">&quot;</span></span><br><span class="line"><span class="string">            if redis.call(&#x27;GET&#x27;, KEYS[1]) == ARGV[1] then</span></span><br><span class="line"><span class="string">                redis.call(&#x27;PEXPIRE&#x27;, KEYS[1], ARGV[2])</span></span><br><span class="line"><span class="string">                redis.call(&#x27;PEXPIRE&#x27;, KEYS[2], ARGV[2])</span></span><br><span class="line"><span class="string">                return 1</span></span><br><span class="line"><span class="string">            end</span></span><br><span class="line"><span class="string">            return 0</span></span><br><span class="line"><span class="string">        &quot;</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;redis-&gt;<span class="keyword">eval</span>(</span><br><span class="line">            <span class="variable">$lua</span>,</span><br><span class="line">            [<span class="variable language_">$this</span>-&gt;lockPrefix.<span class="variable">$key</span>, <span class="variable language_">$this</span>-&gt;tokenPrefix.<span class="variable">$key</span>, <span class="variable">$token</span>, <span class="variable">$ttl</span>],</span><br><span class="line">            <span class="number">2</span></span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-分段锁高级实现"><a href="#2-分段锁高级实现" class="headerlink" title="2. 分段锁高级实现"></a>2. 分段锁高级实现</h2><p>先读取本地锁，再加入lua优化后的分布式锁</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SegmentLockManager</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$redis</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$segments</span> = <span class="number">32</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$localLocks</span> = [];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params">Redis <span class="variable">$redis</span>, <span class="variable">$segments</span> = <span class="number">32</span></span>) </span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;redis = <span class="variable">$redis</span>;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;segments = <span class="variable">$segments</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getSegment</span>(<span class="params"><span class="variable">$resourceId</span></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_ invoke__">crc32</span>(<span class="variable">$resourceId</span>) % <span class="variable language_">$this</span>-&gt;segments;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">lock</span>(<span class="params"><span class="variable">$resourceId</span>, <span class="variable">$ttl</span> = <span class="number">3000</span></span>) </span>&#123;</span><br><span class="line">        <span class="variable">$segment</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getSegment</span>(<span class="variable">$resourceId</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 先尝试本地快速锁</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable language_">$this</span>-&gt;localLocks[<span class="variable">$segment</span>])) &#123;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;localLocks[<span class="variable">$segment</span>][<span class="string">&#x27;count&#x27;</span>]++;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 获取分布式锁</span></span><br><span class="line">        <span class="variable">$lockKey</span> = <span class="string">&quot;segment:lock:<span class="subst">&#123;$segment&#125;</span>&quot;</span>;</span><br><span class="line">        <span class="variable">$token</span> = <span class="title function_ invoke__">uniqid</span>(<span class="string">&#x27;&#x27;</span>, <span class="literal">true</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="variable">$lua</span> = <span class="string">&quot;</span></span><br><span class="line"><span class="string">            if redis.call(&#x27;SET&#x27;, KEYS[1], ARGV[1], &#x27;NX&#x27;, &#x27;PX&#x27;, ARGV[2]) then</span></span><br><span class="line"><span class="string">                return 1</span></span><br><span class="line"><span class="string">            end</span></span><br><span class="line"><span class="string">            return 0</span></span><br><span class="line"><span class="string">        &quot;</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="variable">$locked</span> = <span class="variable language_">$this</span>-&gt;redis-&gt;<span class="keyword">eval</span>(<span class="variable">$lua</span>, [<span class="variable">$lockKey</span>, <span class="variable">$token</span>, <span class="variable">$ttl</span>], <span class="number">1</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$locked</span>) &#123;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;localLocks[<span class="variable">$segment</span>] = [</span><br><span class="line">                <span class="string">&#x27;token&#x27;</span> =&gt; <span class="variable">$token</span>,</span><br><span class="line">                <span class="string">&#x27;count&#x27;</span> =&gt; <span class="number">1</span>,</span><br><span class="line">                <span class="string">&#x27;expire&#x27;</span> =&gt; <span class="title function_ invoke__">microtime</span>(<span class="literal">true</span>) + (<span class="variable">$ttl</span> / <span class="number">1000</span>)</span><br><span class="line">            ];</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">unlock</span>(<span class="params"><span class="variable">$resourceId</span></span>) </span>&#123;</span><br><span class="line">        <span class="variable">$segment</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getSegment</span>(<span class="variable">$resourceId</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">isset</span>(<span class="variable language_">$this</span>-&gt;localLocks[<span class="variable">$segment</span>])) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="variable language_">$this</span>-&gt;localLocks[<span class="variable">$segment</span>][<span class="string">&#x27;count&#x27;</span>]--;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;localLocks[<span class="variable">$segment</span>][<span class="string">&#x27;count&#x27;</span>] &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="variable">$lockKey</span> = <span class="string">&quot;segment:lock:<span class="subst">&#123;$segment&#125;</span>&quot;</span>;</span><br><span class="line">            <span class="variable">$token</span> = <span class="variable language_">$this</span>-&gt;localLocks[<span class="variable">$segment</span>][<span class="string">&#x27;token&#x27;</span>];</span><br><span class="line">            </span><br><span class="line">            <span class="variable">$lua</span> = <span class="string">&quot;</span></span><br><span class="line"><span class="string">                if redis.call(&#x27;GET&#x27;, KEYS[1]) == ARGV[1] then</span></span><br><span class="line"><span class="string">                    return redis.call(&#x27;DEL&#x27;, KEYS[1])</span></span><br><span class="line"><span class="string">                end</span></span><br><span class="line"><span class="string">                return 0</span></span><br><span class="line"><span class="string">            &quot;</span>;</span><br><span class="line">            </span><br><span class="line">            <span class="variable language_">$this</span>-&gt;redis-&gt;<span class="keyword">eval</span>(<span class="variable">$lua</span>, [<span class="variable">$lockKey</span>, <span class="variable">$token</span>], <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">unset</span>(<span class="variable language_">$this</span>-&gt;localLocks[<span class="variable">$segment</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-使用Socket通信"><a href="#3-使用Socket通信" class="headerlink" title="3. 使用Socket通信"></a>3. 使用Socket通信</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 更高效的Socket通信方式</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">redissonLock</span>(<span class="params"><span class="variable">$command</span>, <span class="variable">$lockName</span>, <span class="variable">$ttl</span> = <span class="literal">null</span></span>) </span>&#123;</span><br><span class="line"><span class="variable">$socket</span> = <span class="title function_ invoke__">fsockopen</span>(<span class="string">&#x27;redisson-service&#x27;</span>, <span class="number">12345</span>);</span><br><span class="line"><span class="keyword">if</span> (!<span class="variable">$socket</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$data</span> = [</span><br><span class="line">        <span class="string">&#x27;command&#x27;</span> =&gt; <span class="variable">$command</span>,</span><br><span class="line">        <span class="string">&#x27;lockName&#x27;</span> =&gt; <span class="variable">$lockName</span>,</span><br><span class="line">        <span class="string">&#x27;ttl&#x27;</span> =&gt; <span class="variable">$ttl</span></span><br><span class="line">    ];</span><br><span class="line">    </span><br><span class="line">    <span class="title function_ invoke__">fwrite</span>(<span class="variable">$socket</span>, <span class="title function_ invoke__">json_encode</span>(<span class="variable">$data</span>).<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    <span class="variable">$response</span> = <span class="title function_ invoke__">fgets</span>(<span class="variable">$socket</span>);</span><br><span class="line">    <span class="title function_ invoke__">fclose</span>(<span class="variable">$socket</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="title function_ invoke__">json_decode</span>(<span class="variable">$response</span>)-&gt;success;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="三、替代方案集成"><a href="#三、替代方案集成" class="headerlink" title="三、替代方案集成"></a>三、替代方案集成</h1><h2 id="1-与ZooKeeper集成"><a href="#1-与ZooKeeper集成" class="headerlink" title="1. 与ZooKeeper集成"></a>1. 与ZooKeeper集成</h2><p>ZooKeeper 保持原子性的原理主要通过原子广播协议（Atomic Broadcast Protocol）和事务日志（Transaction Log）来实现。</p>
+<ul>
+<li>ZAB 保证原子性</li>
+<li>事务日志是一个顺序文件，所有节点做的任务都是一样的，而且是按同样的顺序做，保证了数据的一致性</li>
+</ul>
+<ol>
+<li><p>原子广播协议</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">概述：</span><br><span class="line">ZooKeeper 使用 Zab（ZooKeeper Atomic <span class="keyword">Broadcast）协议来保证分布式环境下数据的原子性。</span></span><br><span class="line"><span class="keyword"></span>在 Zab 协议中，所有的写操作都需要经过一个领导者（Leader）节点来协调和广播。</span><br><span class="line"></span><br><span class="line">工作原理：</span><br><span class="line">当一个客户端发起一个写请求时，该请求会被发送到 ZooKeeper 集群中的某个节点。</span><br><span class="line">如果这个节点是领导者，它会将这个写操作封装成一个事务，并向所有的追随者（Follower）节点广播这个事务。</span><br><span class="line">追随者节点收到事务后，会先将其写入本地的事务日志，然后向领导者发送一个确认消息。</span><br><span class="line">当领导者收到大多数追随者节点的确认消息后，它会向所有的追随者节点发送一个提交消息，通知它们可以将这个事务应用到本地的内存数据库中。</span><br><span class="line">这样，所有的节点都会以相同的顺序执行相同的事务，从而保证了数据的原子性。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>事务日志</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">概述：</span><br><span class="line">ZooKeeper 使用事务日志来记录所有的写操作。事务日志是一个顺序文件，每个事务在日志中都有一个唯一的编号（Zxid）。</span><br><span class="line"></span><br><span class="line">工作原理：</span><br><span class="line">当一个事务被提交时，它会被写入到事务日志中。</span><br><span class="line">在 ZooKeeper 节点启动时，它会从事务日志中读取所有的事务，并按照 Zxid 的顺序将它们应用到本地的内存数据库中。</span><br><span class="line">这样可以保证在节点重启后，能够恢复到最后一次成功提交的状态，从而保证了数据的原子性。</span><br><span class="line">同时，事务日志也可以用于在集群中进行数据同步，当一个新的节点加入集群时，它可以通过读取其他节点的事务日志来快速同步数据。</span><br></pre></td></tr></table></figure></li>
+</ol>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ZookeeperLock</span> </span>&#123;</span><br><span class="line"><span class="keyword">private</span> <span class="variable">$zk</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="variable">$path</span> = <span class="string">&#x27;/locks/&#x27;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"><span class="variable">$host</span> = <span class="string">&#x27;localhost:2181&#x27;</span>, <span class="variable">$timeout</span> = <span class="number">10000</span></span>) </span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;zk = <span class="keyword">new</span> <span class="title class_">Zookeeper</span>(<span class="variable">$host</span>, <span class="literal">null</span>, <span class="variable">$timeout</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">lock</span>(<span class="params"><span class="variable">$name</span>, <span class="variable">$timeout</span> = <span class="number">5000</span></span>) </span>&#123;</span><br><span class="line">        <span class="variable">$lockPath</span> = <span class="variable language_">$this</span>-&gt;path . <span class="variable">$name</span>;</span><br><span class="line">        <span class="variable">$startTime</span> = <span class="title function_ invoke__">microtime</span>(<span class="literal">true</span>) * <span class="number">1000</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 创建临时节点</span></span><br><span class="line">        <span class="variable">$realPath</span> = <span class="variable language_">$this</span>-&gt;zk-&gt;<span class="title function_ invoke__">create</span>(</span><br><span class="line">            <span class="variable">$lockPath</span>,</span><br><span class="line">            <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">            [[<span class="string">&#x27;perms&#x27;</span> =&gt; <span class="title class_">Zookeeper</span>::<span class="variable constant_">PERM_ALL</span>, <span class="string">&#x27;scheme&#x27;</span> =&gt; <span class="string">&#x27;world&#x27;</span>, <span class="string">&#x27;id&#x27;</span> =&gt; <span class="string">&#x27;anyone&#x27;</span>]],</span><br><span class="line">            <span class="title class_">Zookeeper</span>::<span class="variable constant_">EPHEMERAL</span></span><br><span class="line">        );</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$realPath</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 等待锁释放</span></span><br><span class="line">        <span class="keyword">while</span> ((<span class="title function_ invoke__">microtime</span>(<span class="literal">true</span>) * <span class="number">1000</span> - <span class="variable">$startTime</span>) &lt; <span class="variable">$timeout</span>) &#123;</span><br><span class="line">            <span class="variable">$children</span> = <span class="variable language_">$this</span>-&gt;zk-&gt;<span class="title function_ invoke__">getChildren</span>(<span class="variable">$this</span>-&gt;path);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">empty</span>(<span class="variable">$children</span>)) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">lock</span>(<span class="variable">$name</span>, <span class="number">0</span>); <span class="comment">// 重试获取</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="title function_ invoke__">usleep</span>(<span class="number">100000</span>); <span class="comment">// 100ms</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">unlock</span>(<span class="params"><span class="variable">$name</span></span>) </span>&#123;</span><br><span class="line">        <span class="comment">// ZooKeeper临时节点会自动释放</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-多级缓存锁方案"><a href="#2-多级缓存锁方案" class="headerlink" title="2. 多级缓存锁方案"></a>2. 多级缓存锁方案</h2><p>在分段式锁基础上，增加APCu共享内存锁</p>
+<ol>
+<li>APCu特点</li>
+</ol>
+<ul>
+<li>键值对缓存<ul>
+<li>存储任意 PHP 变量（如数组、对象、字符串）到共享内存，通过键快速访问。</li>
+</ul>
+</li>
+<li>进程间共享<ul>
+<li>所有 PHP-FPM 进程或 CLI 脚本均可访问同一份缓存数据，无需重复计算。</li>
+</ul>
+</li>
+<li>自动过期机制<ul>
+<li>支持设置缓存项的 TTL（Time-To-Live），到期自动删除，减少内存占用。</li>
+</ul>
+</li>
+<li>原子操作<ul>
+<li>提供 add()、cas()（Compare And Swap）等原子操作，避免竞态条件。</li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li>优缺点</li>
+</ol>
+<ul>
+<li>优点：速度极快，API 简单</li>
+<li>缺点：仅单机有效</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MultiLevelLock</span> </span>&#123;</span><br><span class="line"><span class="keyword">private</span> <span class="variable">$localLocks</span> = [];</span><br><span class="line"><span class="keyword">private</span> <span class="variable">$redisLock</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="variable">$segmentCount</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params">Redis <span class="variable">$redis</span>, <span class="variable">$segmentCount</span> = <span class="number">64</span></span>) </span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;redisLock = <span class="keyword">new</span> <span class="title class_">AdvancedRedisLock</span>(<span class="variable">$redis</span>);</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;segmentCount = <span class="variable">$segmentCount</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">lock</span>(<span class="params"><span class="variable">$resourceId</span>, <span class="variable">$ttl</span> = <span class="number">3000</span></span>) </span>&#123;</span><br><span class="line">        <span class="variable">$segment</span> = <span class="title function_ invoke__">crc32</span>(<span class="variable">$resourceId</span>) % <span class="variable language_">$this</span>-&gt;segmentCount;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 第一层：进程内锁</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable language_">$this</span>-&gt;localLocks[<span class="variable">$segment</span>])) &#123;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;localLocks[<span class="variable">$segment</span>][<span class="string">&#x27;count&#x27;</span>]++;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 第二层：共享内存锁（APCu）</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_ invoke__">function_exists</span>(<span class="string">&#x27;apcu_add&#x27;</span>)) &#123;</span><br><span class="line">            <span class="variable">$lockKey</span> = <span class="string">&quot;shm_lock:<span class="subst">&#123;$segment&#125;</span>&quot;</span>;</span><br><span class="line">            <span class="keyword">if</span> (<span class="title function_ invoke__">apcu_add</span>(<span class="variable">$lockKey</span>, <span class="number">1</span>, <span class="variable">$ttl</span> / <span class="number">1000</span>)) &#123;</span><br><span class="line">                <span class="variable language_">$this</span>-&gt;localLocks[<span class="variable">$segment</span>] = [</span><br><span class="line">                    <span class="string">&#x27;count&#x27;</span> =&gt; <span class="number">1</span>,</span><br><span class="line">                    <span class="string">&#x27;shm&#x27;</span> =&gt; <span class="literal">true</span></span><br><span class="line">                ];</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 第三层：Redis分布式锁</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;redisLock-&gt;<span class="title function_ invoke__">acquire</span>(<span class="string">&quot;global:<span class="subst">&#123;$segment&#125;</span>&quot;</span>, <span class="variable">$ttl</span>)) &#123;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;localLocks[<span class="variable">$segment</span>] = [</span><br><span class="line">                <span class="string">&#x27;count&#x27;</span> =&gt; <span class="number">1</span>,</span><br><span class="line">                <span class="string">&#x27;redis&#x27;</span> =&gt; <span class="literal">true</span></span><br><span class="line">            ];</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">unlock</span>(<span class="params"><span class="variable">$resourceId</span></span>) </span>&#123;</span><br><span class="line">        <span class="variable">$segment</span> = <span class="title function_ invoke__">crc32</span>(<span class="variable">$resourceId</span>) % <span class="variable language_">$this</span>-&gt;segmentCount;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">isset</span>(<span class="variable language_">$this</span>-&gt;localLocks[<span class="variable">$segment</span>])) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="variable language_">$this</span>-&gt;localLocks[<span class="variable">$segment</span>][<span class="string">&#x27;count&#x27;</span>]--;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;localLocks[<span class="variable">$segment</span>][<span class="string">&#x27;count&#x27;</span>] &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!<span class="keyword">empty</span>(<span class="variable language_">$this</span>-&gt;localLocks[<span class="variable">$segment</span>][<span class="string">&#x27;shm&#x27;</span>])) &#123;</span><br><span class="line">                <span class="title function_ invoke__">apcu_delete</span>(<span class="string">&quot;shm_lock:<span class="subst">&#123;$segment&#125;</span>&quot;</span>);</span><br><span class="line">            &#125; <span class="keyword">elseif</span> (!<span class="keyword">empty</span>(<span class="variable language_">$this</span>-&gt;localLocks[<span class="variable">$segment</span>][<span class="string">&#x27;redis&#x27;</span>])) &#123;</span><br><span class="line">                <span class="variable language_">$this</span>-&gt;redisLock-&gt;<span class="title function_ invoke__">release</span>(<span class="string">&quot;global:<span class="subst">&#123;$segment&#125;</span>&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">unset</span>(<span class="variable language_">$this</span>-&gt;localLocks[<span class="variable">$segment</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="四、生产环境最佳实践"><a href="#四、生产环境最佳实践" class="headerlink" title="四、生产环境最佳实践"></a>四、生产环境最佳实践</h1><h2 id="1-锁监控系统实现"><a href="#1-锁监控系统实现" class="headerlink" title="1. 锁监控系统实现"></a>1. 锁监控系统实现</h2><p>监控锁超出指定时长的，进行告警</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LockMonitor</span> </span>&#123;</span><br><span class="line"><span class="keyword">private</span> <span class="variable">$redis</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="variable">$channel</span> = <span class="string">&#x27;lock_monitor&#x27;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params">Redis <span class="variable">$redis</span></span>) </span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;redis = <span class="variable">$redis</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">startMonitoring</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="comment">// 监控锁过期情况</span></span><br><span class="line">        <span class="variable language_">$this</span>-&gt;redis-&gt;<span class="title function_ invoke__">psubscribe</span>([<span class="string">&#x27;__keyevent@0__:expired&#x27;</span>], function(<span class="variable">$redis</span>, <span class="variable">$pattern</span>, <span class="variable">$channel</span>, <span class="variable">$key</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="title function_ invoke__">strpos</span>(<span class="variable">$key</span>, <span class="string">&#x27;lock:&#x27;</span>) === <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">alert</span>(<span class="string">&quot;Lock expired: <span class="subst">&#123;$key&#125;</span>&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 监控死锁</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            <span class="variable">$longHeldLocks</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">checkLongHeldLocks</span>();</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="variable">$longHeldLocks</span> <span class="keyword">as</span> <span class="variable">$lock</span>) &#123;</span><br><span class="line">                <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">alert</span>(<span class="string">&quot;Long held lock: <span class="subst">&#123;$lock[&#x27;key&#x27;]&#125;</span> held for <span class="subst">&#123;$lock[&#x27;duration&#x27;]&#125;</span>ms&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="title function_ invoke__">sleep</span>(<span class="number">10</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">checkLongHeldLocks</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="variable">$keys</span> = <span class="variable language_">$this</span>-&gt;redis-&gt;<span class="title function_ invoke__">keys</span>(<span class="string">&#x27;lock:*&#x27;</span>);</span><br><span class="line">        <span class="variable">$result</span> = [];</span><br><span class="line">        <span class="variable">$now</span> = <span class="title function_ invoke__">microtime</span>(<span class="literal">true</span>) * <span class="number">1000</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">foreach</span> (<span class="variable">$keys</span> <span class="keyword">as</span> <span class="variable">$key</span>) &#123;</span><br><span class="line">            <span class="variable">$ttl</span> = <span class="variable language_">$this</span>-&gt;redis-&gt;<span class="title function_ invoke__">pttl</span>(<span class="variable">$key</span>);</span><br><span class="line">            <span class="variable">$createdAt</span> = <span class="variable">$now</span> - (<span class="variable language_">$this</span>-&gt;redis-&gt;<span class="keyword">object</span>(<span class="string">&#x27;IDLETIME&#x27;</span>, <span class="variable">$key</span>) * <span class="number">1000</span>);</span><br><span class="line">            <span class="variable">$duration</span> = <span class="variable">$now</span> - <span class="variable">$createdAt</span>;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> (<span class="variable">$duration</span> &gt; <span class="number">5000</span>) &#123; <span class="comment">// 超过5秒视为长持有</span></span><br><span class="line">                <span class="variable">$result</span>[] = [</span><br><span class="line">                    <span class="string">&#x27;key&#x27;</span> =&gt; <span class="variable">$key</span>,</span><br><span class="line">                    <span class="string">&#x27;duration&#x27;</span> =&gt; <span class="variable">$duration</span></span><br><span class="line">                ];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$result</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">alert</span>(<span class="params"><span class="variable">$message</span></span>) </span>&#123;</span><br><span class="line">        <span class="comment">// 实现报警逻辑</span></span><br><span class="line">        <span class="title function_ invoke__">file_put_contents</span>(<span class="string">&#x27;/var/log/lock_monitor.log&#x27;</span>, <span class="title function_ invoke__">date</span>(<span class="string">&#x27;[Y-m-d H:i:s]&#x27;</span>) . <span class="variable">$message</span> . PHP_EOL, FILE_APPEND);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-性能优化配置"><a href="#2-性能优化配置" class="headerlink" title="2. 性能优化配置"></a>2. 性能优化配置</h3><p>Redis连接优化</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$redis</span> = <span class="keyword">new</span> <span class="title class_">Redis</span>();</span><br><span class="line"><span class="comment">// 启用持久连接</span></span><br><span class="line"><span class="variable">$redis</span>-&gt;<span class="title function_ invoke__">pconnect</span>(<span class="string">&#x27;127.0.0.1&#x27;</span>, <span class="number">6379</span>, <span class="number">2.5</span>); <span class="comment">// 2.5秒超时</span></span><br><span class="line"><span class="comment">// 设置读写超时</span></span><br><span class="line"><span class="variable">$redis</span>-&gt;<span class="title function_ invoke__">setOption</span>(<span class="title class_">Redis</span>::<span class="variable constant_">OPT_READ_TIMEOUT</span>, <span class="number">2.5</span>);</span><br><span class="line"><span class="comment">// 启用压缩</span></span><br><span class="line"><span class="variable">$redis</span>-&gt;<span class="title function_ invoke__">setOption</span>(<span class="title class_">Redis</span>::<span class="variable constant_">OPT_COMPRESSION</span>, <span class="title class_">Redis</span>::<span class="variable constant_">COMPRESSION_LZF</span>);</span><br></pre></td></tr></table></figure>
+
+<p>锁参数调优建议</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>ttl</th>
+<th>timeout</th>
+<th>retryDelay</th>
+<th>segments</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>短时高频操作</td>
+<td>300ms</td>
+<td>500ms</td>
+<td>50ms</td>
+<td>64</td>
+</tr>
+<tr>
+<td>长时业务处理</td>
+<td>5s</td>
+<td>10s</td>
+<td>200ms</td>
+<td>16</td>
+</tr>
+<tr>
+<td>秒杀场景</td>
+<td>100ms</td>
+<td>200ms</td>
+<td>10ms</td>
+<td>256</td>
+</tr>
+</tbody></table>
+<h1 id="五、压测"><a href="#五、压测" class="headerlink" title="五、压测"></a>五、压测</h1><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lock_benchmark.php</span></span><br><span class="line"><span class="variable">$redis</span> = <span class="keyword">new</span> <span class="title class_">Redis</span>();</span><br><span class="line"><span class="variable">$redis</span>-&gt;<span class="title function_ invoke__">pconnect</span>(<span class="string">&#x27;127.0.0.1&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable">$lock</span> = <span class="keyword">new</span> <span class="title class_">AdvancedRedisLock</span>(<span class="variable">$redis</span>);</span><br><span class="line"><span class="variable">$start</span> = <span class="title function_ invoke__">microtime</span>(<span class="literal">true</span>);</span><br><span class="line"><span class="variable">$success</span> = <span class="number">0</span>;</span><br><span class="line"><span class="variable">$fail</span> = <span class="number">0</span>;</span><br><span class="line"><span class="variable">$concurrency</span> = <span class="number">100</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable">$pool</span> = <span class="keyword">new</span> <span class="title class_">Pool</span>(<span class="variable">$concurrency</span>);</span><br><span class="line"><span class="keyword">for</span> (<span class="variable">$i</span> = <span class="number">0</span>; <span class="variable">$i</span> &lt; <span class="number">1000</span>; <span class="variable">$i</span>++) &#123;</span><br><span class="line"><span class="variable">$pool</span>-&gt;<span class="title function_ invoke__">submit</span>(<span class="keyword">new</span> <span class="keyword">class</span>(<span class="variable">$lock</span>, &amp;<span class="variable">$success</span>, &amp;<span class="variable">$fail</span>) <span class="keyword">extends</span> Thread &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="variable">$lock</span>;</span><br><span class="line">        <span class="keyword">private</span> <span class="variable">$success</span>;</span><br><span class="line">        <span class="keyword">private</span> <span class="variable">$fail</span>;</span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"><span class="variable">$lock</span>, &amp;<span class="variable">$success</span>, &amp;<span class="variable">$fail</span></span>) </span>&#123;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;lock = <span class="variable">$lock</span>;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;success = &amp;<span class="variable">$success</span>;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;fail = &amp;<span class="variable">$fail</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="variable">$result</span> = <span class="variable language_">$this</span>-&gt;lock-&gt;<span class="title function_ invoke__">acquire</span>(<span class="string">&#x27;benchmark&#x27;</span>, <span class="number">100</span>);</span><br><span class="line">            <span class="keyword">if</span> (<span class="variable">$result</span>) &#123;</span><br><span class="line">                <span class="title function_ invoke__">usleep</span>(<span class="number">5000</span>); <span class="comment">// 5ms模拟业务处理</span></span><br><span class="line">                <span class="variable language_">$this</span>-&gt;lock-&gt;<span class="title function_ invoke__">release</span>(<span class="string">&#x27;benchmark&#x27;</span>, <span class="variable">$result</span>[<span class="string">&#x27;token&#x27;</span>]);</span><br><span class="line">                ++<span class="variable language_">$this</span>-&gt;success;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                ++<span class="variable language_">$this</span>-&gt;fail;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$pool</span>-&gt;<span class="title function_ invoke__">shutdown</span>();</span><br><span class="line"><span class="variable">$duration</span> = <span class="title function_ invoke__">microtime</span>(<span class="literal">true</span>) - <span class="variable">$start</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;Total: &quot;</span> . (<span class="variable">$success</span> + <span class="variable">$fail</span>) . <span class="string">&quot;\n&quot;</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;Success: <span class="subst">$success</span>\n&quot;</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;Fail: <span class="subst">$fail</span>\n&quot;</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;QPS: &quot;</span> . <span class="title function_ invoke__">round</span>((<span class="variable">$success</span> + <span class="variable">$fail</span>) / <span class="variable">$duration</span>, <span class="number">2</span>) . <span class="string">&quot;\n&quot;</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;Failure rate: &quot;</span> . <span class="title function_ invoke__">round</span>(<span class="variable">$fail</span> / (<span class="variable">$success</span> + <span class="variable">$fail</span>) * <span class="number">100</span>, <span class="number">2</span>) . <span class="string">&quot;%\n&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="六、性能优化矩阵"><a href="#六、性能优化矩阵" class="headerlink" title="六、性能优化矩阵"></a>六、性能优化矩阵</h1><table>
+<thead>
+<tr>
+<th>优化手段</th>
+<th>吞吐量提升</th>
+<th>延迟降低</th>
+<th>实现复杂度</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Lua脚本原子操作</td>
+<td>30%</td>
+<td>20%</td>
+<td>低</td>
+<td>所有场景</td>
+</tr>
+<tr>
+<td>分段锁</td>
+<td>5-10x</td>
+<td>60%</td>
+<td>中</td>
+<td>资源可分区场景</td>
+</tr>
+<tr>
+<td>本地缓存+分布式锁</td>
+<td>3-5x</td>
+<td>70%</td>
+<td>高</td>
+<td>高并发读场景</td>
+</tr>
+<tr>
+<td>锁等待队列</td>
+<td>-</td>
+<td>40%</td>
+<td>高</td>
+<td>公平性要求高场景</td>
+</tr>
+<tr>
+<td>多级锁</td>
+<td>2-3x</td>
+<td>50%</td>
+<td>高</td>
+<td>多数据中心部署</td>
+</tr>
+</tbody></table>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/posts/eeedb29e.html" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2025-05-10 22:18:02
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="分类"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/" title="后端">
+                        <b>#</b> 后端
+                      </a>
+                    </span>
+                    
+                    <span class="span--category">
+                      <a href="/categories/%E5%90%8E%E7%AB%AF/php/" title="php">
+                        <b>#</b> php
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/php/" title="php">
+                        <b>#</b> php
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/php%E9%9D%A2%E8%AF%95/" title="php面试">
+                        <b>#</b> php面试
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/posts/a73d9edf.html" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86%E4%B8%8E%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="toc-text">一、基础原理与问题分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E6%A0%B8%E5%BF%83%E9%97%AE%E9%A2%98"><span class="toc-text">1. Redis分布式锁核心问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%85%B3%E9%94%AE%E6%8C%87%E6%A0%87%E8%AF%84%E4%BC%B0"><span class="toc-text">2. 关键指标评估</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%BC%98%E5%8C%96%E6%96%B9%E6%A1%88"><span class="toc-text">二、优化方案</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-lua%E4%BC%98%E5%8C%96redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="toc-text">1. lua优化redis分布式锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%88%86%E6%AE%B5%E9%94%81%E9%AB%98%E7%BA%A7%E5%AE%9E%E7%8E%B0"><span class="toc-text">2. 分段锁高级实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%BD%BF%E7%94%A8Socket%E9%80%9A%E4%BF%A1"><span class="toc-text">3. 使用Socket通信</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88%E9%9B%86%E6%88%90"><span class="toc-text">三、替代方案集成</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%B8%8EZooKeeper%E9%9B%86%E6%88%90"><span class="toc-text">1. 与ZooKeeper集成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E9%94%81%E6%96%B9%E6%A1%88"><span class="toc-text">2. 多级缓存锁方案</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="toc-text">四、生产环境最佳实践</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E9%94%81%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F%E5%AE%9E%E7%8E%B0"><span class="toc-text">1. 锁监控系统实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E9%85%8D%E7%BD%AE"><span class="toc-text">2. 性能优化配置</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%8E%8B%E6%B5%8B"><span class="toc-text">五、压测</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E7%9F%A9%E9%98%B5"><span class="toc-text">六、性能优化矩阵</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="gitee" target="_blank" rel="noopener" href="https://gitee.com/thiscat/">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">闽ICP备2023002086号-1</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + php%E4%B8%ADRedis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E4%BC%98%E5%8C%96 + '&url=' + https%3A%2F%2Finspiring-starlight-8a2c35.netlify.app%2Fposts%2F32277a83.html + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://inspiring-starlight-8a2c35.netlify.app/posts/32277a83.html" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>
